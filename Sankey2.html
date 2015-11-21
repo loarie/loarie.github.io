@@ -62,7 +62,7 @@ var sankey = d3.sankey()
 
 var path = sankey.link();
 
-d3.json("flows2json", function(energy) {
+d3.json("flows2.json", function(energy) {
 
   sankey
       .nodes(energy.nodes)
