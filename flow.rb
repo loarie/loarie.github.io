@@ -156,7 +156,7 @@ NODES.select{|a| iconics.include? a["name"]}.map{|a| a["obs_count"]}.sum
 
 NODES.select{|a| leaf_names.include? a["name"]}.select{|a| !iconics.include? a["name"]}.sort_by{|a| -a["obs_count"]}.map{|a| puts "#{a["name"]}, #{a["obs_count"]}"}
 
-Other:
+Other (10):
 Crustacea, 12058
 Echinodermata, 5743
 Cnidaria, 5167
@@ -169,7 +169,7 @@ Tunicata, 824
 Platyhelminthes, 742
 #0.95%
 
-Insects:
+Insects (10):
 Lepidoptera, 185360
 Odonata, 44789
 Coleoptera, 35966
@@ -182,7 +182,7 @@ Neuroptera, 1819
 Ephemeroptera, 1650
 #0.98%
 
-Birds:
+Birds (20):
 Passeriformes, 186272
 Anseriformes, 43973
 Charadriiformes, 41488
@@ -193,8 +193,6 @@ Piciformes, 14345
 Gruiformes, 11841
 Apodiformes, 8995
 Suliformes, 7845
-#89.6%
-
 Psittaciformes, 7138
 Galliformes, 6924
 Falconiformes, 6202
@@ -206,7 +204,7 @@ Procellariiformes, 1915
 Gaviiformes, 1252
 Ciconiiformes, 1105
 
-Plants:
+Plants (20):
 Asteraceae, 64807
 Fabaceae, 30009
 Pteridophyta, 22995
@@ -228,7 +226,7 @@ Polygonaceae, 8299
 Apocynaceae, 7755
 Bryophyta, 7454
 
-Fungi:
+Fungi (10):
 Agaricales, 16004
 Lecanoromycetes, 10518
 Polyporales, 5027
@@ -241,28 +239,28 @@ Leotiomycetes, 711
 Auriculariales, 546
 #91%
 
-Mollusks:
+Mollusks (4):
 Gastropoda,25180
 Bivalvia,4108
 Polyplacophora,1333
 Cephalopoda,784
 #99.9%
 
-Arachnids:
+Arachnids (5):
 Araneae, 27917
 Opiliones, 1560
 Acari, 1451
 Scorpiones, 1361
 Solifugae, 224
 
-Amphibians:
+Amphibians (5):
 Ranidae, 9294
 Hylidae, 9136
 Bufonidae, 7565
 Plethodontidae, 5456
 Salamandridae, 3665
 
-Reptiles:
+Reptiles (10):
 Colubridae, 21172
 Phrynosomatidae, 14210
 Emydidae, 7354
@@ -274,7 +272,7 @@ Teiidae, 2483
 Anguidae, 2258
 Lacertidae, 2187
 
-Mammals:
+Mammals (10):
 Carnivora, 21708
 Rodentia, 20116
 Artiodactyla, 15113
@@ -287,7 +285,7 @@ Didelphimorphia, 1262
 Perissodactyla, 1072
 #96%
 
-Fishes:
+Fishes (20):
 Labridae, 2618
 Syngnathiformes, 2355
 Pomacentridae, 2133
