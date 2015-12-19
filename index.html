@@ -77,7 +77,7 @@ d3.json("mod.json", function(error, us) {
     .attr("d", path);
      
   layer1.append("path")
-    .datum(topojson.mesh(us, us.objects.countries))
+    .datum(topojson.mesh(us, us.objects.countries, function(a, b) { return a !== b; }))
     .attr("d", path)
     .attr("class", "border");
 
