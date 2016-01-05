@@ -32,7 +32,7 @@ text {
   fill: #679045;  
 }
 .other_icon {
-  fill: #b73030;  
+  fill: #ce812e;  
 }
 .animalia_icon {
   fill: #05749b;  
@@ -79,7 +79,7 @@ var color_key = {}
     color_key['Plantae'] = "#e1e9d9";
     
 var border_key = {}
-    border_key['other'] = "#ce812e";
+    border_key['Other'] = "#ce812e";
     border_key['Actinopterygii'] = "#05749b";
     border_key['Amphibia'] = "#05749b";
     border_key['Aves'] = "#05749b";
@@ -105,11 +105,7 @@ d3.json("cluster4.json", function(error, root) {
       .attr("iconic_taxon", function(d) { return d.iconic_taxon; })
       .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
       .on("mouseover", mouseover)
-      .on("mouseout", mouseout)
-      .on("click", function(d){
-              var url = "http://inaturalist.org/observations?quality_grade=needs_id,research&taxon_id="+d.id;
-              window.location = url;
-      });
+      .on("mouseout", mouseout);
 
   node.append("circle")
       .attr("r", function(d) { return d.r; })
