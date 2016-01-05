@@ -384,6 +384,12 @@ d3.json("cluster4.json", function(error, root) {
       selectedGroup.transition()
         .duration(200)
         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")scale(" + (d.r < 20 ? 30/d.r : 2) + ")"; });
+      
+      selectedGroup.select("circle")
+        .style("fill", function(d) { return border_key[d.iconic_taxon]; });
+        
+      selectedGroup.select("path")
+        .style("fill", "#fff");
         
       var common_name = selectedGroup.attr("name");
       var sci_name = selectedGroup.attr("sci_name");
@@ -419,6 +425,12 @@ d3.json("cluster4.json", function(error, root) {
         .duration(200)
         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")scale(1)"; });
       
+      selectedGroup.select("circle")
+        .style("fill", function(d) { return color_key[d.iconic_taxon]; });
+        
+      selectedGroup.select("path")
+        .style("fill", function(d) { return border_key[d.iconic_taxon]; });
+        
       var infobox = svg.select("g.box");
       var someDom = infobox[0][0];
       someDom.parentNode.appendChild(someDom);
