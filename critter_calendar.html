@@ -384,8 +384,6 @@ d3.json("cluster4.json", function(error, root) {
       selectedGroup.transition()
         .duration(200)
         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")scale(" + (d.r < 20 ? 30/d.r : 2) + ")"; });
-      
-      selectedGroup.select("circle").style("stroke-width", function(d) { return (d.r < 20 ? 1/(30/d.r) : 1/2) + "px";})
         
       var common_name = selectedGroup.attr("name");
       var sci_name = selectedGroup.attr("sci_name");
