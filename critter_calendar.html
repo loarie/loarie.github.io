@@ -99,7 +99,7 @@ d3.json("cluster4.json", function(error, root) {
   node.append("circle")
       .attr("r", function(d) { return d.r; })
       .style("visibility", function(d) { return d.name == "obs" ? "hidden" : "visible"; })
-      .style("fill", function(d) { return border_key[d.iconic_taxon]; })
+      .style("fill", function(d) { return color_key[d.iconic_taxon]; })
       .style("stroke", function(d) { return border_key[d.iconic_taxon]; });
      
   var g = node.filter(function(d) { return !d.children; }).append("g").attr("transform", function(d) { return "translate(" + -50 * d.r / 50 + "," + -50 * d.r / 50 + ")scale(" + d.r / 50 + ")"; });
@@ -368,12 +368,9 @@ d3.json("cluster4.json", function(error, root) {
       var selectedGroup = d3.select(this);
       selectedGroup.transition()
         .duration(200)
-      .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")scale(" + (d.r < 20 ? 30/d.r : 2) + ")"; });
+        .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")scale(" + (d.r < 20 ? 30/d.r : 2) + ")"; });
       
       selectedGroup.select("circle").style("stroke-width", function(d) { return (d.r < 20 ? 1/(30/d.r) : 1/2) + "px";})
-      .transition()
-      .duration(200)
-      .style("fill", function(d) { return color_key[d.iconic_taxon]; });
         
       var common_name = selectedGroup.attr("name");
       var sci_name = selectedGroup.attr("sci_name");
@@ -408,11 +405,6 @@ d3.json("cluster4.json", function(error, root) {
         .transition()
         .duration(200)
         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")scale(1)"; });
-      
-        selectedGroup.select("circle")
-        .transition()
-        .duration(200)
-        .style("fill", function(d) { return border_key[d.iconic_taxon]; });
       
       var infobox = svg.select("g.box");
       var someDom = infobox[0][0];
