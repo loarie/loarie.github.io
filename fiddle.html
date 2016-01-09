@@ -77,7 +77,7 @@
   }
 
   li {
-    background-color: #161616;
+    background-color: #f4e6d5;
     border-radius: 6px;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 -1px 1px rgba(0, 0, 0, 0.3);
     display: inline-block;
@@ -86,22 +86,20 @@
     width: 6em;
   }
   
-
-
-  /* The Menu Nav Button */
-  .icon-th {
-    color: #fff;
-    float: right;
-    font-size: 2rem;
-    margin: 0.3em 0.4em;
+  .bold {
+    background-color: #ce812e;
   }
   
-  .icon-cr {
-    fill: #fff;
+  svg {
+    fill: #ce812e;
     width: 100px;
     height: 100px;
   }
-
+  
+  .bold_icon {
+   fill: #fff;
+  }
+  
 </style>
 
 <body>
@@ -558,33 +556,65 @@
     </ul>
   </nav>
 </header>
+<div id="div1"><h2>Let jQuery AJAX Change This Text</h2></div>
 
-      
-
-      
- 
- 
-           
-      
-  
-      
-
-  
- 
-      
-
-  
-
-  <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js'></script>
+ <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js'></script>
   <script>
+if (SVGElement && SVGElement.prototype) {
+
+    SVGElement.prototype.hasClass = function (className) {
+        return new RegExp('(\\s|^)' + className + '(\\s|$)').test(this.getAttribute('class'));
+    };
+
+    SVGElement.prototype.addClass = function (className) {
+        if (!this.hasClass(className)) {
+            this.setAttribute('class', this.getAttribute('class') + ' ' + className);
+        }
+    };
+
+    SVGElement.prototype.removeClass = function (className) {
+        var removedClass = this.getAttribute('class').replace(new RegExp('(\\s|^)' + className + '(\\s|$)', 'g'), '$2');
+        if (this.hasClass(className)) {
+            this.setAttribute('class', removedClass);
+        }
+    };
+
+    SVGElement.prototype.toggleClass = function (className) {
+        if (this.hasClass(className)) {
+            this.removeClass(className);
+        } else {
+            this.addClass(className);
+        }
+    };
+
+}
     $("a").click(function () {
-      var mytaxon = $(this).attr('class');
-      console.log(mytaxon);
+      //$('svg').togglelass("bold");
+      
+      //make the clicked on one bold
+      var $this = $(this);
+      $this.parent().toggleClass("bold");
+      $this.children(":first")[0].toggleClass("bold_icon");
+      
+      //make all other ones not bold
+      var mytaxon = $this.attr('class');
+      $("a:not(." + mytaxon + ")").parent().removeClass("bold");
+      $this.parent().siblings().each( function () {
+        $(this).children(":first").children(":first")[0].removeClass("bold_icon");
+      });
+      
+      console.log($("a:not(." + mytaxon + ")"));
+      console.log($("a." + mytaxon));
+      
+      
       $("nav." + mytaxon + "_clade").toggleClass("show");
       $("nav:not(." + mytaxon + "_clade)").removeClass("show");
-    });
-  </script>
-  <link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/themes/base/jquery-ui.css'>
+      
+      $("#div1").html(mytaxon);
 
+    });
+    
+   </script>
+ 
 </body>
 </html>
