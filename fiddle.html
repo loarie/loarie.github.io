@@ -77,7 +77,7 @@
   }
 
   li {
-    background-color: #f4e6d5;
+    background-color: #cde3eb;
     border-radius: 6px;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.3), inset 0 -1px 1px rgba(0, 0, 0, 0.3);
     display: inline-block;
@@ -87,11 +87,11 @@
   }
   
   .bold {
-    background-color: #ce812e;
+    background-color: #05749b;
   }
   
   svg {
-    fill: #ce812e;
+    fill: #05749b;
     width: 100px;
     height: 100px;
   }
@@ -100,6 +100,11 @@
    fill: #fff;
   }
   
+  h2{
+    
+    margin: 2em;
+    
+  }
 </style>
 
 <body>
@@ -560,58 +565,93 @@
 
  <script src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js'></script>
   <script>
-if (SVGElement && SVGElement.prototype) {
-
-    SVGElement.prototype.hasClass = function (className) {
+    if (SVGElement && SVGElement.prototype) {
+      SVGElement.prototype.hasClass = function (className) {
         return new RegExp('(\\s|^)' + className + '(\\s|$)').test(this.getAttribute('class'));
-    };
-
-    SVGElement.prototype.addClass = function (className) {
+      };
+      SVGElement.prototype.addClass = function (className) {
         if (!this.hasClass(className)) {
             this.setAttribute('class', this.getAttribute('class') + ' ' + className);
         }
-    };
-
-    SVGElement.prototype.removeClass = function (className) {
+      };
+      SVGElement.prototype.removeClass = function (className) {
         var removedClass = this.getAttribute('class').replace(new RegExp('(\\s|^)' + className + '(\\s|$)', 'g'), '$2');
         if (this.hasClass(className)) {
             this.setAttribute('class', removedClass);
         }
-    };
-
-    SVGElement.prototype.toggleClass = function (className) {
+      };
+      SVGElement.prototype.toggleClass = function (className) {
         if (this.hasClass(className)) {
             this.removeClass(className);
         } else {
             this.addClass(className);
         }
-    };
-
-}
+      };
+    }
+    
+    function allTitleCase(inStr) { return inStr.replace(/\w\S*/g, function(tStr) { return tStr.charAt(0).toUpperCase() + tStr.substr(1).toLowerCase(); }); }
+    
     $("a").click(function () {
-      //$('svg').togglelass("bold");
-      
       //make the clicked on one bold
       var $this = $(this);
-      $this.parent().toggleClass("bold");
-      $this.children(":first")[0].toggleClass("bold_icon");
-      
-      //make all other ones not bold
-      var mytaxon = $this.attr('class');
-      $("a:not(." + mytaxon + ")").parent().removeClass("bold");
-      $this.parent().siblings().each( function () {
-        $(this).children(":first").children(":first")[0].removeClass("bold_icon");
-      });
-      
-      console.log($("a:not(." + mytaxon + ")"));
-      console.log($("a." + mytaxon));
-      
-      
-      $("nav." + mytaxon + "_clade").toggleClass("show");
-      $("nav:not(." + mytaxon + "_clade)").removeClass("show");
-      
-      $("#div1").html(mytaxon);
-
+      if($this.parent().parent().parent().hasClass('life_clade')){
+        $this.parent().toggleClass("bold");
+        $this.children(":first")[0].toggleClass("bold_icon");
+        
+        //make all siblings not bold
+        var mytaxon = $this.attr('class');
+        $this.parent().siblings().each( function () {
+          var  $this = $(this);
+          $this.removeClass("bold");
+          $this.children(":first").children(":first")[0].removeClass("bold_icon");
+        });
+        
+        //show submenus
+        $("nav." + mytaxon + "_clade").toggleClass("show");
+        $("nav:not(." + mytaxon + "_clade)").removeClass("show");
+        
+        var $div1 = $("#div1")
+        if($div1.html() == "<h2>"+allTitleCase(mytaxon)+"</h2>"){
+          $div1.html("");
+        }else{
+          $div1.html("<h2>"+allTitleCase(mytaxon)+"</h2>");
+        }
+        
+        //remove all bolds from child menus
+        $("nav").not(".life_clade").each( function () {
+          var  $this = $(this);
+                   
+          var theul = $this.children();
+          theul.children().each(function (){
+            var $this = $(this);
+            $this.removeClass("bold");
+            $this.children(":first").children(":first")[0].removeClass("bold_icon");
+          });
+          
+        });
+        
+        
+      }else{
+        $this.parent().toggleClass("bold");
+        $this.children(":first")[0].toggleClass("bold_icon");
+        
+        //make all other ones on this level not bold
+        var mytaxon = $this.attr('class');
+        $this.parent().siblings().each( function () {
+          var  $this = $(this);
+          $this.removeClass("bold");
+          $this.children(":first").children(":first")[0].removeClass("bold_icon");
+        });
+        
+           
+        var $div1 = $("#div1")
+        if($div1.html() == "<h2>"+allTitleCase(mytaxon)+"</h2>"){
+          var parent_taxon = $("nav.life_clade").children().children(".bold").children().attr('class');
+          $div1.html("<h2>"+allTitleCase(parent_taxon)+"</h2>");
+        }else{
+          $div1.html("<h2>"+allTitleCase(mytaxon)+"</h2>");
+        }
+      }
     });
     
    </script>
