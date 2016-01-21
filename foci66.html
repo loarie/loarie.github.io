@@ -275,7 +275,7 @@ var node = svg.selectAll(".node")
       .attr("width", function(d) { return d.radius; })
       .attr("height", function(d) { return d.radius; })
       .attr("class","img-circle")
-      .attr("clip-path","url(#clipCircle)");
+      .attr("clip-path","url(foci66.#clipCircle)");
 
 
       var box = svg.append("g").attr("class","box").attr("visibility","hidden");
@@ -398,7 +398,7 @@ function go_species() {
             .style("fill", "#fff")
             .style("stroke-width", "2");
   newn.append("clipPath")
-            .attr("id","clipCircle")
+            .attr("id","clipIcon")
             .append("circle")
             .attr("r",function(d) { return d.radius/2; })
             .attr("cx",function(d) { return 0; })
@@ -418,8 +418,8 @@ function go_species() {
             .attr("width", function(d) { return d.radius; })
             .attr("height", function(d) { return d.radius; })
             .attr("class","img-circle")
-            .attr("clip-path","url(#clipCircle)");
-
+            .attr("clip-path","url(foci66.html#clipIcon)");
+  
   force.start();
   for (var i in nodes) {
       nodes[i].cx = (nodes[i].taxon_id == null ? width/2 : centroids[centroids.map(function(d){return d.name;}).indexOf(nodes[i].taxon_id)].x);
