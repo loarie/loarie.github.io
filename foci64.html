@@ -68,7 +68,7 @@ body { font-family: sans-serif; font-size: 12px;}
 <script src="topojson.v1.min.js"></script>
 <script>
 var width = 490,
-    height = 550,
+    height = 450,
     diameter = width,
     padding = 1; // separation between nodes
 
@@ -274,14 +274,14 @@ var node = svg.selectAll(".node")
       .attr("class","img-circle")
       .attr("clip-path",function(d) { return d.fixed ? "url(foci64.html#clipIcon)" : "url(foci64.html#clipCircle)"; });
 
-      var box = svg.append("g").attr("class","box").attr("visibility","hidden");
+      var box = svg.append("g").attr("class","box");
       var common_name = box.append("text")
           .attr("class","common_name")
           .attr("x", diameter*.5)
           .attr("y", diameter*.83)
           .attr("dy", ".35em")
           .attr("text-anchor", "middle")
-        .text("A very long text box as a placeholder for a very long name");
+        .text("This chart shows observations grouped by species and by location");
       
       var login = box.append("text")
           .attr("class","login")
