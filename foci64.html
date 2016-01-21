@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <style>
 body {
-  background: #fcfcfa;
+  background: #fff;
 }
 
 .stroke {
@@ -67,7 +67,7 @@ body { font-family: sans-serif; font-size: 12px;}
 <script src="d3.geo.projection.v0.min.js"></script>
 <script src="topojson.v1.min.js"></script>
 <script>
-var width = 500,
+var width = 490,
     height = 550,
     diameter = width,
     padding = 1; // separation between nodes
@@ -100,9 +100,6 @@ function cleanArray(actual) {
 var raw_m = cleanArray(arrayUnique(taxon_array));
 var m = raw_m.length; // number of distinct clusters
 var data = dat.concat(raw_m.map(function(d){return {taxon_id: d, login: null}}));
-
-var diameter = 500,
-    format = d3.format(",d");
 
 var pack = hierarchy.pack()
         .size([diameter, diameter])
