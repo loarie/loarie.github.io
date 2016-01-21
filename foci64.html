@@ -165,7 +165,7 @@ var svg = d3.select("body").append("svg")
 
 var projection = d3.geo.kavrayskiy7()
     .scale(90)
-    .translate([width / 2, height / 2])
+    .translate([width / 2, height * 1.5 / 4])
     .precision(.1);
 
 var path = d3.geo.path()
@@ -278,7 +278,7 @@ var node = svg.selectAll(".node")
       var common_name = box.append("text")
           .attr("class","common_name")
           .attr("x", diameter*.5)
-          .attr("y", diameter)
+          .attr("y", diameter*.83)
           .attr("dy", ".35em")
           .attr("text-anchor", "middle")
         .text("A very long text box as a placeholder for a very long name");
@@ -286,7 +286,7 @@ var node = svg.selectAll(".node")
       var login = box.append("text")
           .attr("class","login")
           .attr("x", diameter*.5)
-          .attr("y", diameter+20)
+          .attr("y", diameter*.83+20)
           .attr("dy", ".35em")
           .attr("text-anchor", "middle");
       
