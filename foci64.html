@@ -261,11 +261,11 @@ var node = svg.selectAll(".node")
       if(d.fixed){
         var url = "http://www.inaturalist.org/observations?project_id=cormorant-week-jan-3-9&view=species&taxon_id=";
         url += d.taxon_id;
-        window.location = url;
+        window.open(url,'_blank');
       }else{
         var url = "http://www.inaturalist.org/observations/";
         url += d.obs_id;
-        window.location = url;
+        window.open(url,'_blank');
       }
     });
     
@@ -417,7 +417,7 @@ function go_species() {
       .on("click", function(d){
         var url = "http://www.inaturalist.org/observations?project_id=cormorant-week-jan-3-9&view=species&taxon_id=";
         url += d.taxon_id;
-        window.location = url;
+        window.open(url,'_blank');
       });
     
   newn.append("circle")
