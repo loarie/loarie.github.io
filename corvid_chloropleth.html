@@ -48,7 +48,7 @@ var svg = d3.select("body").append("svg")
 
 queue()
     .defer(d3.json, "us3.json")
-    .defer(d3.tsv, "county_species.tsv", function(d) { console.log(d.species); rateById.set(parseInt(d.id), d.species); })
+    .defer(d3.tsv, "county_crows.tsv", function(d) { console.log(d.species); rateById.set(parseInt(d.id), d.species); })
     .await(ready);
 
 function ready(error, us) {
