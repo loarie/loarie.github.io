@@ -2,6 +2,23 @@
 <meta charset="utf-8">
 <style>
 
+svg {
+  font: 10px sans-serif;
+}
+
+.caption {
+  font-weight: bold;
+}
+
+.key path {
+  display: none;
+}
+
+.key line {
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
 .counties {
   fill: none;
   stroke: #fff;
@@ -75,7 +92,7 @@
 <script>
 
 var width = 500,
-    height = 312;
+    height = 340;
 
 var rateById = d3.map();
 
@@ -83,8 +100,21 @@ var format = d3.format("0,000");
 
 //http://www.zonums.com/online/color_ramp/
 var color = d3.scale.threshold()
-    .domain([1, 10, 20, 50, 100, 200, 500, 1000, 5000, 10000])
-    .range(["#FFFFFF", "#FCF1EB", "#FAE4D7","#F7D6C3","#F5C9AF","#F3BB9B", "#F0AE88", "#EEA074", "#EC9360", "#E9854C", "#E77838", "#E56B25"]);
+    .domain([1, 3, 10, 30, 100, 300, 1000, 3000, 10000])
+    .range(["#FCF0E9", "#F9E1D3","#F7D2BD","#F4C3A7","#F2B592", "#EFA67C", "#EC9766", "#EA8850", "#E7793A", "#E56B25"]);
+
+// A position encoding for the key only.
+var x = d3.scale.log()
+    .domain([1, 55106])
+    .range([0, 140]);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .tickSize(13)
+    .tickValues([1,10,100,1000,10000])
+    .tickFormat(d3.format(".0f"));
+
 var projection = d3.geo.albersUsa()
     .scale(690)
     .translate([width / 2, height / 2]);
@@ -95,6 +125,30 @@ var path = d3.geo.path()
 var svg = d3.select("body").append("svg")
     .attr("width", width)
     .attr("height", height);
+    
+var g = svg.append("g")
+    .attr("class", "key")
+    .attr("transform", "translate(255,310)");
+
+g.selectAll("rect")
+    .data(color.range().map(function(d, i) {
+      return {
+        x0: i ? x(color.domain()[i - 1]) : x.range()[0],
+        x1: i < color.domain().length ? x(color.domain()[i]) : x.range()[1],
+        z: d
+      };
+    }))
+  .enter().append("rect")
+    .attr("height", 8)
+    .attr("x", function(d) { return d.x0; })
+    .attr("width", function(d) { return d.x1 - d.x0; })
+    .style("fill", function(d) { return d.z; });
+
+g.call(xAxis).append("text")
+    .attr("class", "caption")
+    .attr("y", -6)
+    .text("No. observations");
+
 
 queue()
     .defer(d3.json, "us3.json")
@@ -105,11 +159,6 @@ var tooltip = d3.select("body").append("div")
       .attr("class", "g-tooltip")
       .html("hey");
 
-
-var templates = {};
-templates['jst'] = {};
-
-           
 function ready(error, us) {
   if (error) throw error;
 
@@ -122,7 +171,9 @@ function ready(error, us) {
     .style("fill", function(d) {
       var data = rateById.get(d.id);
       if(data != null){
-        return color(data.obs_count);
+        if(data.obs_count != 0){
+          return color(data.obs_count);
+        }
       }
     })
     .attr("d", path)
@@ -152,8 +203,8 @@ function ready(error, us) {
     var position = d3.mouse(t);
     if(position[0]<(300/2)){
       position[0] = 0;
-    }else if(position[0]>(width - 300/2)){
-      position[0] = width - 300;
+    }else if(position[0]>(width - 300/2 - 15)){
+      position[0] = width - 300 - 15;
     }else{
       position[0] -= 300/2
     }
@@ -195,6 +246,8 @@ function ready(error, us) {
       
     tooltip.style("display", "none");
   }
+  
+  
   
 }
 
