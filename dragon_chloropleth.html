@@ -203,8 +203,8 @@ function ready(error, us) {
     var position = d3.mouse(t);
     if(position[0]<(300/2)){
       position[0] = 0;
-    }else if(position[0]>(width - 300/2 - 15)){
-      position[0] = width - 300 - 15;
+    }else if(position[0]>(width - 300/2 - 20)){
+      position[0] = width - 300 - 20;
     }else{
       position[0] -= 300/2
     }
