@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.counties {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 0.5;
+}
+
+.states {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+}
+
+.g-tooltip {
+  background-color: rgba(255,255,255,.95);
+  border: 1px solid #ddd;
+  padding: 8px;
+  position: absolute;
+  pointer-events: none;
+  font-family: nyt-franklin, Arial, sans-serif;
+  box-shadow: 1px 1px 1px #ddd;
+  display: none;
+  min-width: 300px;
+}
+  img {
+    border-top: 1px solid #ddd;
+      float: left;
+      margin-right: 10px;
+  }
+
+  .g-tooltip-title {
+    font-size: 13px;
+    margin: 1px 0 12px 0;
+  	float: left;
+  }
+  .g-tooltip-obs {
+    font-size: 13px;
+    margin: 1px 0 12px 0;
+  	float: right;
+  }
+
+  .g-note {
+    color: #999;
+    font-size: 11px;
+    margin-top: 8px;
+    max-width: 300px;
+    line-height: 1.2;
+  }
+  
+  .g-tooltip .th {
+    font-weight: normal;
+    color: #999;
+    text-align: left;
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 300;
+    padding-bottom: 3px;
+  }
+  
+  .g-tooltip .td {
+    font-size: 12px;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    margin: 0;
+  }
+
+</style>
+<body>
+<script src="d3.v3.min.js"></script>
+<script src="queue.v1.min.js"></script>
+<script src="topojson.v1.min.js"></script>
+<script>
+
+var width = 500,
+    height = 312;
+
+var rateById = d3.map();
+
+var format = d3.format("0,000");
+
+//http://www.zonums.com/online/color_ramp/
+var color = d3.scale.threshold()
+    .domain([1, 10, 20, 50, 100, 200, 500, 1000, 5000, 10000])
+    .range(["#FFFFFF", "#FCF1EB", "#FAE4D7","#F7D6C3","#F5C9AF","#F3BB9B", "#F0AE88", "#EEA074", "#EC9360", "#E9854C", "#E77838", "#E56B25"]);
+var projection = d3.geo.albersUsa()
+    .scale(690)
+    .translate([width / 2, height / 2]);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+queue()
+    .defer(d3.json, "us3.json")
+    .defer(d3.tsv, "critter_counties.tsv", function(d) { rateById.set(d.geoid, d); })
+    .await(ready);
+
+var tooltip = d3.select("body").append("div")
+      .attr("class", "g-tooltip")
+      .html("hey");
+
+
+var templates = {};
+templates['jst'] = {};
+
+           
+function ready(error, us) {
+  if (error) throw error;
+
+  svg.append("g")
+    .attr("class", "counties")
+    .selectAll("path")
+    .data(topojson.feature(us, us.objects.counties).features)
+    .enter().append("path")
+  .attr("class",function(d){d.name;})
+    .style("fill", function(d) {
+      var data = rateById.get(d.id);
+      if(data != null){
+        return color(data.obs_count);
+      }
+    })
+    .attr("d", path)
+    .on("mouseover", function(d) {
+      var t = this;
+      mouseover(t,rateById.get(d.id)) })
+    .on("mouseout", mouseout)
+    .on("click", function(d){
+      var url = rateById.get(d.id).url+'&view=species';
+      window.open(url,'_blank');
+    });
+
+  svg.append("path")
+      .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+      .attr("class", "states")
+      .attr("d", path);
+      
+  function mouseover(t,d) {
+    if(d.obs_count == 0){return;}
+    t.parentNode.appendChild(t);
+   
+    path = d3.select(t);
+    path
+      .style("stroke-width", "2px")
+      .style("stroke", "#000");
+    
+    var position = d3.mouse(t);
+    if(position[0]<(300/2)){
+      position[0] = 0;
+    }else if(position[0]>(width - 300/2)){
+      position[0] = width - 300;
+    }else{
+      position[0] -= 300/2
+    }
+    
+    if(position[1]<(height/2)){
+      position[1] += 50;
+    }else{
+      position[1] -= 170;
+    }
+    
+    html = "<div id='textbox'>\
+              <div class='g-tooltip-title'>" + d.county_name + "</div>\
+              <div class='g-tooltip-obs'><b>" + format(d.obs_count) + "</b> Obs.</div>\
+            </div>\
+            <div style='clear: both;'></div>\
+            <img src='" + d.photo + "' />\
+            <div>\
+              <div class='th'>Most Observed Species</div>\
+              <div class='td'>" + d.common_name + "</div>\
+              <div class='td'>(<i>" + d.sci_name + "</i>)</div>\
+              <div class='td'><b>" + d.critter_obs_count + "</b> observation" + (d.critter_obs_count > 1 ? "s" : "") + "</div>\
+          <div style='clear: both;'></div>\
+          <div class='g-note'>" + d.photo_attribution + "</div>";
+    
+    tooltip
+      .style("left", position[0] + "px")
+      .style("top", position[1] + "px")
+      .style("display", "block")
+      .html(html);
+  }
+  
+  function mouseout(d) {
+    this.parentNode.appendChild(this);
+  
+    path = d3.select(this);
+    path
+      .style("stroke-width", "0.5px")
+      .style("stroke", "#fff");
+      
+    tooltip.style("display", "none");
+  }
+  
+}
+
+d3.select(self.frameElement).style("height", height + "px");
+
+</script>
