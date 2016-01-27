@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.land {
+  fill: #e3e3df;
+}
+
+.border {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.g-tooltip {
+  background-color: rgba(255,255,255,.95);
+  border: 1px solid #ddd;
+  padding: 8px;
+  position: absolute;
+  pointer-events: none;
+  font-family: nyt-franklin, Arial, sans-serif;
+  box-shadow: 1px 1px 1px #ddd;
+  display: none;
+  min-width: 300px;
+}
+
+.g-tooltip-title {
+  font-size: 13px;
+  margin: 1px 0 5px 0;
+	float: left;
+}
+.g-tooltip-rank {
+  font-size: 12px;
+  margin: 1px 0 5px 10px;
+	float: right;
+}
+
+.g-tooltip-obs {
+  font-size: 12px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  margin: 0;
+}
+
+.legend circle {
+  fill: none;
+  stroke: #ccc;
+}
+
+.legend text {
+  fill: #777;
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.label {
+  fill: #777;
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+</style>
+<body>
+<script src="d3.v3.min.js" charset="utf-8"></script>
+<script src="topojson.v1.min.js"></script>
+<script src="albers-usa-pr-guam-samoa.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
+<script>
+
+
+var width = 500,
+    height = 340;
+
+var projection = albersUsaPr()
+    .scale(650)
+    .translate([width / 2, height / 2]);
+
+var path = d3.geo.path()
+    .projection(projection);
+
+var radius = d3.scale.sqrt()
+    .domain([0, 1e5])
+    .range([2, 50]);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+        
+var layer1 = svg.append('g');
+
+queue()
+    .defer(d3.json, "mod.json")
+    .defer(d3.json, "park_stats.json")
+    .await(ready);
+    
+var tooltip = d3.select("body").append("div")
+      .attr("class", "g-tooltip")
+      .html("hey");
+        
+function ready(error, mod, parks) {
+  if (error) return console.error(error);
+
+  layer1.selectAll(".land")
+    .data(topojson.feature(mod, mod.objects.countries).features)
+    .enter().append("path")
+    .attr("class", "land")
+    .attr("d", path);
+     
+  layer1.append("path")
+    .datum(topojson.mesh(mod, mod.objects.countries, function(a, b) { return a !== b; }))
+    .attr("d", path)
+    .attr("class", "border");
+  
+var labels = svg.append("text")
+    .attr("class", "label")
+    .attr("x", "118")
+    .attr("y", "270")
+    .attr("dy", "1.3em")
+    .text("Guam");
+    
+var labels = svg.append("text")
+    .attr("class", "label")
+    .attr("x", "145")
+    .attr("y", "250")
+    .attr("dy", "1.3em")
+    .text("Am. Sam.");
+    
+var labels = svg.append("text")
+    .attr("class", "label")
+    .attr("x", "475")
+    .attr("y", "290")
+    .attr("dy", "1.3em")
+    .text("PR & Vir. Is.");
+    
+  svg.selectAll("circle")
+		.data(parks).enter()
+		.append("circle")
+    .attr("class", function(d,i) { return "parks_" + d.id; })
+    .style("fill-opacity", 0.7)
+    .style("stroke", "#fff")
+    .style("stroke-width", ".5px")
+		.attr("cx", function (d) { return projection([d.lon,d.lat])[0]; })
+		.attr("cy", function (d) { return projection([d.lon,d.lat])[1]; })
+    .attr("r", function (d) { return radius(d.num); })
+    .attr("name", function (d) { return d.name; })
+    .attr("fill", function (d) { return d.num > 0 ? "#e56c25" : "#77797c" });
+
+  var voronoi = d3.geom.voronoi()
+  	.x(function(d) { return projection([d.lon,d.lat])[0]; })
+  	.y(function(d) { return projection([d.lon,d.lat])[1]; })
+  	.clipExtent([[0, 0], [width, height]]);
+
+  svg.selectAll(".voronoi")
+  	.data(voronoi(parks)) //Use vononoi() with your dataset inside
+  	.enter().append("path")
+  	.attr("d", function(d, i) { return "M" + d.join("L") + "Z"; })
+  	.datum(function(d, i) { return d.point; })
+          //Give each cell a unique class where the unique part corresponds to the circle classes
+  	.attr("class", function(d,i) { return "voronoi_" + d.id; })
+  	//.style("stroke", "#2074A0") //If you want to look at the cells
+  	.style("fill", "none")
+    //.style("fill-opacity", 0.4)
+  	.style("pointer-events", "all")
+  	.on("mouseover", showTooltip )
+  	.on("mouseout",  removeTooltip)
+    .on("click", function(d){
+        var url = "http://www.inaturalist.org/observations?place_id=";
+        url += d.id;
+        window.location = url;
+    });
+    
+    function ordinal_suffix_of(i) {
+        var j = i % 10,
+            k = i % 100;
+        if (j == 1 && k != 11) {
+            return i + "st";
+        }
+        if (j == 2 && k != 12) {
+            return i + "nd";
+        }
+        if (j == 3 && k != 13) {
+            return i + "rd";
+        }
+        return i + "th";
+    }
+    
+    //Example of a default tooltip where you make use of "this"
+    //Show the tooltip on the hovered over element
+    function showTooltip(d) {
+      var element = d3.selectAll(".parks_"+d.id);
+      element.style("stroke", "#000")
+      .style("stroke-width", "2px");
+	
+      var position = [parseInt(element.attr("cx")),parseInt(element.attr("cy"))];
+      console.log(position);
+      if(position[0]<(300/2)){
+        position[0] = 0;
+      }else if(position[0]>(width - 300/2 - 2)){
+        position[0] = width - 300 - 20;
+      }else{
+        position[0] -= 300/2
+      }
+      
+      if(position[1]<(height/2)){
+        position[1] += 50;
+      }else{
+        position[1] -= 80;
+      }
+      
+html = "<div id='textbox'>\
+          <div class='g-tooltip-title'>" + d.name + "</div>"
+if(d.num>0){
+  html += "<div class='g-tooltip-rank'><b>" + ordinal_suffix_of(d.rank) + "</b> place</div>"
+}
+html += "</div>\
+        <div style='clear: both;'></div>\
+        <div class='g-tooltip-obs'><b>" + d.num + "</b> observations</div>";
+
+tooltip
+  .style("left", position[0] + "px")
+  .style("top", position[1] + "px")
+  .style("display", "block")
+  .html(html);
+    
+      
+    }//function showTooltip
+
+    //Hide the tooltip when the mouse moves away
+    function removeTooltip(d) {
+      var element = d3.selectAll(".parks_"+d.id);
+      element.style("stroke", "#fff")
+      .style("stroke-width", ".5px");
+      
+       tooltip.style("display", "none");
+    }//function removeTooltip
+    
+    
+  var legend = svg.append("g")
+      .attr("class", "legend")
+      .attr("transform", "translate(" + (width - 200) + "," + (height - 20) + ")")
+    .selectAll("g")
+      .data([1e2,1e4])
+    .enter().append("g");
+
+  legend.append("circle")
+      .attr("cy", function(d) { return -radius(d); })
+      .attr("r", radius);
+
+  legend.append("text")
+      .attr("y", function(d,i) { return i==0 ? (-6.5*radius(d)) : (-2 * radius(d)); })
+      .attr("dy", "1.3em")
+      .text(d3.format(".1s"));
+      
+}
+
+
+</script>
