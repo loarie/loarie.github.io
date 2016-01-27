@@ -71,6 +71,8 @@
 var width = 500,
     height = 340;
 
+var format = d3.format("0,000");
+
 var projection = albersUsaPr()
     .scale(650)
     .translate([width / 2, height / 2]);
@@ -166,7 +168,7 @@ var labels = svg.append("text")
     .on("click", function(d){
         var url = "http://www.inaturalist.org/observations?place_id=";
         url += d.id;
-        window.location = url;
+        window.open(url,'_blank');
     });
     
     function ordinal_suffix_of(i) {
@@ -214,7 +216,7 @@ if(d.num>0){
 }
 html += "</div>\
         <div style='clear: both;'></div>\
-        <div class='g-tooltip-obs'><b>" + d.num + "</b> observations</div>";
+        <div class='g-tooltip-obs'><b>" + format(d.num) + "</b> observations</div>";
 
 tooltip
   .style("left", position[0] + "px")
