@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
@@ -67,7 +68,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
 <script>
 
-
 var width = 500,
     height = 340;
 
@@ -85,9 +85,16 @@ var radius = d3.scale.sqrt()
     .range([2, 50]);
 
 var svg = d3.select("body").append("svg")
-    .attr("width", width)
-    .attr("height", height);
-        
+    .attr("viewBox", "0 0 " + width + " " + height)
+    .attr("preserveAspectRatio", "xMinYMin meet");
+
+svg.append("rect").attr("x", 0)
+  .attr("class","extent")
+  .attr("y", 0)
+  .style("fill","none")
+  .attr("width", width)
+  .attr("height", height);
+       
 var layer1 = svg.append('g');
 
 queue()
@@ -190,20 +197,25 @@ var labels = svg.append("text")
     //Show the tooltip on the hovered over element
     function showTooltip(d) {
       var element = d3.selectAll(".parks_"+d.id);
+      var extent = d3.selectAll(".extent");
       element.style("stroke", "#000")
       .style("stroke-width", "2px");
-	
-      var position = [parseInt(element.attr("cx")),parseInt(element.attr("cy"))];
-      console.log(position);
+	    
+      //3 ways to do this
+      //var position = [parseInt(element.attr("cx")),parseInt(element.attr("cy"))]; //unresponsive using an element
+      //var position = [d3.event.pageX,d3.event.pageY];  //using the mouse - responsive
+      var position = [element.position().left, element.position().top];  //using an element - responsive (extended prototype)
+      console.log(extent.position());
+      
       if(position[0]<(300/2)){
         position[0] = 0;
-      }else if(position[0]>(width - 300/2 - 2)){
-        position[0] = width - 300 - 20;
+      }else if(position[0]>(extent.position().width - 300/2 - 2)){
+        position[0] = extent.position().width - 300 - 20;
       }else{
         position[0] -= 300/2
       }
       
-      if(position[1]<(height/2)){
+      if(position[1]<(extent.position().height/2)){
         position[1] += 50;
       }else{
         position[1] -= 80;
@@ -254,6 +266,30 @@ tooltip
       .text(d3.format(".1s"));
       
 }
+
+d3.selection.prototype.position = function() {
+
+    var el = this.node();
+    var elPos = el.getBoundingClientRect();
+    var vpPos = getVpPos(el);
+
+    function getVpPos(el) {
+        if(el.parentNode.nodeName === 'svg') {
+            return el.parentNode.getBoundingClientRect();
+        }
+        return getVpPos(el.parentNode);
+    }
+
+    return {
+        top: elPos.top - vpPos.top,
+        left: elPos.left - vpPos.left,
+        width: elPos.width,
+        bottom: elPos.bottom - vpPos.top,
+        height: elPos.height,
+        right: elPos.right - vpPos.left
+    };
+
+};
 
 d3.select(self.frameElement).style("height", height + "px");
 
