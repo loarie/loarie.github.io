@@ -59,7 +59,7 @@ svg {
         
 var margin = {top: 50, right: 50, bottom: 50, left: 50},
     width = 500 - margin.left - margin.right,
-    height = 330 - margin.top - margin.bottom;
+    height = 200 - margin.top - margin.bottom;
 
 var x2 = d3.scale.linear()
   .domain( [1, 5] )
@@ -87,7 +87,7 @@ function renderGraph(error, nodes) {
     .style("fill", "#f4e6d5")
     .style("fill-opacity", "0")
     .attr("r", function(d) { return Math.pow(d.radius,2)/5 } )
-    .attr("transform", function(d) { return "translate(" + x2(d.rank) + "," + 2.4*height/4 + ")"; });
+    .attr("transform", function(d) { return "translate(" + x2(d.rank) + "," + 3.5*height/4 + ")"; });
   
   var obs_text = svg.selectAll(".obs_text")
     .data(nodes)
@@ -95,7 +95,7 @@ function renderGraph(error, nodes) {
     .attr("class","obs_text")
     .filter(function(d) {return d.rank <= 5;})
     .attr("x", function(d) { return x2(d.rank) } )
-    .attr("y", function(d) { return 2.4*height/4 } )
+    .attr("y", function(d) { return 3.5*height/4 } )
     .text(function(d) { return d.obs } )
     .attr("visibility","hidden");
   
@@ -105,7 +105,7 @@ function renderGraph(error, nodes) {
     .attr("class","login_text")
     .filter(function(d) {return d.rank <= 5;})
     .attr("x", function(d) { return x2(d.rank) } )
-    .attr("y", function(d) { return 1.7*height/4 } )
+    .attr("y", function(d) { return 2.5*height/4 } )
     .text(function(d) { return d.login } )
     .attr("visibility","hidden");
   
