@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Dsnap - Charts</title>
+	<style>
+	#xaxis .domain {
+		fill:none;
+		stroke:#000;
+	}
+	#xaxis text, #yaxis text {
+		font: 12px sans-serif;
+	}
+  .bar:hover{
+    fill: steelblue;
+  }
+	</style>
+</head>
+<body>
+	<div id="wrapper">
+	</div>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	<script>
+  
+  d3.csv("calendardat.csv", function(error, data) {
+    
+    if (error) throw error;
+    
+    var depth = 1600;
+    var label_width = 200;
+    
+    var ids = data.map(function(d){
+       return d["id"]
+    });
+    
+    var categories = data.map(function(d){
+       return d["name"]
+    });
+    
+    var st = data.map(function(d){
+       return d["st"]
+    });
+    
+    var en = data.map(function(d){
+       return d["en"] - d["st"] + 5
+    });
+    
+		var colors = ["#e56c25"];
+
+		var grid = d3.range(13).map(function(i){
+			return {'x1':0,'y1':0,'x2':0,'y2':depth};
+		});
+
+    var mdays = [0,0,31,60,91,121,152,182,213,244,274,305,335];
+		var tickVals = grid.map(function(d,i){
+			if(i>0){ return mdays[i]+12; }
+			else if(i===0){ return "100";}
+		});
+
+		var xscale = d3.scale.linear()
+						.domain([0,365])
+						.range([0,600]);
+
+		var yscale = d3.scale.linear()
+						.domain([0,categories.length])
+						.range([0,depth]);
+
+		var colorScale = d3.scale.quantize()
+						.domain([0,categories.length])
+						.range(colors);
+            
+    var width = 800,
+        height = depth+200;
+            
+		var canvas = d3.select('body')
+						.append('svg')
+            .attr("viewBox", "0 0 " + width + " " + height)
+            .attr("preserveAspectRatio", "xMinYMin meet");
+						
+
+		var grids = canvas.append('g')
+						  .attr('id','grid')
+						  .attr('transform','translate('+label_width+',10)')
+						  .selectAll('line')
+						  .data(grid)
+						  .enter()
+						  .append('line')
+            .attr({'x1':function(d,i){ return xscale(mdays[i]); },
+								 'y1':function(d){ return d.y1; },
+            'x2':function(d,i){ return xscale(mdays[i]); },
+								 'y2':function(d){ return d.y2; },
+							})
+						  .style({'stroke':'#adadad','stroke-width':'1px'});
+
+		var	xAxis = d3.svg.axis();
+			xAxis
+				.orient('bottom')
+				.scale(xscale)
+        .tickFormat(function(d,i) { return ["","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][i]; })
+				.tickValues(tickVals);
+
+		var	yAxis = d3.svg.axis();
+			yAxis
+				.orient('left')
+				.scale(yscale)
+				.tickSize(2)
+				.tickFormat(function(d,i){ 
+          if(categories[i].length > 30)
+            return categories[i].substring(0,30)+'...';
+          else
+            return categories[i];                       
+          })
+				.tickValues(d3.range(categories.length));
+
+		var y_xis = canvas.append('g')
+						  .attr("transform", "translate("+label_width+",15)")
+						  .attr('id','yaxis')
+						  .call(yAxis);
+
+		var x_xis = canvas.append('g')
+						  .attr("transform", "translate("+label_width+","+(depth+10)+")")
+						  .attr('id','xaxis')
+						  .call(xAxis);
+              
+    var vert = canvas.append('g')
+							.attr("transform", "translate("+label_width+",10)")
+							.attr('id','vert')
+              .append('rect')
+          .attr('height','1600')
+          .attr('x',xscale(140))
+					.attr('y',0)
+          .attr('width',10)
+					.style({'fill':'#e3e3df'});
+
+		var chart = canvas.append('g')
+							.attr("transform", "translate("+label_width+",10)")
+							.attr('id','bars')
+							.selectAll('rect')
+							.data(st)
+							.enter()
+							.append('rect')
+							.attr('height',10)
+							.attr({'x':function(d) {return xscale(d); },'y':function(d,i){ return yscale(i); }})
+              .attr("class","bar")
+							.style('fill',function(d,i){ return colorScale(i); })
+							.attr('width',function(d){ return 0; })
+              .style("cursor", "pointer")
+              .on("click", function(d,i) {
+                    document.location.href = "https://www.inaturalist.org/projects/" + ids[i];
+                  })
+              .on("mouseover", function(a){d3.select(this).style("fill","yellow")})
+              .on("mouseout", function(a,i){d3.select(this).style("fill",colorScale(i))})
+              .append("title")
+              .text(function(d,i) { return categories[i]; });
+
+
+		var transit = d3.select("svg").selectAll("rect.bar")
+						    .data(en)
+						    .transition()
+						    .duration(depth) 
+              .attr("width", function(d) {return xscale(d); });
+
+		
+  });
+	</script>
+</body>
+</html>
