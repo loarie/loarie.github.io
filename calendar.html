@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Dsnap - Charts</title>
 	<style>
 	#xaxis .domain {
 		fill:none;
@@ -16,8 +15,6 @@
 	</style>
 </head>
 <body>
-	<div id="wrapper">
-	</div>
 	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 	<script>
   
@@ -69,7 +66,7 @@
 						.range(colors);
             
     var width = 800,
-        height = depth+200;
+        height = depth+30;
             
 		var canvas = d3.select('body')
 						.append('svg')
