@@ -142,7 +142,9 @@
 							.attr('width',function(d){ return 0; })
               .style("cursor", "pointer")
               .on("click", function(d,i) {
-                    document.location.href = "https://www.inaturalist.org/projects/" + ids[i];
+                    var url = "https://www.inaturalist.org/projects/";
+                    url += ids[i];
+                    window.open(url,'_blank');
                   })
               .on("mouseover", function(a){d3.select(this).style("fill","yellow")})
               .on("mouseout", function(a,i){d3.select(this).style("fill",colorScale(i))})
