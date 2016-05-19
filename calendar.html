@@ -148,7 +148,7 @@
 							.attr('width',function(d){ return 0; })
               .style("cursor", "pointer")
               .on("click", function(d,i) {
-                if(!window.mobilecheck){
+                if(!window.mobilecheck()){
                     var url = "https://www.inaturalist.org/projects/";
                     url += ids[i];
                     window.open(url,'_blank');
