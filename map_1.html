@@ -129,7 +129,7 @@ d3.json("map_" + place_id + ".json", function(error, us) {
       .attr("class", "border");
   
 
-  d3.json("user_mapp_" + place_id + ".json", function(error, data) {
+  d3.json("user_map_" + place_id + ".json", function(error, data) {
     
     var node = svg.selectAll("g")
              .data(data)
