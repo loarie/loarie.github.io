@@ -28,21 +28,26 @@
 }
 
 .g-tooltip-title {
-  font-size: 13px;
+  font-size: 12px;
   margin: 1px 0 5px 0;
 	float: left;
-}
-.g-tooltip-rank {
-  font-size: 12px;
-  margin: 1px 0 5px 10px;
-	float: right;
+  font: sans-serif;
 }
 
 .g-tooltip-obs {
-  font-size: 12px;
+  font-size: 14px;
   padding-top: 3px;
   padding-bottom: 3px;
-  margin: 0;
+  margin: 1px 0 5px 0;
+  padding-top: 3px;
+  font: sans-serif;
+}
+
+.g-tooltip-topobserver {
+  text-transform: uppercase;
+  font: 10px sans-serif;
+  margin: 1px 0 5px 0;
+  padding-top: 6px;
 }
 
 .label {
@@ -63,6 +68,8 @@ window.mobilecheck = function() {
     return check;
 }
 
+var place_id = 6793; /////////////////////////////////////////////////////////
+
 var lat_sep = 1.657418181818182;
 var lng_sep = 2.8906454545454547;
 
@@ -70,7 +77,7 @@ var randomlat = d3.randomUniform(0, 3*lat_sep/10);
 var randomlng = d3.randomUniform(0, 3*lng_sep/10);
 
 var x = d3.scale.log()
-    .domain( [100,75469] ) //75469
+    .domain( [1000,75469] ) //75469
     .range( [5,25] );
 
 var width = 700,
@@ -78,9 +85,9 @@ var width = 700,
 
 var format = d3.format("0,000");
 
-var center = [-102.24113492150693,23.905735234147066];
-var offset = [350,250]; 
-var scale = 1200;
+var center = [-102.24113492150693,23.905735234147066];  /////////////////////////////////////////////////////////
+var offset = [350,250];  /////////////////////////////////////////////////////////
+var scale = 1200;  /////////////////////////////////////////////////////////
 
 var projection = d3.geo.mercator().center(center)
         .scale(scale).translate(offset);
@@ -105,7 +112,7 @@ var tooltip = d3.select("body").append("div")
       .attr("class", "g-tooltip")
       .html("hey");
       
-d3.json("mx.json", function(error, us) {
+d3.json("map_" + place_id + ".json", function(error, us) {
   if (error) throw error;
 
   layer1.selectAll("path")
@@ -122,7 +129,7 @@ d3.json("mx.json", function(error, us) {
       .attr("class", "border");
   
 
-  d3.json("user_map_6793.json", function(error, data) {
+  d3.json("user_map_" + place_id + ".json", function(error, data) {
     
     var node = svg.selectAll("g")
              .data(data)
@@ -257,10 +264,12 @@ d3.json("mx.json", function(error, us) {
          }
       
    html = "<div id='textbox'>\
-             <div class='g-tooltip-title'>@" + d.user.login + "</div>"
+            <div class='g-tooltip-obs'><b>" + format(d.obs_count) + "</b> observaciones</div>"
    html += "</div>\
            <div style='clear: both;'></div>\
-           <div class='g-tooltip-obs'><b>" + format(d.obs_count) + "</b> observaciones</div>";
+           <div class='g-tooltip-topobserver'>TOP OBSERVER</div>\
+           <div style='clear: both;'></div>\
+           <div class='g-tooltip-title'>@" + d.user.login + "</div>";
 
    tooltip
      .style("left", position[0] + "px")

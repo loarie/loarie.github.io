@@ -78,7 +78,7 @@ body {
     return check;
   }
 
-var place_id = 6744;
+var place_id = 6793;
     
 var margin = {top: 20, right: 100, bottom: 30, left: 50},
     width = 500 - margin.left - margin.right,
@@ -113,7 +113,7 @@ var svg = d3.select("body").append("svg")
     .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.csv("user_graph_6793.csv", function(error, data) {
+d3.csv("user_graph_" + place_id + ".csv", function(error, data) {
   if (error) throw error;
 
   data.forEach(function(d) {
@@ -181,7 +181,7 @@ d3.csv("user_graph_6793.csv", function(error, data) {
       .attr("width", function(d) { return 7*2; })
       .attr("height", function(d) { return 7*2; })
       .attr("class","img-circle")
-      .attr("clip-path",function(d) { return "url(user_graph_6793.html#clipCircle)"; });
+      .attr("clip-path",function(d) { return "url(user_graph_" + place_id + ".html#clipCircle)"; });
 
   focus.append("text")
       .attr("class","title")
