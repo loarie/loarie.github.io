@@ -212,7 +212,7 @@ d3.json("map_" + place_id + ".json", function(error, us) {
     	.on("mouseout",  removeTooltip)
       .on("click", function(d){
         if(!window.mobilecheck()){
-          var url = "https://www.naturalista.mx/observations?verifiable=true&nelat="+d.nelat+"&nelng="+d.nelng+"&swlat="+d.swlat+"&swlng="+d.swlng
+          var url = "http://www.naturalista.mx/observations?verifiable=true&nelat="+d.nelat+"&nelng="+d.nelng+"&swlat="+d.swlat+"&swlng="+d.swlng
           window.open(url);
         }
       });
@@ -267,7 +267,7 @@ d3.json("map_" + place_id + ".json", function(error, us) {
             <div class='g-tooltip-obs'><b>" + format(d.obs_count) + "</b> observaciones</div>"
    html += "</div>\
            <div style='clear: both;'></div>\
-           <div class='g-tooltip-topobserver'>TOP OBSERVER</div>\
+           <div class='g-tooltip-topobserver'>OBSERVADOR SUPERIOR</div>\
            <div style='clear: both;'></div>\
            <div class='g-tooltip-title'>@" + d.user.login + "</div>";
 
