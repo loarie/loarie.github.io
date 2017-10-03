@@ -56,8 +56,8 @@ svg {
 
 </style>
 <body>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-<script src="http://d3js.org/queue.v1.min.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://d3js.org/queue.v1.min.js"></script>
 <script>
 
 window.mobilecheck = function() {
@@ -79,7 +79,7 @@ var x = d3.scale.linear()
     .range( [margin.left+40, width + margin.right ] );
 
 var z = d3.scale.log()
-    .domain([4472, 160054]) //////////////////////////////////////////////////////////////////////
+    .domain([4474, 160131]) //////////////////////////////////////////////////////////////////////
     .range([25, 60]);
     
 var svg = d3.select("body").append("svg") 
@@ -178,7 +178,7 @@ function renderGraph(error, nodes, flags) {
     	.on("mouseout",  removeTooltip)
       .on("click", function(d){
         if(!window.mobilecheck()){
-          var url = "https://www.inaturalist.org/observations?place_id="+place_id+"verifiable=true&taxon_ids="+d.taxon_id_string+"&view=identifiers"
+          var url = "http://www.naturalista.mx/observations?place_id="+place_id+"verifiable=true&taxon_ids="+d.taxon_id_string+"&view=identifiers"
           window.open(url);
         }
       });
@@ -232,12 +232,12 @@ function renderGraph(error, nodes, flags) {
          }
       
  html = "<div id='textbox'>\
-          <div class='g-tooltip-heading'>" + d.group + "</div>"
+          <div class='g-tooltip-heading'>" + d.spanish_group + "</div>"
  html += "</div>\
          <div style='clear: both;'></div>\
-         <div class='g-tooltip-obs'><b>" + format(d.obs_count) + "</b> observations</div>\
+         <div class='g-tooltip-obs'><b>" + format(d.obs_count) + "</b> observaciones</div>\
          <div style='clear: both;'></div>\
-         <div class='g-tooltip-topobserver'>TOP Identifier</div>\
+         <div class='g-tooltip-topobserver'>OBSERVADOR SUPERIOR</div>\
          <div style='clear: both;'></div>\
          <div class='g-tooltip-title'>@" + d.user.login + "</div>";
   
