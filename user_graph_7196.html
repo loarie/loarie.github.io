@@ -78,7 +78,24 @@ body {
     return check;
   }
 
-var place_id = 7196;
+  var es_ES = {
+          "decimal": ",",
+          "thousands": ".",
+          "grouping": [3],
+          "currency": ["€", ""],
+          "dateTime": "%a %b %e %X %Y",
+          "date": "%d/%m/%Y",
+          "time": "%H:%M:%S",
+          "periods": ["AM", "PM"],
+          "days": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+          "shortDays": ["Dom", "Lun", "Mar", "Mi", "Jue", "Vie", "Sab"],
+          "months": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+          "shortMonths": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+      };
+
+      var ES = d3.locale(es_ES);
+
+var place_id = 7196; /////////////////////
     
 var margin = {top: 20, right: 100, bottom: 30, left: 50},
     width = 500 - margin.left - margin.right,
@@ -86,8 +103,8 @@ var margin = {top: 20, right: 100, bottom: 30, left: 50},
 
 var parseDate = d3.time.format("%b %Y").parse,
     bisectDate = d3.bisector(function(d) { return d.date; }).left,
-    formatValue = d3.format(",f"),
-    formatDate = d3.time.format("%b %Y");
+    formatValue = ES.numberFormat(",."),
+    formatDate = ES.timeFormat("%b %Y");
 
 var x = d3.time.scale()
     .range([0, width]);
@@ -101,7 +118,8 @@ var xAxis = d3.svg.axis()
 
 var yAxis = d3.svg.axis()
     .scale(y)
-    .orient("left");
+    .orient("left")
+        .tickFormat(formatValue);
 
 var line = d3.svg.line()
     .x(function(d) { return x(d.date); })
@@ -141,7 +159,7 @@ d3.csv("user_graph_" + place_id + ".csv", function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("No. observations / month");
+      .text("Nº de observaciones / mes");
 
   svg.append("path")
       .datum(data)
@@ -164,7 +182,7 @@ d3.csv("user_graph_" + place_id + ".csv", function(error, data) {
       .attr("class","rect")
       .attr("x", 3)
       .attr("y", 3)
-      .attr("width", 70)
+      .attr("width", 100)
       .attr("height", 50);
   
   focus.append("clipPath")
@@ -227,7 +245,7 @@ d3.csv("user_graph_" + place_id + ".csv", function(error, data) {
         d = x0 - d0.date > d1.date - x0 ? d1 : d0;
         console.log(d);
         if(!window.mobilecheck()){
-          var url = "http://www.inaturalist.org/observations?verifiable=true&created_d1="+d.raw_date+"&created_d2="+d.end_date+"&place_id="+place_id;
+          var url = "http://naturalista.biodiversidad.co/observations?verifiable=true&created_d1="+d.raw_date+"&created_d2="+d.end_date+"&place_id="+place_id;
           window.open(url);
         }
       });
@@ -243,12 +261,12 @@ d3.csv("user_graph_" + place_id + ".csv", function(error, data) {
     var text_title = focus.select("text.title")
       text_title.text(formatDate(d.date));
     var text_obscount = focus.select("text.obscount")
-      text_obscount.text( formatValue(d.count) + " obs");
+      text_obscount.text( formatValue(d.count) + " observaciones");
     var text_login = focus.select("text.login")
     var text_topobserver = focus.select("text.topobserver")
     if(d.count>0){
       text_login.text( (d.most_login.length > 15) ? "@"+d.most_login.substring(0,12)+'...' : "@"+d.most_login );
-      text_topobserver.text( "TOP OBSERVER" );
+      text_topobserver.text( "OBSERVADOR SUPERIOR" );
     }else{
       text_login.text("");
       text_topobserver.text("");
