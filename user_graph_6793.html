@@ -118,7 +118,8 @@ var xAxis = d3.svg.axis()
 
 var yAxis = d3.svg.axis()
     .scale(y)
-    .orient("left");
+    .orient("left")
+        .tickFormat(formatValue);
 
 var line = d3.svg.line()
     .x(function(d) { return x(d.date); })
@@ -158,7 +159,7 @@ d3.csv("user_graph_" + place_id + ".csv", function(error, data) {
       .attr("y", 6)
       .attr("dy", ".71em")
       .style("text-anchor", "end")
-      .text("No. observations / month");
+      .text("Nº de observaciones / mes");
 
   svg.append("path")
       .datum(data)
