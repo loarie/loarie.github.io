@@ -81,7 +81,7 @@ var x = d3.scale.log()
     .range( [5,25] );
 
 var width = 500, /////////////////////////////////////////////////////////
-    height = 650; /////////////////////////////////////////////////////////
+    height = 520; /////////////////////////////////////////////////////////
 
 var format = d3.format("0,000");
 
@@ -212,7 +212,7 @@ d3.json("map_" + place_id + ".json", function(error, us) {
     	.on("mouseout",  removeTooltip)
       .on("click", function(d){
         if(!window.mobilecheck()){
-          var url = "https://www.naturalista.mx/observations?verifiable=true&nelat="+d.nelat+"&nelng="+d.nelng+"&swlat="+d.swlat+"&swlng="+d.swlng
+          var url = "http://www.inaturalist.ca/observations?verifiable=true&nelat="+d.nelat+"&nelng="+d.nelng+"&swlat="+d.swlat+"&swlng="+d.swlng
           window.open(url);
         }
       });
