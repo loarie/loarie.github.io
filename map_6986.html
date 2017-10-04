@@ -212,7 +212,7 @@ d3.json("map_" + place_id + ".json", function(error, us) {
     	.on("mouseout",  removeTooltip)
       .on("click", function(d){
         if(!window.mobilecheck()){
-          var url = "http://naturewatch.org.nz/observations?verifiable=true&nelat="+d.nelat+"&nelng="+d.nelng+"&swlat="+d.swlat+"&swlng="+d.swlng
+          var url = "https://www.inaturalist.org/observations?verifiable=true&nelat="+d.nelat+"&nelng="+d.nelng+"&swlat="+d.swlat+"&swlng="+d.swlng
           window.open(url);
         }
       });
