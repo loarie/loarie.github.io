@@ -100,8 +100,7 @@ var formatSuffix = d3.format(".1s");
   
 queue()
 	.defer(d3.json, "identifiers_" + place_id + ".json")
-  .defer(d3.tsv, "flags4.tsv", function(d) { urlByPlace_id.set(d.place_id, d.url); ratioByPlace_id.set(d.place_id, d.ratio);})
-	.await(renderGraph);
+  .await(renderGraph);
 
 var tooltip = d3.select("body").append("div")
       .attr("class", "g-tooltip")
@@ -179,7 +178,7 @@ function renderGraph(error, nodes, flags) {
     	.on("mouseout",  removeTooltip)
       .on("click", function(d){
         if(!window.mobilecheck()){
-          var url = "https://www.inaturalist.org/observations?place_id="+place_id+"verifiable=true&taxon_ids="+d.taxon_id_string+"&view=identifiers"
+          var url = "http://www.inaturalist.ca/observations?place_id="+place_id+"verifiable=true&taxon_ids="+d.taxon_id_string+"&view=identifiers"
           window.open(url);
         }
       });
