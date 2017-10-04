@@ -179,7 +179,7 @@ function renderGraph(error, nodes, flags) {
     	.on("mouseout",  removeTooltip)
       .on("click", function(d){
         if(!window.mobilecheck()){
-          var url = "http://naturewatch.org.nz/observations?place_id="+place_id+"verifiable=true&taxon_ids="+d.taxon_id_string+"&view=identifiers"
+          var url = "https://www.inaturalist.org/observations?place_id="+place_id+"verifiable=true&taxon_ids="+d.taxon_id_string+"&view=identifiers"
           window.open(url);
         }
       });
