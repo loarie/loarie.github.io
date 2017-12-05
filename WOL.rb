@@ -1,6 +1,7 @@
 ###
 #
-# This ruby script loops compares a WOL CSV downloaded from https://www.pugetsound.edu/academics/academic-resources/slater-museum/biodiversity-resources/dragonflies/world-odonata-list2/
+# This ruby script loops compares a WOL CSV downloaded from
+# https://www.pugetsound.edu/files/resources/world-odonata-214.xls
 # with Odonata extant species on iNaturalist
 #
 ###
@@ -98,7 +99,7 @@ end
 # These are species in WOL, not in iNat
 not_in_wol = ( inat_names.map{ |row| row[:name] } - wol_names.map{ |a| a[:species] } )
 if not_in_wol.count > 0
-  puts "These are species in WOL, not in iNat..."
+  puts "These are species in iNat, not in WOL..."
   not_in_wol.map{ |name| puts "\t" + name }
 end
 
