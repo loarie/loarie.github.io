@@ -96,7 +96,7 @@ if not_in_inat.count > 0
   not_in_inat.map{ |name| puts "\t" + name }
 end
 
-# These are species in WOL, not in iNat
+# These are species in iNat, not in WOL
 not_in_wol = ( inat_names.map{ |row| row[:name] } - wol_names.map{ |a| a[:species] } )
 if not_in_wol.count > 0
   puts "These are species in iNat, not in WOL..."
