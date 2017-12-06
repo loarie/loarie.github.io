@@ -135,7 +135,7 @@ discrepancies = [
   {asw: ["Hyliola sierra"], inat: ["Pseudacris sierra"]},
   {asw: ["Eurycea quadridigitata","Eurycea hillisi","Eurycea paludicola","Eurycea sphagnicola"], inat: ["Eurycea quadridigitata"]},
   {asw: ["Eurycea spelaea", "Eurycea nerea", "Eurycea braggi"], inat: ["Eurycea spelaea"]},  
-  {asw: ["Bombina variagata"], inat: ["Bombina pachypus","Bombina variagata"]},
+  {asw: ["Bombina variegata"], inat: ["Bombina pachypus","Bombina variegata"]},
   {asw: ["Lissotriton graecus","Lissotriton vulgaris","Lissotriton meridionalis"], inat: ["Lissotriton vulgaris"]},
   {asw: ["Smilisca manisorum","Smilisca baudin"], inat: ["Smilisca baudin"]},
   {asw: ["Megophrus koui"], inat: ["Megophrys koui"]}
