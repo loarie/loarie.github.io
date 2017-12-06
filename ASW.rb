@@ -144,7 +144,7 @@ discrepancies = [
 # These are species in iNat, not in ASW
 not_in_asw = ( inat_names.map{ |a| a[:name] } - asw_data.map{ |row| row[:name] } )
 if not_in_asw.count > 0
-  puts "These are species in the iNat, not in asw..."
+  puts "These are species in the iNat, not in ASW..."
   not_in_asw.each do |name|
     #ignore discrepancies
     unless discrepancies.map{|row| row[:ref]}.flatten.include? name
