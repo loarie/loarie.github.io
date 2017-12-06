@@ -98,53 +98,53 @@ end
 
 #These are intentional discrepancies between ASW and whats on iNat
 discrepancies = [
-  {asw: ["Ichthophis cardamomensis"], ref: ["Ichthyophis cardamomensis"]},
-  {asw: ["Ichthophis catlocensis"], ref: ["Ichthyophis catlocensis"]},
-  {asw: ["Ichthophis chaloensis"], ref: ["Ichthyophis chaloensis"]},
-  {asw: ["Microhyla mihintaleiWijayathilaka,"], ref: ["Microhyla mihintalei"]},
-  {asw: ["Chlacorana crassiovis"], ref: ["Chalcorana crassiovis"]},
-  {asw: [], ref: ["Dendropsophus nekronastes"]},
-  {asw: [], ref: ["Hylodes caete"]},
-  {asw: [], ref: ["Megophrys koui"]},  
-  {asw: ["Aneides iecanus","Aneides niger","Aneides flavipunctatus"], ref: ["Aneides flavipunctatus"]},
-  {asw: ["Desmognathus aureatus","Desmognathus melanius","Desmognathus marmoratus"], ref: ["Desmognathus marmoratus"]},
-  {asw: ["Desmognathus auriculatus","Desmognathus valentinei"], ref: ["Desmognathus auriculatus"]},
-  {asw: ["Pseudotriton diastictus","Pseudotriton montanus"], ref: ["Pseudotriton montanus"]},
-  {asw: ["Trachycephalus typhonius","Trachycephalus macrotis","Trachycephalus quadrangulum","Trachycephalus vermiculatus"], ref: ["Trachycephalus typhonius"]},
-  {asw: ["Dryophytes andersonii"], ref: ["Hyla andersonii"]},
-  {asw: ["Dryophytes arboricola"], ref: ["Hyla arboricola"]},
-  {asw: ["Dryophytes arenicolor"], ref: ["Hyla arenicolor"]} ,
-  {asw: ["Dryophytes avivoca"], ref: ["Hyla avivoca"]},
-  {asw: ["Dryophytes bocourti"], ref: ["Hyla bocourti"]},
-  {asw: ["Dryophytes chrysoscelis"], ref: ["Hyla chrysoscelis"]},
-  {asw: ["Dryophytes cinereus"], ref: ["Hyla cinerea"]},
-  {asw: ["Dryophytes euphorbiaceus"], ref: ["Hyla euphorbiacea"]},
-  {asw: ["Dryophytes eximius"], ref: ["Hyla eximia"]},
-  {asw: ["Dryophytes femoralis"], ref: ["Hyla femoralis"]},
-  {asw: ["Dryophytes gratiosus"], ref: ["Hyla gratiosa"]},
-  {asw: ["Dryophytes immaculatus"], ref: ["Hyla immaculata"]},
-  {asw: ["Dryophytes japonicus"], ref: ["Hyla japonica"]},
-  {asw: ["Dryophytes plicatus"], ref: ["Hyla plicata"]},
-  {asw: ["Dryophytes squirellus"], ref: ["Hyla squirella"]},
-  {asw: ["Dryophytes versicolor"], ref: ["Hyla versicolor"]},
-  {asw: ["Dryophytes walkeri"], ref: ["Hyla walkeri"]},
-  {asw: ["Dryophytes wrightorum"], ref: ["Hyla wrightorum"]},
-  {asw: ["Hyliola cadaverina"], ref: ["Pseudacris cadaverina"]},
-  {asw: ["Hyliola hypochondriaca"], ref: ["Pseudacris hypochondriaca"]},
-  {asw: ["Hyliola regilla"], ref: ["Pseudacris regilla"]},
-  {asw: ["Hyliola sierra"], ref: ["Pseudacris sierra"]},
-  {asw: ["Eurycea quadridigitata","Eurycea hillisi","Eurycea paludicola","Eurycea sphagnicola"], ref: ["Eurycea quadridigitata"]},
-  {asw: ["Eurycea spelaea", "Eurycea nerea", "Eurycea braggi"], ref: ["Eurycea spelaea"]},  
-  {asw: ["Bombina variagata"], ref: ["Bombina pachypus","Bombina variagata"]},
-  {asw: ["Lissotriton graecus","Lissotriton vulgaris","Lissotriton meridionalis"], ref: ["Lissotriton vulgaris"]},
-  {asw: ["Smilisca manisorum","Smilisca baudin"], ref: ["Smilisca baudin"]},
-  {asw: ["Megophrus koui"], ref: ["Megophrys koui"]}
+  {asw: ["Ichthophis cardamomensis"], inat: ["Ichthyophis cardamomensis"]},
+  {asw: ["Ichthophis catlocensis"], inat: ["Ichthyophis catlocensis"]},
+  {asw: ["Ichthophis chaloensis"], inat: ["Ichthyophis chaloensis"]},
+  {asw: ["Microhyla mihintaleiWijayathilaka,"], inat: ["Microhyla mihintalei"]},
+  {asw: ["Chlacorana crassiovis"], inat: ["Chalcorana crassiovis"]},
+  {asw: [], inat: ["Dendropsophus nekronastes"]},
+  {asw: [], inat: ["Hylodes caete"]},
+  {asw: [], inat: ["Megophrys koui"]},  
+  {asw: ["Aneides iecanus","Aneides niger","Aneides flavipunctatus"], inat: ["Aneides flavipunctatus"]},
+  {asw: ["Desmognathus aureatus","Desmognathus melanius","Desmognathus marmoratus"], inat: ["Desmognathus marmoratus"]},
+  {asw: ["Desmognathus auriculatus","Desmognathus valentinei"], inat: ["Desmognathus auriculatus"]},
+  {asw: ["Pseudotriton diastictus","Pseudotriton montanus"], inat: ["Pseudotriton montanus"]},
+  {asw: ["Trachycephalus typhonius","Trachycephalus macrotis","Trachycephalus quadrangulum","Trachycephalus vermiculatus"], inat: ["Trachycephalus typhonius"]},
+  {asw: ["Dryophytes andersonii"], inat: ["Hyla andersonii"]},
+  {asw: ["Dryophytes arboricola"], inat: ["Hyla arboricola"]},
+  {asw: ["Dryophytes arenicolor"], inat: ["Hyla arenicolor"]} ,
+  {asw: ["Dryophytes avivoca"], inat: ["Hyla avivoca"]},
+  {asw: ["Dryophytes bocourti"], inat: ["Hyla bocourti"]},
+  {asw: ["Dryophytes chrysoscelis"], inat: ["Hyla chrysoscelis"]},
+  {asw: ["Dryophytes cinereus"], inat: ["Hyla cinerea"]},
+  {asw: ["Dryophytes euphorbiaceus"], inat: ["Hyla euphorbiacea"]},
+  {asw: ["Dryophytes eximius"], inat: ["Hyla eximia"]},
+  {asw: ["Dryophytes femoralis"], inat: ["Hyla femoralis"]},
+  {asw: ["Dryophytes gratiosus"], inat: ["Hyla gratiosa"]},
+  {asw: ["Dryophytes immaculatus"], inat: ["Hyla immaculata"]},
+  {asw: ["Dryophytes japonicus"], inat: ["Hyla japonica"]},
+  {asw: ["Dryophytes plicatus"], inat: ["Hyla plicata"]},
+  {asw: ["Dryophytes squirellus"], inat: ["Hyla squirella"]},
+  {asw: ["Dryophytes versicolor"], inat: ["Hyla versicolor"]},
+  {asw: ["Dryophytes walkeri"], inat: ["Hyla walkeri"]},
+  {asw: ["Dryophytes wrightorum"], inat: ["Hyla wrightorum"]},
+  {asw: ["Hyliola cadaverina"], inat: ["Pseudacris cadaverina"]},
+  {asw: ["Hyliola hypochondriaca"], inat: ["Pseudacris hypochondriaca"]},
+  {asw: ["Hyliola regilla"], inat: ["Pseudacris regilla"]},
+  {asw: ["Hyliola sierra"], inat: ["Pseudacris sierra"]},
+  {asw: ["Eurycea quadridigitata","Eurycea hillisi","Eurycea paludicola","Eurycea sphagnicola"], inat: ["Eurycea quadridigitata"]},
+  {asw: ["Eurycea spelaea", "Eurycea nerea", "Eurycea braggi"], inat: ["Eurycea spelaea"]},  
+  {asw: ["Bombina variagata"], inat: ["Bombina pachypus","Bombina variagata"]},
+  {asw: ["Lissotriton graecus","Lissotriton vulgaris","Lissotriton meridionalis"], inat: ["Lissotriton vulgaris"]},
+  {asw: ["Smilisca manisorum","Smilisca baudin"], inat: ["Smilisca baudin"]},
+  {asw: ["Megophrus koui"], inat: ["Megophrys koui"]}
 ]
 
 # These are species in iNat, not in ASW
 not_in_asw = ( inat_names.map{ |a| a[:name] } - asw_data.map{ |row| row[:name] } )
 if not_in_asw.count > 0
-  puts "These are species in the inat, not in asw..."
+  puts "These are species in the iNat, not in asw..."
   not_in_asw.each do |name|
     #ignore discrepancies
     unless discrepancies.map{|row| row[:ref]}.flatten.include? name
@@ -158,7 +158,7 @@ swaps = Hash.new
 # These are species in ASW, not in iNat
 not_in_inat = ( asw_data.map{ |row| row[:name] } - inat_names.map{ |a| a[:name] } )
 if not_in_inat.count > 0
-  puts "These are species in ASW, not in the ref..."
+  puts "These are species in ASW, not in iNat..."
   not_in_inat.each do |name|
     #ignore discrepancies
     unless discrepancies.map{|row| row[:asw]}.flatten.include? name
