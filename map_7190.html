@@ -68,26 +68,26 @@ window.mobilecheck = function() {
     return check;
 }
 
-var place_id = 6986; /////////////////////////////////////////////////////////
+var place_id = 7190; /////////////////////////////////////////////////////////
 
-var lat_sep = 1.159772727272727; /////////////////////////////////////////////////////////
-var lng_sep = 1.500872727272727; /////////////////////////////////////////////////////////
+var lat_sep = 3.502407490118181; /////////////////////////////////////////////////////////
+var lng_sep = 3.9216575465909087; /////////////////////////////////////////////////////////
 
 var randomlat = d3.randomUniform(0, 3*lat_sep/10);
 var randomlng = d3.randomUniform(0, 3*lng_sep/10);
 
 var x = d3.scale.log()
-    .domain( [100,1819] ) //////////////////////////////////////////////////////////
-    .range( [5,25] );
+    .domain( [50,5000] ) //////////////////////////////////////////////////////////
+    .range( [5,15] );
 
-var width = 300, /////////////////////////////////////////////////////////
+var width = 150, /////////////////////////////////////////////////////////
     height = 270; /////////////////////////////////////////////////////////
 
 var format = d3.format("0,000");
 
-var center = [25.14532533158209,-28.931796669866046];  /////////////////////////////////////////////////////////
-var offset = [140,140];  /////////////////////////////////////////////////////////
-var scale = 900;  /////////////////////////////////////////////////////////
+var center = [-64.76984287037813,-34.74201680925291];  /////////////////////////////////////////////////////////
+var offset = [55,90];  /////////////////////////////////////////////////////////
+var scale = 300;  /////////////////////////////////////////////////////////
 
 var projection = d3.geo.mercator().center(center)
         .scale(scale).translate(offset);
@@ -112,7 +112,7 @@ var tooltip = d3.select("body").append("div")
       .attr("class", "g-tooltip")
       .html("hey");
       
-d3.json("map_" + place_id + ".json", function(error, us) {
+d3.json("map_" + place_id + ".json"+'?' + Math.floor(Math.random() * 1000), function(error, us) {
   if (error) throw error;
 
   layer1.selectAll("path")
@@ -135,7 +135,7 @@ d3.json("map_" + place_id + ".json", function(error, us) {
              .data(data)
              .enter()
              .append("g")
-             .filter(function(d){ return d.obs_count > 100;}) //276,36
+             .filter(function(d){ return d.obs_count > 50;}) //276,36
         .attr("transform", function(d) {
                 var x = projection([d.lng+randomlng(), d.lat+randomlat()])[0];
                 var y = projection([d.lng+randomlng(), d.lat+randomlat()])[1];
