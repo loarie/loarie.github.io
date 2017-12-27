@@ -73,6 +73,24 @@ d3.csv("accum4_d3.csv?" + Math.floor(Math.random() * 1000), function(d, i, colum
       .attr("y", function(d) { return y(d[1]); })
       .attr("height", function(d) { return y(d[0]) - y(d[1]); })
       .attr("width", x.bandwidth())
+      .style("cursor", function(d) {
+        var a = d.data;
+        var b = [a[keys[0]], a[keys[1]], a[keys[2]], a[keys[3]], a[keys[4]], a[keys[5]]];
+        var c = 0
+        var cumsum = 0;
+        for(var i=0; i<b.length; i++) {
+          cumsum += b[i];
+          if(cumsum == d[1]){
+            c = i;
+            break;
+          }
+        }
+        if(keys[c] != "cum"){
+          return "pointer"
+        }else{
+          return null
+        }
+      })
       .on("mouseover", function(d) { 
         var a = d.data;
         var b = [a[keys[0]], a[keys[1]], a[keys[2]], a[keys[3]], a[keys[4]], a[keys[5]]];
