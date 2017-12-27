@@ -68,30 +68,6 @@ d3.csv("accum4_d3.csv?" + Math.floor(Math.random() * 1000), function(d, i, colum
     .selectAll("rect")
     .data(function(d) { return d; })
     .enter()
-      .append("a")
-      .attr("xlink:target","_blank")
-      .attr("xlink:href", function(d){
-        var a = d.data;
-        var b = [a[keys[0]], a[keys[1]], a[keys[2]], a[keys[3]], a[keys[4]], a[keys[5]]];
-        var c = 0
-        var cumsum = 0;
-        for(var i=0; i<b.length; i++) {
-          cumsum += b[i];
-          if(cumsum == d[1]){
-            c = i;
-            break;
-          }
-        }
-        if(a[keys[c]]==0){
-          return "https://www.inaturalist.org";
-        }else if(keys[c]=="cum"){
-          return null
-        }else{
-          var match = aux_dat.filter(function(item) {return item.date == a.date && item.icon == keys[c]; });
-          var url = "https://www.inaturalist.org/observations?taxon_ids="+match[0].url+"&view=species&i="+ Math.floor(Math.random() * 1000);
-          return url;
-          }
-      })
       .append("rect")
       .attr("x", function(d) { return x(d.data.date); })
       .attr("y", function(d) { return y(d[1]); })
@@ -130,7 +106,29 @@ d3.csv("accum4_d3.csv?" + Math.floor(Math.random() * 1000), function(d, i, colum
         var yPosition = d3.mouse(this)[1] - 25;
         tooltip.attr("transform", "translate(" + xPosition + "," + yPosition + ")");
         tooltip.select("text").text(labs[keys[c]]);
-      });
+      })
+      .on("click",function(d){
+        var a = d.data;
+        var b = [a[keys[0]], a[keys[1]], a[keys[2]], a[keys[3]], a[keys[4]], a[keys[5]]];
+        var c = 0
+        var cumsum = 0;
+        for(var i=0; i<b.length; i++) {
+          cumsum += b[i];
+          if(cumsum == d[1]){
+            c = i;
+            break;
+          }
+        }
+        if(a[keys[c]]==0){
+          var url = "https://www.inaturalist.org";
+        }else if(keys[c]=="cum"){
+          return null
+        }else{
+          var match = aux_dat.filter(function(item) {return item.date == a.date && item.icon == keys[c]; });
+          var url = "https://www.inaturalist.org/observations?taxon_ids="+match[0].url+"&view=species&i="+ Math.floor(Math.random() * 1000);
+          
+          }
+                window.open(url, '_blank')});
 
   g.append("g")
       .attr("class", "axis")
