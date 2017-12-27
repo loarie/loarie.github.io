@@ -36,8 +36,11 @@ var x = d3.scaleBand()
 var y = d3.scaleLinear()
     .rangeRound([height, 0]);
 
+var color = d3.scaleOrdinal()
+    .range(d3.schemeCategory10);
+
 var z = d3.scaleOrdinal()
-    .range(["#C8C8C8","#1e90ff", "#24acff", "#2bceff", "#33f6ff", "#3dffff", "#86f9f7"]);
+    .range(["#C8C8C8",color(0), color(2), color(4), color(6), color(8), color(10)]);
 
 var labs = {3: "Birds", 40151: "Mammals", 1: "Other Fish", 20978: "Amphibians", 47178: "Ray-finned Fishes", 26036: "Reptiles"};
 
