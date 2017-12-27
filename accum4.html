@@ -197,4 +197,9 @@ d3.csv("accum4_d3.csv?" + Math.floor(Math.random() * 1000), function(d, i, colum
       .attr("font-weight", "bold");
 });
 
+var links= document.getElementsByTagName('a');
+for (var i=0; i<links.length; i++){
+   links[i].setAttribute('target', '_top');
+}
+
 </script>
