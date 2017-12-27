@@ -82,12 +82,12 @@ d3.csv("accum4_d3.csv?" + Math.floor(Math.random() * 1000), function(d, i, colum
           }
         }
         if(a[keys[c]]==0){
-          return "http://www.inaturalist.org";
+          return "https://www.inaturalist.org";
         }else if(keys[c]=="cum"){
           return null
         }else{
           var match = aux_dat.filter(function(item) {return item.date == a.date && item.icon == keys[c]; });
-          var url = "http://www.inaturalist.org/observations?taxon_ids="+match[0].url+"&view=species&i="+ Math.floor(Math.random() * 1000);
+          var url = "https://www.inaturalist.org/observations?taxon_ids="+match[0].url+"&view=species&i="+ Math.floor(Math.random() * 1000);
           return url;
           }
       })
