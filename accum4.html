@@ -69,6 +69,7 @@ d3.csv("accum4_d3.csv?" + Math.floor(Math.random() * 1000), function(d, i, colum
     .data(function(d) { return d; })
     .enter()
       .append("a")
+      .attr("xlink:target","_blank")
       .attr("xlink:href", function(d){
         var a = d.data;
         var b = [a[keys[0]], a[keys[1]], a[keys[2]], a[keys[3]], a[keys[4]], a[keys[5]]];
