@@ -1,5 +1,5 @@
 ## Get set of obs ids of all verifiable observations in a taxon
-taxon_id =  47208 #64784 #84718 #63561
+taxon_id =  47825 #47208 #64784 #84718 #63561
 obs = Observation.select("observations.id, observations.taxon_id, observations.created_at").joins(:taxon).where("(taxon_id = ? OR taxa.ancestry LIKE (?) OR taxa.ancestry LIKE (?)) AND quality_grade IN (?)", taxon_id, "%/#{taxon_id}", "%/#{taxon_id}/%", ["needs_id","research"])
 ids = obs.pluck(:id); nil
 
