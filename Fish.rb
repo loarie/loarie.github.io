@@ -146,6 +146,9 @@ end
 discrepancies = [
   #the Fishbase API isn't exactly the same as Fishbase
   #these aren't in the Fishbase API, but are in the Fishbase website so leaving them
+  {fishbase: [], inat: ["Rhizosomichthys totae"]},
+  {fishbase: [], inat: ["Nosferatu pantostictus"]},
+  {fishbase: [], inat: ["Aethotaxis mitopteryx"]},
   {fishbase: [], inat: ["Leucos aula"]},
   {fishbase: [], inat: ["Merluccius gayi"]},
   {fishbase: [], inat: ["Nettorhamphos radula"]},
@@ -165,10 +168,12 @@ discrepancies = [
   {fishbase: [], inat: ["Tylosurus acus"]},
   {fishbase: [], inat: ["Barbodes semifasciolatus"]},
   {fishbase: [], inat: ["Centrolabrus melanocercus"]},
-  {fishbase: [], inat: ["Trachinocephalus trachinus", "Trachinocephalus myops"]}, #Synodus myops in fishbase but not the API, we're splitting/moving Synodus
+  {fishbase: [], inat: ["Speolabeo musaei"]},
+  {fishbase: [], inat: ["Trachinocephalus trachinus", "Trachinocephalus myops", "Trachinocephalus gauguini"]}, #Synodus myops in fishbase but not the API, we're splitting/moving Synodus
   {fishbase: ["Gasterosteus aculeatus","Gasterosteus gymnurus"], inat: ["Gasterosteus aculeatus","Gasterosteus nipponicus"]},
   {fishbase: ["Labidesthes sicculus"], inat: ["Labidesthes vanhyningi","Labidesthes sicculus"]},
   #Explicit deviations for fishbase
+  {fishbase: ["Pseudoxiphophorus obliquus"], inat: ["Heterandria obliqua"]}, #Fishbase has it in Pseudoxiphophorus and departs from the API with Pseudoxiphophorus anzuetoi	(Rosen & Bailey, 1979).Pseudoxiphophorus bimaculatus,Pseudoxiphophorus cataractae,Pseudoxiphophorus diremptus,Pseudoxiphophorus jonesii,Pseudoxiphophorus litoperas
   {fishbase: ["Hippocampus alatus", "Hippocampus spinosissimus"], inat: ["Hippocampus spinosissimus"]}, # via IUCN seahorse group
   {fishbase: ["Hippocampus procerus","Hippocampus whitei"], inat: ["Hippocampus whitei"]}, # via IUCN seahorse group
   {fishbase: ["Hippocampus waleananus","Hippocampus satomiae"], inat: ["Hippocampus satomiae"]}, # via IUCN seahorse group
@@ -342,6 +347,9 @@ discrepancies = [
   {fishbase: [], inat: ["Antennarius steffifer"]},
   {fishbase: [], inat: ["Chaunacops spinosus"]}
 ]
+
+discrepancies.map{|a| puts a[:fishbase].join(", ")+" -> "+a[:inat].join(", ")}
+discrepancies.map{|a| puts a[:inat][0] + " ???"}
 
 leftovers = discrepancies.map{|row| row[:fishbase]}.flatten - fishbase.map{|row| row[:name]}
 if leftovers.count > 0
