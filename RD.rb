@@ -84,9 +84,10 @@ end
 #These are intentional discrepancies between Reptile Database and whats on iNat
 discrepancies = [
   #inat would merge 
+  {rd: ["Trachemys venusta"], inat: ["Trachemys callirostris","Trachemys venusta"]},
   {rd: ["Crotalus atrox"], inat: ["Crotalus tortugensis", "Crotalus atrox"]}, #https://www.inaturalist.org/taxa/map?taxa=30764,121085
   {rd: ["Anatololacerta anatolica"], inat: ["Anatololacerta anatolica", "Anatololacerta oertzeni"]}, #https://www.inaturalist.org/taxa/map?taxa=73603,73601
-  {rd: ["Acontias orientalis"], inat: ["Acontias lineicauda","Acontias orientalis"]}, #https://www.inaturalist.org/taxa/map?taxa=604083,37303
+  {rd: ["Acontias albigularis","Acontias wakkerstroomensis","Acontias orientalis"], inat: ["Acontias lineicauda","Acontias orientalis"]}, #https://www.inaturalist.org/flags/147679
   {rd: ["Pliocercus elapoides"], inat: ["Pliocercus bicolor","Pliocercus elapoides"]}, #https://www.inaturalist.org/taxa/map?taxa=121082,73912
   {rd: ["Trapelus ruderatus"], inat: ["Trapelus lessonae","Trapelus ruderatus"]}, #https://www.inaturalist.org/taxa/map?taxa=73979,31354
   {rd: ["Macrochelys temminckii"], inat: ["Macrochelys apalachicolae","Macrochelys temminckii"]}, #https://www.inaturalist.org/taxa/map?taxa=521316,521318
@@ -95,7 +96,12 @@ discrepancies = [
   {rd: ["Aspidoscelis tigris"], inat: ["Aspidoscelis catalinensis","Aspidoscelis canus","Aspidoscelis tigris"]}, #https://www.inaturalist.org/taxa/map?taxa=121101,38671,121100
   {rd: ["Ctenotus inornatus"], inat: ["Ctenotus helenae","Ctenotus inornatus","Ctenotus saxatilis","Ctenotus fallens"]}, #https://www.inaturalist.org/taxa/map?taxa=37058,37091,37096,37106
   #inat would split
-  {rd: ["Emys marmorata","Emys pallida"], inat: ["Actinemys marmorata"]}, #https://www.inaturalist.org/taxa/map?taxa=521330,521331
+  {rd: ["Lampropeltis greeri","Lampropeltis leonis","Lampropeltis mexicana"], inat: ["Lampropeltis mexicana"]}, #http://mesoamericanherpetology.com/uploads/3/4/7/9/34798824/hansen_and_salmon_-_lampropeltis_mexicana_paper.pdf
+  {rd: ["Natrix astreptophora","Natrix helvetica","Natrix natrix"], inat: ["Natrix natrix"]}, #https://www.inaturalist.org/flags/243637#comment-1907503
+  {rd: ["Heterodon nasicus", "Heterodon gloydi"], inat: ["Heterodon nasicus"]}, #https://www.inaturalist.org/flags/44680
+  {rd: ["Agkistrodon conanti", "Agkistrodon piscivorus"], inat: ["Agkistrodon piscivorus"]}, #flags 251295
+  {rd: ["Agkistrodon laticinctus", "Agkistrodon contortrix"], inat: ["Agkistrodon contortrix"]}, #flags 251295
+  {rd: ["Actinemys marmorata","Actinemys pallida"], inat: ["Actinemys marmorata"]}, #https://www.inaturalist.org/taxa/map?taxa=521330,521331
   {rd: ["Salvadora deserticola","Salvadora hexalepis"], inat: ["Salvadora hexalepis"]}, #https://www.inaturalist.org/taxa/map?taxa=558943,606618
   {rd: ["Cyclura stejnegeri", "Cyclura cornuta"], inat: ["Cyclura cornuta"]}, #https://www.inaturalist.org/taxa/map?taxa=146565,35295
   {rd: ["Terrapene carolina","Terrapene mexicana","Terrapene yucatana"], inat: ["Terrapene carolina"]}, #https://www.inaturalist.org/taxa/map?taxa=606754,521325,521323
@@ -111,67 +117,18 @@ discrepancies = [
   {rd: ["Indotyphlops braminus"], inat: ["Ramphotyphlops braminus"]},
   #inat would add:
   {rd: ["Trachemys medemi"], inat: []}, #newly described turtle species not yet in Turtles of the world
+  {rd: ["Kinosternon vogti"], inat: []},
+  #extinct in iNat
+  {rd: ["Chelonoidis phantasticus"], inat: []},
   #skip these reptile database species (they are duplicates that they should remove - that happen to be involved in the changes above too)
-  {rd: ["Aspidoscelis inornata"], inat: []},
-  {rd: ["Actinemys marmorata"], inat: []},
-  {rd: ["Kinosternon arizonense"], inat: []},
   {rd: ["Holbrookia maculata"], inat: []},
-  {rd: ["Emydoidea blandingii"], inat: []},
-  {rd: ["Uma rufopunctata"], inat: []},
   #skip these reptile database species (they are duplicates that they should remove)
-  {rd: ["Crocodylus raninus"], inat: []},
-  {rd: ["Homopus boulengeri"], inat: []},
-  {rd: ["Alinea berengerae"], inat: []},
-  {rd: ["Alinea pergravis"], inat: []},
-  {rd: ["Pholidoscelis corvina"], inat: []},
-  {rd: ["Lophognathus burnsi"], inat: []},
-  {rd: ["Naja crawshayi"], inat: []},
-  {rd: ["Trachylepis ivensii"], inat: []},
-  {rd: ["Liasis papuana"], inat: []},
-  {rd: ["Chioninia geisthardti"], inat: []},
-  {rd: ["Diploglossus legnotus"], inat: []},
-  {rd: ["Diploglossus ingridae"], inat: []},
-  {rd: ["Cercosaura argula"], inat: []},
-  {rd: ["Lamprolepis vyneri"], inat: []},
-  {rd: ["Draco timorensis"], inat: []},
-  {rd: ["Orthriophis cantoris"], inat: []},
-  {rd: ["Orthriophis hodgsoni"], inat: []},
-  {rd: ["Orthriophis moellendorffi"], inat: []},
-  {rd: ["Orthriophis taeniurus"], inat: []},
-  {rd: ["Flaviemys purvisi"], inat: []},
-  {rd: ["Calliophis bivirgata"], inat: []},
-  {rd: ["Anguis incomptus"], inat: []},
-  {rd: ["Ctenosaura defensor"], inat: []},
-  {rd: ["Scincella rara"], inat: []},
-  {rd: ["Pholidoscelis chrysolaema"], inat: []},
-  {rd: ["Pholidoscelis erythrocephala"], inat: []},
-  {rd: ["Pholidoscelis fuscata"], inat: []},
-  {rd: ["Uropeltis rubromaculatus"], inat: []},
-  {rd: ["Uropeltis ceylanicus"], inat: []},
-  {rd: ["Trachylepis septemtaeniata"], inat: []},
-  {rd: ["Trachylepis aurata"], inat: []},
-  {rd: ["Thamnophis valida"], inat: []},
-  {rd: ["Uropeltis melanogaster"], inat: []},
-  {rd: ["Altiphylax yarkandensis"], inat: []},
-  {rd: ["Siagonodon unguirostris"], inat: []},
-  {rd: ["Plectrurus canaricus"], inat: []},
-  {rd: ["Pholidoscelis taeniura"], inat: []},
-  {rd: ["Pholidoscelis pluvianotata"], inat: []},
-  {rd: ["Pholidoscelis lineolata"], inat: []},
-  {rd: ["Pholidoscelis cineracea"], inat: []},
-  {rd: ["Phelsuma nigra"], inat: []},
-  {rd: ["Niveoscincus coventryi"], inat: []},
-  {rd: ["Niveoscincus greeni"], inat: []},
-  {rd: ["Niveoscincus metallicus"], inat: []},
-  {rd: ["Niveoscincus microlepidotus"], inat: []},
-  {rd: ["Niveoscincus ocellatus"], inat: []},
-  {rd: ["Niveoscincus orocryptus"], inat: []},
-  {rd: ["Niveoscincus palfreymani"], inat: []},
-  {rd: ["Niveoscincus pretiosus"], inat: []},
-  {rd: ["Cercosaura argula"], inat: []},
-  {rd: ["Vermicella calonotus"], inat: []},
-  {rd: ["Homopus signatus"], inat: []},
-  {rd: ["Homopus solus"], inat: []},
+  {rd: ["Woodworthia brunneus"], inat: []},
+  {rd: ["Woodworthia chrysosireticus"], inat: []},
+  {rd: ["Coluber fuliginosus"], inat: []},
+  {rd: ["Woodworthia maculatus"], inat: []},
+  {rd: ["Emys marmorata"], inat: []},
+  {rd: ["Emys pallida"], inat: []},
   {rd: ["Thamnophis saurita"], inat: []},
   {rd: ["Aspidoscelis costatus"], inat: []}, 
   {rd: ["Aspidoscelis flagellicaudus"], inat: []}, 
@@ -190,8 +147,6 @@ discrepancies = [
   {rd: ["Aspidoscelis pictus"], inat: []}, 
   {rd: ["Aspidoscelis sexlineatus"], inat: []}, 
   {rd: ["Aspidoscelis stictogrammus"], inat: []}, 
-  {rd: ["Cnemidophorus martyris"], inat: []}, 
-  {rd: ["Chelonoidis phantastica"], inat: []},
   #keep these NZ 'species' in iNaturalist until further investigation
   {rd: [], inat: ["Naultinus \"north cape\""]},
   {rd: [], inat: ["Hoplodactylus \"southern alps\""]},
@@ -219,7 +174,7 @@ discrepancies = [
 
 leftovers = discrepancies.map{|row| row[:rd]}.flatten - rd_data.select{ |a| a[:rank] == "species" }.map{ |a| a[:name] }
 if leftovers.count > 0
-  puts "These are no longer in the RD"
+  puts "These are no longer in RD"
   leftovers.each do |name|
     puts "\t" + name
   end
@@ -233,21 +188,24 @@ if added.count > 0
   end
 end
 
-# These are species in iNat, not in RD
+swaps = []
+
 not_in_rd = ( inat_names.map{ |row| row[:name] } - rd_data.select{ |a| a[:rank] == "species" }.map{ |a| a[:name] } )
 if not_in_rd.count > 0
   puts "These are species in iNat, not in RD..."
   not_in_rd.each do |name|
     #ignore discrepancies
     unless discrepancies.map{|row| row[:inat]}.flatten.include? name
-      puts "\t" + name
+      unless swaps.map{|a| a[:in]}.include? name
+        puts "\t" + name
+      end
     end
   end
 end
-#build swaps from these to indicate how these taxa should be dealt with
-swaps = Hash.new
+
 
 # These are species in RD, not in iNat
+news = []
 not_in_inat = ( rd_data.select{ |a| a[:rank] == "species" }.map{ |a| a[:name] } - inat_names.map{ |row| row[:name] } )
 if not_in_inat.count > 0
   puts "These are species in RD, not in iNat..."
@@ -255,8 +213,9 @@ if not_in_inat.count > 0
     #ignore discrepancies
     unless discrepancies.map{|row| row[:rd]}.flatten.include? name
       #ignore taxa accounted for by the above swaps
-      unless swaps.values.include? name
+      unless swaps.map{|a| a[:out]}.include? name
         puts "\t" + name
+        news << name
       end
     end
   end
