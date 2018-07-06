@@ -95,7 +95,7 @@ def one_node( ids )
     response = Net::HTTP.get( uri ); nil
     dat = JSON.parse( response ); nil
     # Sleep a bit to keep under 1.6req/sec and avoid hammering the iNat API
-    sleep 0.625
+    sleep 0.75
     parents = dat["results"]
     parents.each do |parent|
       if parent["rank_level"] > 10 && parent["children"]
@@ -133,7 +133,7 @@ fishkey.keys.each do |fishclass|
     response = Net::HTTP.get( uri ); nil
     dat = JSON.parse( response ); nil
     # Sleep a bit to keep under 1.6req/sec and avoid hammering the iNat API
-    sleep 0.625
+    sleep 0.75
     parents = dat["results"]
     parents.each do |parent|
       unless parent["rank"] == "hybrid" || parent["extinct"] == true
@@ -146,6 +146,10 @@ end
 discrepancies = [
   #the Fishbase API isn't exactly the same as Fishbase
   #these aren't in the Fishbase API, but are in the Fishbase website so leaving them
+  {fishbase: [], inat: ["Macrhybopsis etnieri"]},
+  {fishbase: [], inat: ["Macrhybopsis tomellerii"]},
+  {fishbase: [], inat: ["Macrhybopsis pallida"]},
+  {fishbase: [], inat: ["Macrhybopsis boschungi"]},
   {fishbase: [], inat: ["Rhizosomichthys totae"]},
   {fishbase: [], inat: ["Nosferatu pantostictus"]},
   {fishbase: [], inat: ["Aethotaxis mitopteryx"]},
@@ -348,8 +352,8 @@ discrepancies = [
   {fishbase: [], inat: ["Chaunacops spinosus"]}
 ]
 
-discrepancies.map{|a| puts a[:fishbase].join(", ")+" -> "+a[:inat].join(", ")}
-discrepancies.map{|a| puts a[:inat][0] + " ???"}
+#discrepancies.map{|a| puts a[:fishbase].join(", ")+" -> "+a[:inat].join(", ")}
+#discrepancies.map{|a| puts a[:inat][0] + " ???"}
 
 leftovers = discrepancies.map{|row| row[:fishbase]}.flatten - fishbase.map{|row| row[:name]}
 if leftovers.count > 0
@@ -399,4 +403,6 @@ if not_in_inat.count > 0
     end
   end
 end
+
+
 
