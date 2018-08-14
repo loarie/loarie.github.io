@@ -196,9 +196,44 @@ discrepancies = [
 {iucn: [], inat: ["Cebus capucinus"]},
 {iucn: [],  inat: ["Cercopithecus pogonias"]},
 {iucn: [], inat: ["Dipodomys ornatus"]},
-#bats are still a mess - punting
-{iucn: ["Dermanura anderseni", "Dermanura azteca", "Dermanura cinerea", "Dermanura gnoma", "Dermanura tolteca", "Chaerephon aloysiisabaudiae", "Chaerephon ansorgei", "Chaerephon bemmeleni", "Chaerephon bivittatus", "Chaerephon bregullae", "Chaerephon chapini", "Chaerephon gallagheri", "Chaerephon jobensis", "Chaerephon johorensis", "Chaerephon major", "Chaerephon nigeriae", "Chaerephon plicatus", "Chaerephon pumilus", "Chaerephon russatus", "Chaerephon solomonis", "Chaerephon tomensis", "Diclidurus isabella", "Hipposideros commersoni", "Mops brachypterus", "Mops condylurus", "Mops congicus", "Mops demonstrator", "Mops midas", "Mops mops", "Mops nanulus", "Mops niangarae", "Mops niveiventer", "Mops petersoni", "Mops sarasinorum", "Mops spurrelli", "Mops thersites", "Mops trevori", "Hypsugo anthonyi", "Pipistrellus hesperus", "Hypsugo joffrei", "Hypsugo kitcheneri", "Hypsugo lophurus", "Hypsugo macrotis", "Pipistrellus subflavus", "Rhogeessa alleni", "Rousettus lanosus", "Scotonycteris ophiodon", "Austronomus australis", "Mops leucostigma", "Triaenops rufus", "Neoromicia matroka", "Nycticeinops schlieffeni", "Hypsugo vordermanni", "Lissonycteris angolensis", "Hypsugo savii", "Miniopterus africanus", "Neoromicia brunnea", "Neoromicia capensis", "Neoromicia flavescens", "Neoromicia guineensis", "Neoromicia helios", "Neoromicia melckorum", "Neoromicia nana", "Neoromicia rendalli", "Neoromicia somalica", "Neoromicia tenuipinnis", "Neoromicia zuluensis", "Austronomus kuboriensis", "Natalus espiritosantensis", "Dermanura rosenbergi", "Neoromicia malagasyensis", "Neoromicia robertsi", "Neoromicia roseveari", "Chaerephon atsinanana", "Mops bakarii", "Mormopterus lumsdenae", "Mormopterus kitcheneri", "Mormopterus halli", "Mormopterus ridei", "Mormopterus cobourgianus", "Myotis nyctor", "Rhinolophus xinanzhongguoensis", "Dermanura glauca", "Dermanura bogotensis", "Dermanura phaeotis", "Rhinolophus belligerator", "Rhinolophus mcintyrei", "Rhinolophus proconsulis", "Rhinolophus tatar", "Rhinolophus indorouxii", "Rhinolophus microglobosus", "Epomophorus minor", "Scotophilus andrewreborii", "Scotophilus ejetai", "Scotophilus livingstonii", "Scotophilus trujilloi", "Murina bicolor", "Murina gracilis", "Murina recondita", "Murina jaintiana", "Murina pluvialis", "Hypsugo bemainty", "Otonycteris leucophaea", "Myotis secundus", "Myotis soror", "Submyotodon latirostris", "Myotis borneoensis", "Myotis federatus", "Myotis peytoni", "Peropteryx pallidoptera", "Cynomops milleri", "Eumops wilsoni", "Eumops nanus", "Pteronotus mesoamericanus", "Pteronotus rubiginosus", "Molossus bondae", "Promops davisoni", "Chiroderma vizzotoi", "Anoura cadenai", "Artibeus schwartzi", "Micronycteris buriri", "Micronycteris giovanniae", "Lophostoma occidentalis", "Lonchophylla peracchii", "Thyroptera wynneae", "Eptesicus taddeii", "Lasiurus salinae", "Myotis diminutus", "Myotis izecksohni", "Myotis lavali", "Rhogeessa bickhami", "Rhogeessa menchuae", "Rhogeessa velilla", "Vampyrodes major", "Sturnira burtonlimi", "Sturnira koopmanhilli", "Sturnira perla", "Platyrrhinus incarum", "Platyrrhinus angustirostris", "Platyrrhinus aquilus", "Platyrrhinus nitelinea", "Neoromicia isabella", "Dermanura watsoni"], inat: ["Pteropus pelewensis","Myotis phanluongi", "Pipistrellus savii", "Pipistrellus nanus", "Pipistrellus rendalli", "Pipistrellus capensis", "Pipistrellus guineensis", "Pipistrellus tenuipinnis", "Pipistrellus brunneus", "Pipistrellus zuluensis", "Pipistrellus isabella", "Pipistrellus somalicus", "Pipistrellus roseveari", "Pipistrellus stanleyi", "Pipistrellus anthonyi", "Eptesicus malagasyensis", "Eptesicus matroka", "Perimyotis subflavus", "Parastrellus hesperus", "Plecotus gaisleri", "Pipistrellus lophurus", "Pipistrellus kitcheneri", "Pipistrellus joffrei", "Pipistrellus macrotis", "Pipistrellus vordermanni", "Pipistrellus helios", "Pipistrellus robertsi", "Pipistrellus lanzai", "Pipistrellus bemainty", "Scotophilus alvenslebeni", "Nycticeinops schlieffenii", "Nyctophilus corbeni", "Nyctophilus major", "Glauconycteris atra", "Tadarida australis", "Tadarida pumila", "Tadarida condylura", "Tadarida nigeriae", "Tadarida plicata", "Tadarida thersites", "Tadarida nanula", "Tadarida jobensis", "Tadarida ansorgei", "Tadarida aloysiisabaudiae", "Tadarida major", "Tadarida demonstrator", "Tadarida russata", "Tadarida spurrelli", "Tadarida bregullae", "Tadarida leucostigma", "Tadarida midas", "Tadarida tomensis", "Tadarida trevori", "Tadarida chapini", "Tadarida brachyptera", "Tadarida bakarii", "Baeodon alleni", "Tadarida johorensis", "Tadarida kuboriensis", "Tadarida mops", "Tadarida sarasinorum", "Tadarida solomonis", "Molossus barnesi", "Harpiocephalus mordax", "Tadarida bemmeleni", "Tadarida bivittata", "Tadarida congica", "Tadarida gallagheri", "Tadarida jobimena", "Tadarida niangarae", "Tadarida niveiventer", "Tadarida petersoni", "Tadarida atsinanana", "Artibeus phaeotis", "Artibeus watsoni", "Artibeus aztecus", "Artibeus toltecus", "Miniopterus oceanensis", "Artibeus cinereus", "Natalus macrourus", "Miniopterus mossambicus", "Miniopterus fuliginosus", "Miniopterus villiersi", "Artibeus glaucus", "Artibeus incomitatus", "Artibeus rosenbergii", "Lophostoma aequatorialis", "Lophostoma yasuni", "Artibeus anderseni", "Sturnira thomasi", "Artibeus gnomus", "Pteropus yapensis", "Pteropus argentatus", "Pteropus brunneus", "Diclidurus isabellus", "Myonycteris angolensis", "Stenonycteris lanosus", "Scotonycteris bergmansi", "Scotonycteris occidentalis", "Casinycteris ophiodon", "Dobsonia magna", "Pteropus pilosus", "Pteropus tokudae", "Pteropus insularis", "Rhinolophus geoffroyi", "Rhinolophus willardi", "Hipposideros commersonii", "Hipposideros nicobarulae", "Hipposideros cryptovalorona", "Rhinolophus nippon", "Rhinolophus mabuensis", "Rhinolophus horaceki", "Rhinolophus kahuzi", "Triaenops menamena", "Coelops hirsutus", "Paracoelops megalotis"] }
+#bats (thanks bobby23!)
+{iucn: ["Hipposideros commersoni"], inat: ["Macronycteris commersoni"]}, #Hipposideros commersonii (iNat) should be swapped with Macronycteris commersoni (ASM); IUCN recognizes Hipposideros commersoni* 
+{iucn: ["Pipistrellus hesperus"], inat: ["Parastrellus hesperus"]}, #Parastrellus hesperus (iNat/ASM) in place of Pipistrellus Hesperus (IUCN) 
+{iucn: ["Pipistrellus subflavus"], inat: ["Perimyotis subflavus"]},#Perimyotis subflavus (iNat/ASM) should be retained; IUCN recognizes Pipistrellus subflavus* 
+{iucn: ["Scotonycteris ophiodon"], inat: ["Casinycteris ophiodon"]}, #Casinycteris ophiodon (iNat/ASM) in place of Scotonycteris ophiodon (IUCN)
+{iucn: ["Triaenops rufus","Triaenops persicus"], inat: ["Triaenops persicus"]}, #Triaenops rufus (IUCN, 2017) is treated as Triaenops persicus (ASM); it traditionally applies to the Madagascan population of T. persicus; some authorities treat them synonymous, others keep them distinct
+{iucn: ["Lissonycteris angolensis"], inat: ["Myonycteris angolensis"]}, #Myonycteris angolensis (iNat/ASM) in place of Lissonycteris angolensis (IUCN) 
+{iucn: ["Molossus bondae","Molossus currentium"], inat: ["Molossus currentium"]},#Molossus bondae (IUCN, 2017) is treated as Molossus currentium (ASM) 
+{iucn: [], inat: ["Plecotus gaisleri"]}, #Plecotus gaisleri (iNat/ASM) should be retained 
+{iucn: [], inat: ["Scotophilus alvenslebeni"]}, #Scotophilus alvenslebeni (iNat/ASM) should be retained
+{iucn: [], inat: ["Nycticeinops schlieffenii"]}, #Nycticeinops schlieffenii (iNat) should be retained; it is a recently described species (Koubínová et al. 2013) 
+{iucn: [], inat: ["Nyctophilus corbeni"]}, #Nyctophilus corbeni (iNat/ASM) should be retained 
+{iucn: [], inat: ["Nyctophilus major"]}, #Nyctophilus major (iNat/ASM) should be retained
+{iucn: [], inat: ["Glauconycteris atra"]}, #Glauconycteris atra (iNat) should be retained; it is a recently described species (Hassanin et al. 2018) 
+{iucn: [], inat: ["Hypsugo lanzai"]}, #Pipistrellus lanzai (iNat) should be swapped with Hypsugo lanzai (ASM) 
+{iucn: [], inat: ["Neoromicia stanleyi"]}, #Pipistrellus stanleyi (iNat) should be swapped with Neoromicia stanleyi (ASM) 
+{iucn: [], inat: ["Miniopterus fuliginosus"]}, #Miniopterus fuliginosus (iNat/ASM) should be retained 
+{iucn: [], inat: ["Miniopterus oceanensis"]}, #Miniopterus oceanensis (iNat/ASM) should be retained 
+{iucn: [], inat: ["Miniopterus mossambicus"]}, #Miniopterus mossambicus (iNat/ASM) should be retained 
+{iucn: [], inat: ["Miniopterus villiersi"]}, #Miniopterus villiersi (iNat) is not on the IUCN Red List or ASM Database. The Catalogue of Life (CoL) recognizes "Miniopterus schreibersii villiersi", a name recognized by Wikipedia's bat contributors as well. However, neither IUCN or ASM recognize subspecies for Miniopterus schreibersii. Primary literature from the last decade recognize Miniopterus villiersi as a species in-text. Based on the general direction of the literature, I tentatively suggest we leave it alone for now. Jakob may know more, since it's an African bat. 
+{iucn: [], inat: ["Sturnira thomasi"]}, #Sturnira thomasi (iNat) lacks recent literature and is in neither database; the IUCN use to have an assessment for it published in 1996, but it was pulled from their database over a decade ago
+{iucn: [], inat: ["Dermanura incomitatus"]}, #Artibeus incomitatus (iNat) should be swapped with Dermanura incomitatus (ASM) 
+{iucn: [], inat: ["Macronycteris cryptovalorona"]}, #Hipposideros cryptovalorona (iNat) should be swapped with Macronycteris cryptovalorona (ASM) 
+{iucn: [], inat: ["Pteropus pelewensis"]}, #Pteropus pelewensis (iNat/ASM) should be retained 
+{iucn: [], inat: ["Pteropus pelagicus"]}, #Pteropus insularis (iNat) should be swapped with Pteropus pelagicus (ASM) 
+{iucn: [], inat: ["Dobsonia magna"]}, #Dobsonia magna (iNat) is not formally on the IUCN Red List, but is mentioned in the taxonomic note for Dobsonia moluccensis: "Dobsonia moluccensis has been considered separate from Dobsonia magna (Bergmans and Sarbini 1985), but more taxonomic work needs to be conducted to clarify their taxonomy (Helgen 2007)". There statement implies D. magna and D. moluccensis should tentatively be recognized as separate taxa, and I recommend we follow that position on iNat. D. magna is missing from the ASM Database, but is included on CoL. 
+{iucn: [], inat: ["Scotonycteris occidentalis"]}, #Scotonycteris occidentalis (iNat/ASM) should be retained 
+{iucn: [], inat: ["Scotonycteris bergmansi"]}, #Scotonycteris bergmansi (iNat/ASM) should be retained 
+{iucn: [], inat: ["Rhinolophus geoffroyi"]}, #Rhinolophus geoffroyi (iNat) should be retained; it traditionally is treated as a synonym of R. clivosus, but Stoffberg et al. (2012) finds mitochondrial differentiation; it's not listed as a synonym of R. clivosus on IUCN
+{iucn: [], inat: ["Rhinolophus willardi"]}, #Rhinolophus willardi (iNat/ASM) should be retained 
+{iucn: [], inat: ["Rhinolophus mabuensis"]}, #Rhinolophus mabuensis (iNat/ASM) should be retained 
+{iucn: [], inat: ["Rhinolophus horaceki"]}, # (iNat/ASM) should be retained 
+{iucn: [], inat: ["Rhinolophus nippon"]}, #Rhinolophus nippon (iNat) should be retained; it has no assessment page, but IUCN authors state that “although Thomas (1997, unpublished thesis) found very high divergence in mitochondrial DNA sequences, Csorba et al. 2003 refrained from splitting Japanese greater horseshoe bats (Rhinolophus nippon) from R. ferrumequinum”; this suggests that they would support it 
+{iucn: [], inat: ["Rhinolophus kahuzi"]}, #Rhinolophus kahuzi (iNat/ASM) should be retained 
+{iucn: [], inat: ["Triaenops menamena"]}, #Triaenops menamena (iNat/ASM) should be retained.
+{iucn: [], inat: ["Hipposideros nicobarulae"]} #Hipposideros nicobarulae (iNat/ASM) should be retained; IUCN recognizes Hipposideros ater* 
 ]
+
 
 leftovers = discrepancies.map{|row| row[:iucn]}.flatten - iucn.map{|row| row["scientific_name"]}
 if leftovers.count > 0
@@ -232,6 +267,7 @@ end
 #build swaps from these to indicate how these taxa should be dealt with
 swaps = Hash.new
 
+
 # These are species in IUCN, not in iNat
 res = []
 not_in_inat = ( iucn.map{|row| row["scientific_name"]} - inat_names.map{ |row| row[:name] } )
@@ -248,11 +284,4 @@ if not_in_inat.count > 0
     end
   end
 end
-
-
-
-
-
-
-
 
