@@ -146,44 +146,30 @@ end
 discrepancies = [
   #the Fishbase API isn't exactly the same as Fishbase
   #these aren't in the Fishbase API, but are in the Fishbase website so leaving them
-  {fishbase: [], inat: ["Macrhybopsis etnieri"]},
-  {fishbase: [], inat: ["Macrhybopsis tomellerii"]},
-  {fishbase: [], inat: ["Macrhybopsis pallida"]},
-  {fishbase: [], inat: ["Macrhybopsis boschungi"]},
   {fishbase: [], inat: ["Rhizosomichthys totae"]},
-  {fishbase: [], inat: ["Nosferatu pantostictus"]},
   {fishbase: [], inat: ["Aethotaxis mitopteryx"]},
   {fishbase: [], inat: ["Leucos aula"]},
   {fishbase: [], inat: ["Merluccius gayi"]},
-  {fishbase: [], inat: ["Nettorhamphos radula"]},
   {fishbase: [], inat: ["Neotrygon trigonoides"]},
-  {fishbase: [], inat: ["Neotrygon australiae"]},
   {fishbase: [], inat: ["Micropterus haiaka"]},
   {fishbase: [], inat: ["Stegastes marginatus"]},
   {fishbase: [], inat: ["Pomacentrus maafu"]},
   {fishbase: [], inat: ["Sirembo amaculata"]},
   {fishbase: [], inat: ["Sirembo wami"]},
-  {fishbase: [], inat: ["Pomacentrus magniseptus"]},
   {fishbase: [], inat: ["Pomacentrus micronesicus"]},
   {fishbase: [], inat: ["Altrichthys alelia"]},
-  {fishbase: [], inat: ["Prognathodes basabei"]},
-  {fishbase: [], inat: ["Centropyge cocosensis"]},
-  {fishbase: [], inat: ["Monacoa niger"]},
   {fishbase: [], inat: ["Tylosurus acus"]},
   {fishbase: [], inat: ["Barbodes semifasciolatus"]},
   {fishbase: [], inat: ["Centrolabrus melanocercus"]},
-  {fishbase: [], inat: ["Speolabeo musaei"]},
-  {fishbase: [], inat: ["Trachinocephalus trachinus", "Trachinocephalus myops", "Trachinocephalus gauguini"]}, #Synodus myops in fishbase but not the API, we're splitting/moving Synodus
-  {fishbase: ["Gasterosteus aculeatus","Gasterosteus gymnurus"], inat: ["Gasterosteus aculeatus","Gasterosteus nipponicus"]},
-  {fishbase: ["Labidesthes sicculus"], inat: ["Labidesthes vanhyningi","Labidesthes sicculus"]},
+  {fishbase: ["Trachinocephalus myops"], inat: ["Trachinocephalus trachinus", "Trachinocephalus myops", "Trachinocephalus gauguini"]}, #split
   #Explicit deviations for fishbase
+  {fishbase: [], inat: ["Stomias boa"]} #https://www.inaturalist.org/flags/283439
   {fishbase: ["Pseudoxiphophorus obliquus"], inat: ["Heterandria obliqua"]}, #Fishbase has it in Pseudoxiphophorus and departs from the API with Pseudoxiphophorus anzuetoi	(Rosen & Bailey, 1979).Pseudoxiphophorus bimaculatus,Pseudoxiphophorus cataractae,Pseudoxiphophorus diremptus,Pseudoxiphophorus jonesii,Pseudoxiphophorus litoperas
   {fishbase: ["Hippocampus alatus", "Hippocampus spinosissimus"], inat: ["Hippocampus spinosissimus"]}, # via IUCN seahorse group
   {fishbase: ["Hippocampus procerus","Hippocampus whitei"], inat: ["Hippocampus whitei"]}, # via IUCN seahorse group
   {fishbase: ["Hippocampus waleananus","Hippocampus satomiae"], inat: ["Hippocampus satomiae"]}, # via IUCN seahorse group
   {fishbase: ["Hippocampus biocellatus","Hippocampus trimaculatus"], inat: ["Hippocampus trimaculatus", "Hippocampus planifrons", "Hippocampus dahli"]}, # via IUCN seahorse group
   {fishbase: ["Hippocampus fuscus","Hippocampus borboniensis","Hippocampus kuda"], inat: ["Hippocampus kuda"]}, # via IUCN seahorse group
-  {fishbase: ["Pegasus volitans"], inat: ["Pegasus tetrabelos", "Pegasus volitans"]},
   {fishbase: ["Cheilinus fasciatus"], inat: ["Cheilinus quinquecinctus","Cheilinus fasciatus"]},
   {fishbase: ["Chrysiptera brownriggii"], inat: ["Chrysiptera leucopoma","Chrysiptera brownriggii"]},
   {fishbase: ["Poecilia sphenops"], inat: ["Poecilia thermalis","Poecilia sphenops"]},
@@ -191,8 +177,6 @@ discrepancies = [
   {fishbase: ["Antennatus coccineus"], inat: ["Antennarius nummifer","Antennatus coccineus"]},
   {fishbase: ["Lethrinus lentjan"], inat: ["Lethrinus punctulatus","Lethrinus lentjan"]},
   {fishbase: ["Pagrus auratus"], inat: ["Chrysophrys auratus"]},
-  {fishbase: ["Acanthurus nigricansm"], inat: ["Acanthurus nigricans"]}, #fishbase type
-  {fishbase: ["Zebrasoma veliferum"], inat: ["Zebrasoma velifer"]},      #cof uses Z. velifer
   {fishbase: ["Synchiropus rameus"], inat: ["Orbonymus rameus"]},      #cof uses Orbonymus
   {fishbase: ["Crenimugil seheli"], inat: ["Moolgarda seheli"]},          #cof uses Moolgarda
   {fishbase: ["Helotes sexlineatus"], inat: ["Pelates sexlineatus"]},     #see https://www.inaturalist.org/taxon_changes/27850
@@ -200,160 +184,23 @@ discrepancies = [
   {fishbase: ["Planiliza haematocheila"], inat: ["Liza haematocheila"]},
   {fishbase: ["Dajaus monticola"], inat: ["Agonostomus monticola"]},
   {fishbase: ["Chelon ramada"], inat: ["Liza ramada"]},
-  {fishbase: ["Chelon aurata"], inat: ["Liza aurata"]},
+  {fishbase: ["Chelon auratus"], inat: ["Liza aurata"]},
   {fishbase: ["Pelates octolineatus"], inat: ["Helotes octolineatus"]},
+  {fishbase: ["Nosferatu bartoni"], inat: ["Herichthys bartoni"]},      # https://www.inaturalist.org/flags/248128
+  {fishbase: ["Nosferatu labridens"], inat: ["Herichthys labridens"]},
+  {fishbase: ["Nosferatu molango"], inat: ["Herichthys molango"]},
+  {fishbase: ["Nosferatu pame"], inat: ["Herichthys pame"]},
+  {fishbase: ["Nosferatu pratinus"], inat: ["Herichthys pantostictus"]}, # "Nosferatu pantostictus" is in Fishbase but not the API
+  {fishbase: ["Nosferatu steindachneri"], inat: ["Herichthys steindachneri"]},
+  {fishbase: ["Tetraodon barbatus"], inat: ["Pao barbatus"]} #https://www.inaturalist.org/flags/273964
   # newly discovered not yet in fishbase:
   {fishbase: [], inat: ["Dellichthys trnskii"]},
   {fishbase: [], inat: ["Trachelochismus aestuarium"]},
-  {fishbase: [], inat: ["Hippocampus casscsio"]}, # via IUCN seahorse group
-  #need to vet and keep of find destinations for/inactivate these names not in Fishbase
-  {fishbase: [], inat: ["Rhinogobius nganfoensis"]},
-  {fishbase: [], inat: ["Rhinogobius vinhensis"]},
-  {fishbase: [], inat: ["Cryptocentroides argulus"]},
-  {fishbase: [], inat: ["Pseudogobius melanosticta"]},
-  {fishbase: [], inat: ["Oxyurichthys zeta"]},
-  {fishbase: [], inat: ["Hazeus diacanthus"]},
-  {fishbase: [], inat: ["Egglestonichthys ulbubunitj"]},
-  {fishbase: [], inat: ["Pseudocaranx georgianus"]},
-  {fishbase: [], inat: ["Teleocichla preta"]},
-  {fishbase: [], inat: ["Percina apina"]},
-  {fishbase: [], inat: ["Pomadasys approximans"]},
-  {fishbase: [], inat: ["Mullus barbatus"]},
-  {fishbase: [], inat: ["Ozichthys albimaculosus"]},
-  {fishbase: [], inat: ["Dentex carpenteri"]},
-  {fishbase: [], inat: ["Scorpis hectori"]},
-  {fishbase: [], inat: ["Scorpis boops"]},
-  {fishbase: [], inat: ["Scorpis australis"]},
-  {fishbase: [], inat: ["Parascolopsis rufomaculata"]},
-  {fishbase: [], inat: ["Nemadactylus carponotatus"]},
-  {fishbase: [], inat: ["Nemadactylus concinnus"]},
-  {fishbase: [], inat: ["Cheilodactylus antonii"]},
-  {fishbase: [], inat: ["Cheilodactylus aspersus"]},
-  {fishbase: [], inat: ["Cheilodactylus carmichaelis"]},
-  {fishbase: [], inat: ["Microdesmus longispinnis"]},
-  {fishbase: [], inat: ["Gobiomorphus gobiodes"]},
-  {fishbase: [], inat: ["Ditrema temminckii"]},
-  {fishbase: [], inat: ["Boroda malua"]},
-  {fishbase: [], inat: ["Eucinostomus californiensis"]},
-  {fishbase: [], inat: ["Pseudocalliurichthys goodladi"]},
-  {fishbase: [], inat: ["Bathycallionymus bifilum"]},
-  {fishbase: [], inat: ["Bathycallionymus kailolae"]},
-  {fishbase: [], inat: ["Calliurichthys afilum"]},
-  {fishbase: [], inat: ["Calliurichthys australis"]},
-  {fishbase: [], inat: ["Calliurichthys ogilbyi"]},
-  {fishbase: [], inat: ["Foetorepus apricus"]},
-  {fishbase: [], inat: ["Foetorepus grandoculis"]},
-  {fishbase: [], inat: ["Pterosynchiropus occidentalis"]},
-  {fishbase: [], inat: ["Repomucenus filamentosus"]},
-  {fishbase: [], inat: ["Repomucenus keeleyi"]},
-  {fishbase: [], inat: ["Repomucenus meridionalis"]},
-  {fishbase: [], inat: ["Repomucenus sublaevis"]},
-  {fishbase: [], inat: ["Repomucenus belcheri"]},
-  {fishbase: [], inat: ["Stichaeus punctatus"]},
-  {fishbase: [], inat: ["Heteropriacanthus carolinus"]},
-  {fishbase: [], inat: ["Heteropriacanthus fulgens"]},
-  {fishbase: [], inat: ["Olisthops brownii"]},
-  {fishbase: [], inat: ["Sillago burra"]},
-  {fishbase: [], inat: ["Uranoscopus terraereginae"]},
-  {fishbase: [], inat: ["Hypopterus macroptera"]},
-  {fishbase: [], inat: ["Aurigequula longispinis"]},
-  {fishbase: [], inat: ["Psenes hillii"]},
-  {fishbase: [], inat: ["Emmelichthys nitidus"]},
-  {fishbase: [], inat: ["Matsubaraea fusiformis"]},
-  {fishbase: [], inat: ["Puntius euspilurus"]},
-  {fishbase: [], inat: ["Dionda flavipinnis"]},
-  {fishbase: [], inat: ["Scaphesthes tamusuiensis"]},
-  {fishbase: [], inat: ["Anabarilius liui"]},
-  {fishbase: [], inat: ["Sarcocheilichthys variegatus"]},
-  {fishbase: [], inat: ["Physoschistura chulabhornae"]},
-  {fishbase: [], inat: ["Orthrias angorae"]},
-  {fishbase: [], inat: ["Beaufortia schaueri"]},
-  {fishbase: [], inat: ["Beaufortia orbifolia"]},
-  {fishbase: [], inat: ["Beaufortia micrantha"]},
-  {fishbase: [], inat: ["Meuschenia scabra"]},
-  {fishbase: [], inat: ["Aluterus abassai"]},
-  {fishbase: [], inat: ["Acanthostracion bucephalus"]},
-  {fishbase: [], inat: ["Chilomycterus spinosus"]},
-  {fishbase: [], inat: ["Scorpaena africana"]},
-  {fishbase: [], inat: ["Scorpaena aculeata"]},
-  {fishbase: [], inat: ["Sebastolobus varispinis"]},
-  {fishbase: [], inat: ["Trachyscorpia cristulata"]},
-  {fishbase: [], inat: ["Onigocia macrocephala"]},
-  {fishbase: [], inat: ["Platycephalus angustus"]},
-  {fishbase: [], inat: ["Platycephalus australis"]},
-  {fishbase: [], inat: ["Liparis madrensis"]},
-  {fishbase: [], inat: ["Liparis makinoana"]},
-  {fishbase: [], inat: ["Notoliparis stewarti"]},
-  {fishbase: [], inat: ["Paraliparis copei"]},
-  {fishbase: [], inat: ["Kanekonia leichhardti"]},
-  {fishbase: [], inat: ["Hoplichthys mimaseanus"]},
-  {fishbase: [], inat: ["Doryrhamphus excisus"]},
-  {fishbase: [], inat: ["Phyllopteryx dewysea"]},
-  {fishbase: [], inat: ["Halicampus ensenadae"]},
-  {fishbase: [], inat: ["Pseudoxiphophorus jonesii"]},
-  {fishbase: [], inat: ["Allodontichtys hubbsi"]},
-  {fishbase: [], inat: ["Allodontichtys polylepis"]},
-  {fishbase: [], inat: ["Allodontichtys tamazulae"]},
-  {fishbase: [], inat: ["Ariosoma hemiaspidus"]},
-  {fishbase: [], inat: ["Chaetostoma anomala"]},
-  {fishbase: [], inat: ["Olyra taquara"]},
-  {fishbase: [], inat: ["Oreoglanis hponkanensis"]},
-  {fishbase: [], inat: ["Engyprosopon osculum"]},
-  {fishbase: [], inat: ["Monolene maculipina"]},
-  {fishbase: [], inat: ["Etropus delsmani"]},
-  {fishbase: [], inat: ["Brachirus breviceps"]},
-  {fishbase: [], inat: ["Brachirus fitzroiensis"]},
-  {fishbase: [], inat: ["Pardachirus rautheri"]},
-  {fishbase: [], inat: ["Pseudaesopia callizona"]},
-  {fishbase: [], inat: ["Symphurus sitgmosus"]},
-  {fishbase: [], inat: ["Paraplagusia bleekeri"]},
-  {fishbase: [], inat: ["Clupea pallasii"]},
-  {fishbase: [], inat: ["Gephyrocharax atricaudatus"]},
-  {fishbase: [], inat: ["Saccoderma falcata"]},
-  {fishbase: [], inat: ["Pygopristis denticulatus"]},
-  {fishbase: [], inat: ["Leporinus enyae"]},
-  {fishbase: [], inat: ["Pterodiscus cookei"]},
-  {fishbase: [], inat: ["Galaxias arcanus"]},
-  {fishbase: [], inat: ["Galaxias mungadhan"]},
-  {fishbase: [], inat: ["Galaxias aequipinnis"]},
-  {fishbase: [], inat: ["Galaxias brevissimus"]},
-  {fishbase: [], inat: ["Galaxias gunaikurnai"]},
-  {fishbase: [], inat: ["Galaxias lanceolatus"]},
-  {fishbase: [], inat: ["Galaxias longifundus"]},
-  {fishbase: [], inat: ["Galaxias mcdowalli"]},
-  {fishbase: [], inat: ["Galaxias oliros"]},
-  {fishbase: [], inat: ["Galaxias supremus"]},
-  {fishbase: [], inat: ["Galaxias tantangara"]},
-  {fishbase: [], inat: ["Galaxias terenasus"]},
-  {fishbase: [], inat: ["Mallotus philippinensis"]},
-  {fishbase: [], inat: ["Argentina tapetodes"]},
-  {fishbase: [], inat: ["Nansenia boreacrassicauda"]},
-  {fishbase: [], inat: ["Dolicholagus longirosytis"]},
-  {fishbase: [], inat: ["Platybelone argalus"]},
-  {fishbase: [], inat: ["Strongylura notata"]},
-  {fishbase: [], inat: ["Hyporhamphus roberti"]},
-  {fishbase: [], inat: ["Cheilopogon pinnatibarbatus"]},
-  {fishbase: [], inat: ["Menidia alchichica"]},
-  {fishbase: [], inat: ["Menidia ferdebueni"]},
-  {fishbase: [], inat: ["Menidia labarcae"]},
-  {fishbase: [], inat: ["Menidia letholepis"]},
-  {fishbase: [], inat: ["Menidia promelas"]},
-  {fishbase: [], inat: ["Menidia squamata"]},
-  {fishbase: [], inat: ["Menidia bartoni"]},
-  {fishbase: [], inat: ["Menidia charari"]},
-  {fishbase: [], inat: ["Menidia riojai"]},
-  {fishbase: [], inat: ["Menidia aculeatum"]},
-  {fishbase: [], inat: ["Atherinella pellosemion"]},
-  {fishbase: [], inat: ["Atherinosoma elongatum"]},
-  {fishbase: [], inat: ["Pseudomugil luminatus"]},
-  {fishbase: [], inat: ["Porophryne erythrodactylus"]},
-  {fishbase: [], inat: ["Kuiterichthys pietschi"]},
-  {fishbase: [], inat: ["Antennarius steffifer"]},
-  {fishbase: [], inat: ["Chaunacops spinosus"]}
+  {fishbase: [], inat: ["Kuiterichthys pietschi"]}, #https://www.inaturalist.org/flags/283371
+  {fishbase: [], inat: ["Chaunacops spinosus"]} #https://www.inaturalist.org/flags/283372
 ]
 
-#discrepancies.map{|a| puts a[:fishbase].join(", ")+" -> "+a[:inat].join(", ")}
-#discrepancies.map{|a| puts a[:inat][0] + " ???"}
+
 
 leftovers = discrepancies.map{|row| row[:fishbase]}.flatten - fishbase.map{|row| row[:name]}
 if leftovers.count > 0
@@ -372,6 +219,7 @@ if added.count > 0
 end
 
 swaps = []
+swaps2 = []
 # These are species in iNat, not in Fishbase
 not_in_fishbase = ( inat_names.map{ |row| row[:name] } - fishbase.map{|row| row[:name]} )
 if not_in_fishbase.count > 0
@@ -381,14 +229,17 @@ if not_in_fishbase.count > 0
     unless discrepancies.map{|row| row[:inat]}.flatten.include? name
       if syn = synkey(name, fishbase_synonyms, fishbase)
         swaps << {in: name, out: syn}
-        puts "{in: \"" + name + "\", out: \"" + syn + "\"},"
+        #puts "{in: \"" + name + "\", out: \"" + syn + "\"},"
       else
         puts "{in: \"" + name + "\", out: \"\"},"
-        swaps << {in: name, out: ""}
+        swaps2 << {in: name, out: ""}
       end
     end
   end
 end
+
+
+swaps2 #flag them
 
 # These are 'new' species in Fishbase, not in iNat
 news = []
@@ -404,5 +255,115 @@ if not_in_inat.count > 0
   end
 end
 
+leftovers = ["Rhinogobius nganfoensis", "Rhinogobius vinhensis", "Pseudogobius melanosticta", "Cryptocentroides argulus", "Oxyurichthys zeta", "Hazeus diacanthus", "Egglestonichthys ulbubunitj", "Dentex carpenteri", "Teleocichla preta", "Pseudocaranx georgianus", "Pomadasys approximans", "Mullus barbatus", "Scorpis hectori", "Scorpis boops", "Scorpis australis", "Ozichthys albimaculosus", "Nemadactylus carponotatus", "Nemadactylus concinnus", "Cheilodactylus antonii", "Cheilodactylus aspersus", "Cheilodactylus carmichaelis", "Parascolopsis rufomaculata", "Eucinostomus californiensis", "Ditrema temminckii", "Gobiomorphus gobiodes", "Microdesmus longispinnis", "Boroda malua", "Pseudocalliurichthys goodladi", "Repomucenus sublaevis", "Repomucenus belcheri", "Neosynchiropus marbacescui", "Bathycallionymus bifilum", "Bathycallionymus kailolae", "Calliurichthys afilum", "Calliurichthys australis", "Calliurichthys ogilbyi", "Foetorepus apricus", "Foetorepus grandoculis", "Pterosynchiropus occidentalis", "Repomucenus filamentosus", "Repomucenus keeleyi", "Repomucenus meridionalis", "Stichaeus punctatus", "Heteropriacanthus carolinus", "Heteropriacanthus fulgens", "Olisthops brownii", "Sillago burra", "Uranoscopus terraereginae", "Hypopterus macroptera", "Aurigequula longispinis", "Psenes hillii", "Matsubaraea fusiformis", "Emmelichthys nitidus", "Puntius euspilurus", "Sarcocheilichthys variegatus", "Dionda flavipinnis", "Anabarilius liui", "Scaphesthes tamusuiensis", "Physoschistura chulabhornae", "Orthrias angorae", "Aluterus abassai", "Meuschenia scabra", "Chilomycterus spinosus", "Acanthostracion bucephalus", "Scorpaena africana", "Scorpaena aculeata", "Platycephalus australis", "Onigocia macrocephala", "Platycephalus angustus", "Sebastolobus varispinis", "Trachyscorpia cristulata", "Liparis makinoana", "Liparis madrensis", "Paraliparis copei", "Notoliparis stewarti", "Kanekonia leichhardti", "Hoplichthys mimaseanus", "Doryrhamphus excisus", "Halicampus ensenadae", "Allodontichtys hubbsi", "Allodontichtys polylepis", "Allodontichtys tamazulae", "Chaetostoma anomala", "Oreoglanis hponkanensis", "Olyra taquara", "Ariosoma hemiaspidus", "Etropus delsmani", "Monolene maculipina", "Engyprosopon osculum", "Brachirus breviceps", "Brachirus fitzroiensis", "Pardachirus rautheri", "Pseudaesopia callizona", "Symphurus sitgmosus", "Paraplagusia bleekeri", "Clupea pallasii", "Strongylura notata", "Platybelone argalus", "Cheilopogon pinnatibarbatus", "Hyporhamphus roberti", "Gephyrocharax atricaudatus", "Saccoderma falcata", "Pygopristis denticulatus", "Leporinus enyae", "Pterodiscus cookei", "Menidia aculeatum", "Menidia alchichica", "Menidia ferdebueni", "Menidia labarcae", "Menidia letholepis", "Menidia promelas", "Menidia squamata", "Menidia bartoni", "Menidia charari", "Menidia riojai", "Atherinella pellosemion", "Atherinosoma elongatum", "Pseudomugil luminatus", "Galaxias arcanus", "Galaxias mungadhan", "Galaxias oliros", "Galaxias aequipinnis", "Galaxias brevissimus", "Galaxias gunaikurnai", "Galaxias lanceolatus", "Galaxias longifundus", "Galaxias mcdowalli", "Galaxias supremus", "Galaxias tantangara", "Galaxias terenasus", "Mallotus philippinensis", "Dolicholagus longirosytis", "Porophryne erythrodactylus", "Antennarius steffifer", "Argentina tapetodes", "Kuiterichthys pietschi", "Chaunacops spinosus"]
+taxon_id = 1
+leftovers.each do |name|
+  unless t = Taxon.where("name = ? AND is_active = true AND rank IN ('genus','tribe','species') AND ancestry LIKE (?)", name, "%/#{taxon_id}/%").first
+    puts name
+    next
+  end
+  if flag = Flag.where(flaggable_id: t.id, flaggable_type: 'Taxon', resolved: false).first
+    puts "flag exists for #{t.id}"
+    next
+  end
+  #create flag
+  flag = Flag.new(flag: "taxon (maybe?) not in Fishbase", user_id: 477, flaggable_id: t.id, flaggable_type: 'Taxon', resolved: false)
+  if flag.save!
+    puts flag.id
+    Comment.create(parent_type: "Flag", parent_id: flag.id, user_id: 477, body: "iNat syncs with Fishbase using the 3rd party https://fishbase.ropensci.org/ API, which can be a bit out of sync with Fishbase so this could be out of date. But this taxon doesn't appear to be in the fishbase.ropensci.org API and thus likeley not in Fishbase. Is it actually in Fishbase, an error/duplicate, or a legit taxon that should be added as a deviation from Fishbase?")
+  end
+end
+
+
+
+#add news
+#swaps
+
+gen = ["Caraibops","Kaperangus","Parascombrops","Phycocharax","Pseudorestias","Euryochus","Pseudoqolus","Malihkaia","Anoptoplacus","Pseudoxiphophorus","Samaretta","Barbourichthys","Amamiichthys","Cymatognathus","Potamoglanis"]
+gen.each do |row|
+  fam = not_in_inat.select{|a| a[:name].split[0] == row}.first[:family]
+  puts [row,fam].join(", ")
+end
+
+taxon_id = 1
+not_in_inat.each do |row|
+  name = row[:name]
+  parent = name.split[0]
+  puts name
+  unless parent_taxon = Taxon.where("name = ? AND is_active = true AND rank = 'genus' AND (ancestry LIKE (?) OR ancestry LIKE (?))", parent, "%/#{taxon_id}/%", "%/#{taxon_id}").first
+    puts "\t\t\tmissing"
+    next
+  end
+  unless t = Taxon.where("is_active = true AND name = ? AND rank = 'species' AND ancestry LIKE (?)", name, "%/#{taxon_id}/%").first
+    if t = Taxon.where("is_active = false AND name = ? AND rank = 'species' AND ancestry LIKE (?)", name, "%/#{taxon_id}/%").first
+      puts "\t\t\tactivating #{name}"
+      t.is_active = true
+      t.skip_locks = true
+      t.skip_complete = true
+      puts "issue" unless t.save!
+    else
+      puts "\t\t\tcreating #{name}"
+      t = Taxon.new(name: name, rank: "species", is_active: true)
+      t.parent = parent_taxon
+      t.skip_locks = true
+      t.skip_complete = true
+      puts "issue" unless t.save!
+    end
+  end
+end
+
+
+
+#swap sp
+taxon_id2 =1
+putting = []
+missing = []
+swaps.each do |row|
+  unless input = Taxon.where("name = ? AND is_active = true AND ancestry LIKE (?)", row[:in], "%/#{taxon_id}/%").first
+    puts "missing input #{row[:in]}"
+    missing << row
+    next
+  end
+  unless output = Taxon.where("name = ? AND ancestry LIKE (?)", row[:out], "%/#{taxon_id2}/%").first
+    puts "missing output #{row[:out]}"
+    missing << row
+    next
+  end
+  
+  if tc = TaxonChange.where(taxon_id: output.id, committed_on: nil).first #draf exists
+    if tct = TaxonChangeTaxon.where(taxon_id: input.id, taxon_change_id: tc.id).first
+      putting << tc.id
+      next
+    end
+  end
+  tc = TaxonChange.new(
+        description: "swapped in Fisbase",
+        taxon_id: output.id,
+        source_id: 12552,
+        user_id: 477,
+        type: "TaxonSwap",
+        committed_on: nil,
+        change_group: "10_2018 Fish update",
+        committer_id: nil
+  )
+  tc.save(:validate => false)
+  tct = TaxonChangeTaxon.create(taxon_id: input.id, taxon_change_id: tc.id)
+  puts "made taxon change for #{input.name} and #{output.name}"
+end
+
+#commit the taxon changes
+loarie = User.find(477)
+tcts = TaxonChangeTaxon.joins(:taxon, :taxon_change).where("taxon_changes.committed_on IS NULL AND taxon_changes.change_group = '10_2018 Fish update'").pluck(:taxon_change_id)
+tcs = TaxonChange.find(tcts)
+tcs.each do |tc|
+  puts tc.id
+  tc.committer = loarie
+  begin
+    tc.commit
+  rescue
+    puts "oops"
+  end
+  #sleep(1.minute)
+end
 
 
