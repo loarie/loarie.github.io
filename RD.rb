@@ -243,7 +243,7 @@ swaps.each do |row|
         user_id: 477,
         type: "TaxonSwap",
         committed_on: nil,
-        change_group: "9_2018 Reptile Database update",
+        change_group: "11_2018 Reptile Database update 2",
         committer_id: nil
   )
   tc.save(:validate => false)
@@ -253,7 +253,7 @@ end
 
 #commit the taxon changes
 loarie = User.find(477)
-tcts = TaxonChangeTaxon.joins(:taxon, :taxon_change).where("taxon_changes.committed_on IS NULL AND taxon_changes.change_group = '9_2018 Reptile Database update'").pluck(:taxon_change_id)
+tcts = TaxonChangeTaxon.joins(:taxon, :taxon_change).where("taxon_changes.committed_on IS NULL AND taxon_changes.change_group = '11_2018 Reptile Database update 2'").pluck(:taxon_change_id)
 tcs = TaxonChange.find(tcts)
 tcs.each do |tc|
   puts tc.id
