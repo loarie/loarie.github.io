@@ -47,7 +47,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-d3.json("treenew5.json"+'?' + Math.floor(Math.random() * 1000), function(error, flare) {
+d3.json("subject.json"+'?' + Math.floor(Math.random() * 1000), function(error, flare) {
   if (error) throw error;
 
   root = flare;
