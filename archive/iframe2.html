@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script></script>
+<script src="//d3js.org/topojson.v1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/queue-async/1.0.7/queue.min.js"></script>
+<script>
+
+var svg = d3.select("body").append("svg") 
+  .attr("viewBox", "0 0 500 400")
+  .attr("preserveAspectRatio", "xMinYMin meet");
+
+var color = d3.scale.category10();
+
+var width=500,
+  height=400;
+
+svg.append("rect")
+  .attr("x", 0)
+  .attr("y", 0)
+  .style("fill","#000")
+  .attr("width", width)
+  .attr("height", height);
+
+svg.selectAll("circle")
+    .data([32, 57, 112, 115])
+  .enter().append("circle")
+    .style("fill",function(d,i) { return color(i);} )
+    .attr("cy", function(d,i) { return i%2*height + (1-2*(i%2))*d;} )
+    .attr("cx", function(d,i) { return Math.round(i/4)*width + (1-2*Math.round(i/4))*d;} )
+    .attr("r", function(d) { return d; });
+
+</script>

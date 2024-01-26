@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body>
+  <input type="checkbox"></input> <label>Display as bargraph </label>  
+  <div id="chart"></div>
+  <style>
+  label { font-family: sans-serif; font-size: 12px;}
+  </style>
+  <script src="d3.v3.min.js"></script>
+  <script src="d3.layout.cloud.js"></script>
+  <script>
+  
+  var fill = function(x){ return ["#72ac42","#4987c6","#f04a22","#ed2191","#ed2191","#ed2191","#98351f","#98351f","#98351f","#98351f","#98351f","#98351f","#98351f","#98351f","#98351f"][Math.floor(x/34)]};
+  var width = 500;
+  var height = 600;
+  var label = d3.select('label')
+  var svg = d3.select("div#chart").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .append("g")
+    .attr("transform", "translate(" + (width / 2 + 10) + "," + (height / 2 + 10) + ")");
+  
+  var xScale = d3.scale.linear()
+      .domain([203, 11211])
+           .range([6,50]);
+  var yScale = d3.scale.linear()
+      .domain([203, 11211])
+           .range([1,30]);
+           
+    var words = d3.layout.cloud().size([width, height])
+        .words([{text:"finatic",frequency:11211,order:0},{text:"jaykeller",frequency:9762,order:1},{text:"erikamitchell",frequency:9229,order:2},{text:"sambiology",frequency:9099,order:3},{text:"cedric_lee",frequency:7275,order:4},{text:"anudibranchmom",frequency:6661,order:5},{text:"gonzalezii",frequency:6302,order:6},{text:"dpom",frequency:6162,order:7},{text:"glmory",frequency:5682,order:8},{text:"maractwin",frequency:5443,order:9},{text:"francisco3",frequency:5390,order:10},{text:"charlie",frequency:5275,order:11},{text:"treichard",frequency:4957,order:12},{text:"jmaughn",frequency:4822,order:13},{text:"gzepeda",frequency:4736,order:14},{text:"allenratzlaff",frequency:4510,order:15},{text:"lauraelviauribelara",frequency:4502,order:16},{text:"juancarloslopezdominguez1",frequency:4142,order:17},{text:"speedy",frequency:3870,order:18},{text:"kueda",frequency:3741,order:19},{text:"silversea_starsong",frequency:3713,order:20},{text:"greglasley",frequency:3589,order:21},{text:"robberfly",frequency:3511,order:22},{text:"sea-kangaroo",frequency:3435,order:23},{text:"loarie",frequency:3084,order:24},{text:"hfabian",frequency:3065,order:25},{text:"ingyl_13_mazatl",frequency:3015,order:26},{text:"jon_sullivan",frequency:2893,order:27},{text:"damontighe",frequency:2695,order:28},{text:"gyrrlfalcon",frequency:2538,order:29},{text:"magazhu",frequency:2456,order:30},{text:"berkshirenaturalist",frequency:2430,order:31},{text:"susanelliott",frequency:2389,order:32},{text:"negronahual",frequency:2292,order:33},{text:"bbunny",frequency:2237,order:34},{text:"dwest",frequency:2235,order:35},{text:"swampy",frequency:2193,order:36},{text:"direbecca",frequency:2136,order:37},{text:"cullen",frequency:2095,order:38},{text:"taogirl",frequency:2086,order:39},{text:"martingrimm",frequency:2056,order:40},{text:"lungta",frequency:2052,order:41},{text:"harumkoh",frequency:2019,order:42},{text:"connlindajo",frequency:1952,order:43},{text:"juancarlosgarciamorales1",frequency:1928,order:44},{text:"dominic",frequency:1907,order:45},{text:"leonperrie",frequency:1881,order:46},{text:"tiwane",frequency:1870,order:47},{text:"paloma",frequency:1837,order:48},{text:"davidr",frequency:1807,order:50},{text:"lisa_bennett",frequency:1807,order:49},{text:"stephen_thorpe",frequency:1762,order:51},{text:"juancruzado",frequency:1731,order:52},{text:"lovelyclemmy",frequency:1725,order:53},{text:"reallifeecology",frequency:1721,order:55},{text:"lonnyholmes",frequency:1721,order:54},{text:"tnewman",frequency:1700,order:56},{text:"muir",frequency:1696,order:57},{text:"sunnetchan",frequency:1644,order:58},{text:"avocat",frequency:1623,order:59},{text:"meurkc",frequency:1608,order:60},{text:"mike68lusk",frequency:1601,order:61},{text:"jwalewski",frequency:1590,order:62},{text:"marvelliott",frequency:1575,order:63},{text:"savvy",frequency:1570,order:64},{text:"sanguinaria33",frequency:1550,order:65},{text:"gcwarbler",frequency:1525,order:66},{text:"lianamay",frequency:1513,order:67},{text:"zaccota",frequency:1505,order:68},{text:"chiefredearth",frequency:1478,order:69},{text:"aureliomolinahdz",frequency:1462,order:70},{text:"paul_norwood",frequency:1446,order:71},{text:"cosmiccat",frequency:1404,order:72},{text:"cgritz",frequency:1380,order:73},{text:"sidesplotch",frequency:1374,order:74},{text:"royaltyler",frequency:1368,order:75},{text:"kucycads",frequency:1352,order:76},{text:"camelcreek",frequency:1351,order:77},{text:"leslie_flint",frequency:1341,order:78},{text:"wendy5",frequency:1313,order:79},{text:"kestrel",frequency:1310,order:81},{text:"temminicki",frequency:1310,order:80},{text:"andyk",frequency:1305,order:82},{text:"nanorca13",frequency:1282,order:83},{text:"johnvandenhoeven",frequency:1278,order:84},{text:"fm5050",frequency:1267,order:85},{text:"aaroncarlson",frequency:1220,order:86},{text:"rcurtis",frequency:1211,order:87},{text:"annemirdl",frequency:1179,order:88},{text:"lauramorganclark",frequency:1177,order:89},{text:"scottking",frequency:1165,order:90},{text:"krancmm",frequency:1164,order:92},{text:"mchlfx",frequency:1164,order:91},{text:"larry522",frequency:1150,order:93},{text:"lexgarcia1",frequency:1118,order:94},{text:"annikaml",frequency:1106,order:95},{text:"kellyfuerstenberg",frequency:1095,order:96},{text:"richardwasson",frequency:1090,order:97},{text:"dhobern",frequency:1083,order:98},{text:"terathopius",frequency:1082,order:100},{text:"anewman",frequency:1082,order:99},{text:"naturenut",frequency:1077,order:101},{text:"celticcail",frequency:1073,order:102},{text:"kpmcfarland",frequency:1059,order:103},{text:"johnnybirder",frequency:1052,order:104},{text:"trcarlisle",frequency:1049,order:105},{text:"jakob",frequency:1018,order:106},{text:"mickley",frequency:1011,order:107},{text:"joepb",frequency:1001,order:108},{text:"metsa",frequency:990,order:109},{text:"pete_woods",frequency:988,order:110},{text:"rebeccafay",frequency:965,order:111},{text:"nicoolejnik",frequency:964,order:112},{text:"julio",frequency:958,order:113},{text:"tony_wills",frequency:952,order:114},{text:"lst",frequency:942,order:115},{text:"aunty",frequency:941,order:116},{text:"lfelliott",frequency:939,order:117},{text:"botanygirl",frequency:935,order:119},{text:"john_barkla",frequency:935,order:118},{text:"kevinhintsa",frequency:921,order:120},{text:"vilseskog",frequency:920,order:121},{text:"gpstewart",frequency:910,order:122},{text:"eccentric_entomophile",frequency:908,order:123},{text:"raulagrait",frequency:886,order:124},{text:"jim-botany",frequency:885,order:125},{text:"blubayou",frequency:879,order:126},{text:"th0th",frequency:877,order:127},{text:"penelopetowle",frequency:861,order:128},{text:"raymkd",frequency:856,order:129},{text:"gbentall",frequency:841,order:130},{text:"keimwj",frequency:839,order:131},{text:"rwp84",frequency:824,order:132},{text:"suz",frequency:805,order:133},{text:"momoto-erick",frequency:799,order:134},{text:"colinmorita",frequency:796,order:135},{text:"joshualincoln",frequency:794,order:136},{text:"parkecology",frequency:790,order:137},{text:"natureinla",frequency:789,order:138},{text:"jaico",frequency:781,order:139},{text:"matty",frequency:777,order:140},{text:"pacof",frequency:774,order:141},{text:"mayfly1963",frequency:772,order:142},{text:"zooga1961",frequency:770,order:143},{text:"cwwood",frequency:757,order:144},{text:"pjd1",frequency:755,order:145},{text:"anis",frequency:751,order:146},{text:"fyn_kynd",frequency:748,order:147},{text:"tiggrx",frequency:747,order:148},{text:"mikaelb",frequency:745,order:149},{text:"johnb-nz",frequency:741,order:150},{text:"patsimpson2000",frequency:739,order:151},{text:"karolina",frequency:738,order:152},{text:"catenatus",frequency:720,order:153},{text:"codyhough",frequency:719,order:154},{text:"matthewherron",frequency:718,order:156},{text:"carloscarrera",frequency:718,order:155},{text:"barrierislandnaturalist",frequency:717,order:157},{text:"liapun312",frequency:711,order:158},{text:"jaliya",frequency:707,order:159},{text:"eric_hunt",frequency:706,order:160},{text:"tangatawhenua",frequency:700,order:161},{text:"jimjohnson",frequency:693,order:162},{text:"fishesoftexas",frequency:684,order:163},{text:"hannawacker",frequency:671,order:164},{text:"gaudettelaura",frequency:662,order:165},{text:"brentano",frequency:658,order:166},{text:"mmcmasters",frequency:655,order:167},{text:"elfaulkner",frequency:654,order:168},{text:"scadwell",frequency:653,order:170},{text:"enricoschifani",frequency:653,order:169},{text:"kylejones",frequency:652,order:171},{text:"bcfl14",frequency:650,order:172},{text:"faerthen",frequency:646,order:173},{text:"knightericm",frequency:642,order:174},{text:"bjoelle",frequency:641,order:175},{text:"javierahr",frequency:640,order:176},{text:"james5",frequency:639,order:177},{text:"bendingtree",frequency:637,order:178},{text:"mrfish33",frequency:635,order:179},{text:"duarte",frequency:634,order:181},{text:"huatulco",frequency:634,order:180},{text:"sekihiker",frequency:627,order:183},{text:"melissa_hutchison",frequency:627,order:182},{text:"dgreenberger",frequency:625,order:184},{text:"butterflies4fun",frequency:624,order:185},{text:"atassin",frequency:618,order:186},{text:"asemerdj",frequency:617,order:188},{text:"ellen5",frequency:617,order:187},{text:"heliographyst",frequency:616,order:189},{text:"javigonz",frequency:615,order:190},{text:"poncho",frequency:607,order:191},{text:"coachwhipbooks",frequency:606,order:192},{text:"treegrow",frequency:604,order:193},{text:"steve_kerr",frequency:602,order:194},{text:"rjnjr",frequency:597,order:195},{text:"nzwide",frequency:591,order:196},{text:"jay",frequency:589,order:198},{text:"rileypollom",frequency:589,order:197},{text:"jzzipkin",frequency:586,order:199},{text:"hugoalvarezg",frequency:584,order:202},{text:"gancw1",frequency:584,order:201},{text:"marisa_a",frequency:584,order:200},{text:"ivijayanand",frequency:579,order:203},{text:"manuelnevarez",frequency:575,order:204},{text:"danielgeorge",frequency:574,order:205},{text:"coreyjlange",frequency:570,order:206},{text:"molanic",frequency:563,order:207},{text:"jollygoodyellow",frequency:561,order:208},{text:"rjadams55",frequency:560,order:209},{text:"dave-barry",frequency:559,order:210},{text:"leftcoastnaturalist",frequency:555,order:211},{text:"ericisley",frequency:551,order:212},{text:"tortuga_rapido",frequency:549,order:214},{text:"adorantes",frequency:549,order:213},{text:"sparrow",frequency:548,order:215},{text:"finrod",frequency:547,order:216},{text:"nlblock",frequency:546,order:218},{text:"khimmler",frequency:546,order:217},{text:"matthew_salkiewicz",frequency:539,order:219},{text:"milopyne",frequency:538,order:220},{text:"david_lyttle",frequency:536,order:221},{text:"danieleseglie",frequency:534,order:222},{text:"shaunmichael",frequency:532,order:223},{text:"beschwar",frequency:530,order:224},{text:"npollock66",frequency:522,order:226},{text:"benconnorbarrie",frequency:522,order:225},{text:"icosahedron",frequency:520,order:227},{text:"connor22",frequency:510,order:228},{text:"romer",frequency:507,order:229},{text:"rebecca_atx",frequency:506,order:230},{text:"chia",frequency:503,order:231},{text:"chrisgoforth",frequency:502,order:233},{text:"nelruzam",frequency:502,order:232},{text:"ross2",frequency:500,order:236},{text:"scottbuckel",frequency:500,order:235},{text:"jaguargozandojungla",frequency:500,order:234},{text:"amyjaeckerjones",frequency:498,order:238},{text:"njohnson",frequency:498,order:237},{text:"kbeza31979",frequency:497,order:239},{text:"jptuttle",frequency:495,order:240},{text:"tapaculo99",frequency:494,order:242},{text:"mrchasse",frequency:494,order:241},{text:"sarka",frequency:493,order:243},{text:"dianaterryhibbitts",frequency:489,order:246},{text:"hvillalonmoreno",frequency:489,order:245},{text:"onjalalaina",frequency:489,order:244},{text:"lg_price",frequency:485,order:248},{text:"kimberlietx",frequency:485,order:247},{text:"fernandovalentinez_uruapan",frequency:481,order:249},{text:"carrieseltzer",frequency:480,order:250},{text:"alexshepard",frequency:479,order:251},{text:"eagleloft",frequency:478,order:252},{text:"bluebird101",frequency:469,order:253},{text:"carlos2",frequency:466,order:254},{text:"melindawpajak",frequency:465,order:256},{text:"paulcools",frequency:465,order:255},{text:"cesarpollo5",frequency:463,order:258},{text:"cdorsay",frequency:463,order:257},{text:"subhajit_roy",frequency:460,order:259},{text:"opuntia",frequency:458,order:260},{text:"dnydick",frequency:457,order:261},{text:"csavy",frequency:455,order:262},{text:"smwhite",frequency:447,order:263},{text:"absoluteandy",frequency:443,order:264},{text:"wildflowerenthusiast5",frequency:441,order:265},{text:"carmelo_lopez",frequency:439,order:266},{text:"lepalot",frequency:438,order:267},{text:"sarahcarline",frequency:429,order:269},{text:"paolapalazzolo",frequency:429,order:268},{text:"rammahr",frequency:428,order:270},{text:"caminogirl",frequency:426,order:271},{text:"angelicabecerrat",frequency:423,order:272},{text:"sudachi",frequency:419,order:273},{text:"alice_shanks",frequency:417,order:275},{text:"pohanginapete",frequency:417,order:274},{text:"sorilet14",frequency:416,order:276},{text:"rkharwood",frequency:413,order:277},{text:"yasingi",frequency:411,order:280},{text:"nicetim",frequency:411,order:279},{text:"russellm08",frequency:411,order:278},{text:"raphusdodo",frequency:410,order:281},{text:"ctracey",frequency:409,order:282},{text:"skiman1016",frequency:408,order:284},{text:"johnsteel",frequency:408,order:283},{text:"gtsalmon",frequency:404,order:285},{text:"tonyg",frequency:403,order:286},{text:"evelynch",frequency:401,order:287},{text:"neilvinson",frequency:398,order:288},{text:"christian77amador",frequency:394,order:289},{text:"toby",frequency:393,order:291},{text:"congonaturalist",frequency:393,order:290},{text:"jimsteamer",frequency:386,order:293},{text:"willfreyman",frequency:386,order:292},{text:"mc_biology_club",frequency:384,order:294},{text:"skystevens",frequency:383,order:298},{text:"layla",frequency:383,order:297},{text:"bob777",frequency:383,order:296},{text:"lscknwrbiota",frequency:383,order:295},{text:"rodolfojuliani",frequency:380,order:299},{text:"pedrofcofrancohdez",frequency:379,order:300},{text:"guille",frequency:378,order:302},{text:"prairieridge",frequency:378,order:301},{text:"timbir5",frequency:376,order:304},{text:"brianw",frequency:376,order:303},{text:"acryptozoo",frequency:375,order:305},{text:"sedema-veracruz",frequency:374,order:306},{text:"d_kluza",frequency:373,order:308},{text:"hydaticus",frequency:373,order:307},{text:"langaha",frequency:372,order:310},{text:"theresaannclark",frequency:372,order:309},{text:"cspnl",frequency:369,order:312},{text:"marknenadov",frequency:369,order:311},{text:"markg",frequency:368,order:313},{text:"aguilita",frequency:366,order:314},{text:"microm",frequency:365,order:315},{text:"franko",frequency:364,order:316},{text:"the_salamander_man",frequency:363,order:319},{text:"tobler",frequency:363,order:318},{text:"lichenlady",frequency:363,order:317},{text:"alderash",frequency:361,order:320},{text:"alfonsinahernandez",frequency:360,order:321},{text:"gailtv",frequency:359,order:322},{text:"xavimm75",frequency:358,order:323},{text:"thehaplesshiker",frequency:357,order:325},{text:"jack4",frequency:357,order:324},{text:"beartracker",frequency:353,order:327},{text:"jmarchal",frequency:353,order:326},{text:"trevor_partridge",frequency:352,order:328},{text:"dyeany2",frequency:351,order:329},{text:"hartvillestuff",frequency:347,order:331},{text:"tgosliner",frequency:347,order:330},{text:"steviekgold",frequency:346,order:333},{text:"jacobogre",frequency:346,order:332},{text:"rhislop",frequency:345,order:334},{text:"rappman",frequency:344,order:337},{text:"rbbrummitt",frequency:344,order:336},{text:"bobmcd",frequency:344,order:335},{text:"dremsen",frequency:343,order:339},{text:"eolanp",frequency:343,order:338},{text:"sullivanribbit",frequency:340,order:341},{text:"ajwacaser",frequency:340,order:340},{text:"sara4",frequency:336,order:342},{text:"nanofishology",frequency:335,order:343},{text:"sindic",frequency:332,order:344},{text:"annwf",frequency:329,order:345},{text:"pintail",frequency:328,order:346},{text:"ggnoma",frequency:325,order:348},{text:"jonibaum",frequency:325,order:347},{text:"martinbishop",frequency:324,order:350},{text:"john8",frequency:324,order:349},{text:"biohexx1",frequency:323,order:351},{text:"ryber",frequency:322,order:352},{text:"chandan",frequency:319,order:353},{text:"pbedell",frequency:318,order:354},{text:"grahame",frequency:316,order:356},{text:"jnelson",frequency:316,order:355},{text:"speiden",frequency:315,order:357},{text:"michaelcobballen",frequency:314,order:362},{text:"sheliahargis",frequency:314,order:361},{text:"wisel",frequency:314,order:360},{text:"chuckd",frequency:314,order:359},{text:"liselle",frequency:314,order:358},{text:"trichomanes",frequency:312,order:363},{text:"dwilson",frequency:311,order:364},{text:"heathermarie",frequency:310,order:366},{text:"panza_rayada",frequency:310,order:365},{text:"kaitlin",frequency:309,order:369},{text:"esrakotoarisoa",frequency:309,order:368},{text:"califlora",frequency:309,order:367},{text:"abr",frequency:304,order:371},{text:"oz4caster",frequency:304,order:370},{text:"itmndeborah",frequency:303,order:372},{text:"carlaag",frequency:302,order:374},{text:"miwasatoshi",frequency:302,order:373},{text:"dhalter",frequency:299,order:376},{text:"dpalmeri",frequency:299,order:375},{text:"belemqueuedelapin",frequency:295,order:377},{text:"fluffberger",frequency:293,order:379},{text:"jblinde",frequency:293,order:378},{text:"tom_carlberg",frequency:292,order:380},{text:"hawnzd",frequency:290,order:381},{text:"mbowser",frequency:287,order:382},{text:"eraskin",frequency:286,order:383},{text:"cwbarrows",frequency:285,order:384},{text:"field_daze",frequency:284,order:389},{text:"romeyswanson",frequency:284,order:388},{text:"majo00",frequency:284,order:387},{text:"ncowey",frequency:284,order:386},{text:"hummer56",frequency:284,order:385},{text:"rockybajada",frequency:283,order:390},{text:"swpip",frequency:282,order:392},{text:"jkrzeptowski",frequency:282,order:391},{text:"godricvt",frequency:281,order:395},{text:"nicolebot",frequency:281,order:394},{text:"tiskolin",frequency:281,order:393},{text:"rowan_hindmarsh_walls",frequency:279,order:397},{text:"nycticorax",frequency:279,order:396},{text:"runshigleyrun",frequency:278,order:398},{text:"arturogma",frequency:277,order:399},{text:"mothvet",frequency:276,order:402},{text:"wkcheng71",frequency:276,order:401},{text:"pihlaviita",frequency:276,order:400},{text:"bonnieeamick",frequency:273,order:403},{text:"aredoubles",frequency:272,order:404},{text:"colleenm",frequency:271,order:405},{text:"cixpre",frequency:269,order:406},{text:"jlmichael",frequency:268,order:407},{text:"ttadevosyan",frequency:267,order:409},{text:"bill-nz",frequency:267,order:408},{text:"madalyn6690",frequency:265,order:410},{text:"crimmer",frequency:264,order:411},{text:"chamaeleo",frequency:263,order:412},{text:"jmanuelgbasurto",frequency:262,order:413},{text:"beepboop",frequency:261,order:414},{text:"aztekium",frequency:260,order:415},{text:"greenrosettas",frequency:259,order:417},{text:"leptodia",frequency:259,order:416},{text:"jwhittle",frequency:258,order:418},{text:"nancyed",frequency:256,order:419},{text:"michael",frequency:255,order:421},{text:"lera",frequency:255,order:420},{text:"trosenmeier",frequency:254,order:425},{text:"aegolius",frequency:254,order:424},{text:"angelasimpson",frequency:254,order:423},{text:"rangervic",frequency:254,order:422},{text:"naturespotter",frequency:253,order:426},{text:"danjleavitt",frequency:252,order:428},{text:"swanson",frequency:252,order:427},{text:"rodolphsartin",frequency:248,order:429},{text:"denniswross",frequency:247,order:432},{text:"srall",frequency:247,order:431},{text:"juanrafael77",frequency:247,order:430},{text:"joachim",frequency:245,order:433},{text:"mattiamenchetti",frequency:244,order:434},{text:"amybeth55",frequency:243,order:435},{text:"beaatthenest",frequency:242,order:436},{text:"ronsavage",frequency:241,order:438},{text:"acreman",frequency:241,order:437},{text:"la_mancha_en_movimiento",frequency:240,order:439},{text:"bouteloua",frequency:239,order:440},{text:"amandaandmike",frequency:238,order:441},{text:"dmontijo",frequency:237,order:442},{text:"bluets15",frequency:236,order:444},{text:"jason_m_hill",frequency:236,order:443},{text:"nuwan",frequency:235,order:446},{text:"mcanlic",frequency:235,order:445},{text:"hobiecat",frequency:234,order:448},{text:"alfredoeloisa",frequency:234,order:447},{text:"pleary",frequency:233,order:449},{text:"yaoshawn",frequency:231,order:450},{text:"bhollingsworth",frequency:230,order:451},{text:"maryejohnson",frequency:228,order:453},{text:"benhutchins",frequency:228,order:452},{text:"vadalton",frequency:227,order:454},{text:"tedbarone",frequency:226,order:455},{text:"mperdicas",frequency:225,order:457},{text:"ospreyeagle",frequency:225,order:456},{text:"smartrf",frequency:224,order:460},{text:"aaaaalex0180",frequency:224,order:459},{text:"sunita",frequency:224,order:458},{text:"salmonskyview",frequency:223,order:461},{text:"mickeylong",frequency:222,order:462},{text:"justin2",frequency:221,order:465},{text:"marcello",frequency:221,order:464},{text:"i_c_riddell",frequency:221,order:463},{text:"leptonia",frequency:220,order:467},{text:"dfwuw",frequency:220,order:466},{text:"rebelgirl73",frequency:219,order:471},{text:"genebem",frequency:219,order:470},{text:"angel92_yucatanjay",frequency:219,order:469},{text:"artemis224",frequency:219,order:468},{text:"wischlegel",frequency:218,order:475},{text:"dean_g",frequency:218,order:474},{text:"randomrover88",frequency:218,order:473},{text:"lupiita",frequency:218,order:472},{text:"moyervides",frequency:217,order:476},{text:"mustardlypig",frequency:216,order:478},{text:"philwarren",frequency:216,order:477},{text:"naturalist619",frequency:215,order:479},{text:"chris_hass",frequency:214,order:481},{text:"dshell",frequency:214,order:480},{text:"artmur",frequency:213,order:482},{text:"zprincipe",frequency:212,order:484},{text:"kiloueka",frequency:212,order:483},{text:"bcal003",frequency:211,order:485},{text:"biosam",frequency:210,order:487},{text:"cdmar10",frequency:210,order:486},{text:"laceypantalones",frequency:209,order:489},{text:"reynoldsj13",frequency:209,order:488},{text:"discoverycamp",frequency:208,order:490},{text:"pmdenn",frequency:207,order:492},{text:"sitkaconnor",frequency:207,order:491},{text:"loloscheiner",frequency:206,order:494},{text:"iain_reid",frequency:206,order:493},{text:"jansonjones",frequency:205,order:497},{text:"jamo",frequency:205,order:496},{text:"flosi",frequency:205,order:495},{text:"d_b",frequency:204,order:498},{text:"jsinghurst",frequency:203,order:499}])
+        .padding(1)
+        .rotate(function() { return ~~(Math.random() * 2) * 90; })
+        .font("sans-serif")
+        .fontSize(function(d) { return xScale(d.frequency); })
+        .on("end", draw)
+        .start();
+
+    function draw(words) {
+        svg.selectAll("text.words")
+          .data(words)
+          .enter()
+          .append("text")
+          .style("font-size", function(d) { return d.size + "px"; })
+          .style("font-family", "sans-serif")
+          .style("fill", function(d, i) { return fill(i); })
+          .attr("class","words")
+          .attr("text-anchor", "middle")
+          .attr("transform", function(d) {
+            return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+          })
+          .text(function(d) { return d.text; });
+        
+        svg.selectAll("rect")
+          .data(words)
+          .enter()
+          .append("rect")
+          .filter(function(d,i) { return i <= 99; })
+          .style("fill", function(d, i) { return fill(i); })
+          .attr("x", function(d,i){ return 12-width/2 + 185*Math.floor(i/34); })
+          .attr("y", function(d,i){return 10+(i % 34)*16 - height/2 - 10;})
+          .attr("width", 0)
+          .attr("height", 10);
+          
+        var g = svg.append("g").attr("class","nums");
+  
+        g.selectAll("text.nums")
+          .data(words)
+          .enter()
+          .append("text")
+          .filter(function(d,i) { return i <= 99; })
+          .text(function(d,i) {return i+1 + ".";})
+          .attr("class","nums")
+          .attr("x", function(d,i){ return 10-width/2 + 185*Math.floor(i/34); })
+          .attr("y", function(d,i) {return 10+(i % 34)*16 - height/2;})
+          .attr("text-anchor", "end")
+          .style("font-size", "12px")
+          .style("font-family", "sans-serif")
+          .style("fill", "#000")
+          .style('opacity', 0);
+          
+      }
+    
+    d3.select("input").on("change", change);
+    
+    function change() {
+      var toggle = d3.select("input");
+      if(toggle.attr("checked") == "true"){
+        toggle.attr("checked", "false");
+        svg.selectAll("text.words")
+            .transition().duration(2000)
+            .style('opacity', 1)
+            .style("font-size", function(d) { return d.size + "px"; })
+            .style("font-family", "sans-serif")
+            .style("fill", function(d, i) { return fill(i); })
+            .attr("text-anchor", "middle")
+            .attr("transform", function(d) {
+              return "translate(" + [d.x, d.y] + ")rotate(" + d.rotate + ")";
+            });
+            
+        svg.selectAll("rect")
+            .transition().duration(2000)
+            .attr("width", 0);
+            
+        svg.selectAll("text.nums")
+            .transition().duration(2000)
+            .style('opacity', 0);
+            
+      } else {
+        toggle.attr("checked", "true");
+        svg.selectAll("text.words")
+            .filter(function(d,i) { return i > 99; })
+            .transition().duration(2000)
+            .style('opacity', 0);
+        svg.selectAll("text.words")
+            .filter(function(d,i) { return i <= 99; })
+            .transition().duration(2000)
+            .attr("transform",function(d,i) {return "translate(" + ((this.getBBox().width*12/d.size)/2 + yScale(d.frequency) + 14 - width/2 + 185*Math.floor(i/34)) + "," + (10+((i % 34)*16) - height/2) + ")"; })
+            .style("font-family", "sans-serif")
+            .style("font-size","12px");
+         
+        svg.selectAll("rect")
+            .transition().duration(2000)
+            .attr("width", function(d){return yScale(d.frequency);});
+            
+        svg.selectAll("text.nums")
+            .transition().duration(2000)
+            .style('opacity', 1);
+            
+        
+      }
+  
+    }
+    
+    
+  </script>

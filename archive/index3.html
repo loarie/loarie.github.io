@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+.land {
+  fill: #ddd;
+}
+
+.border {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.bubble {
+  fill: brown;
+  fill-opacity: .5;
+  stroke: #fff;
+  stroke-width: .5px;
+}
+
+.bubble :hover {
+  stroke: #000;
+}
+
+.legend circle {
+  fill: none;
+  stroke: #ccc;
+}
+
+.legend text {
+  fill: #777;
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.d3-tip {
+  line-height: 1;
+  font: 10px sans-serif;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}
+
+</style>
+<body>
+<script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="//d3js.org/topojson.v1.min.js"></script>
+<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.v0.6.3.js"></script>
+<script>
+
+var width = 960,
+    height = 600;
+
+var path = d3.geo.path()
+    .projection(null);
+
+var radius = d3.scale.sqrt()
+    .domain([0, 50])
+    .range([0, 15]);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var legend = svg.append("g")
+	   .attr("class", "legend")
+	   .attr("transform", "translate(" + (width - 50) + "," + (height - 20) + ")")
+	 .selectAll("g")
+	   .data([5, 50])
+	 .enter().append("g");
+
+ var tip = d3.tip()
+   .attr('class', 'd3-tip')
+   .offset([-10, 0])
+   .html(function(d) {
+     return d.properties.population + " observation" + (d.properties.population == 1 ? "" : "s");
+   })
+
+legend.append("circle")
+	   .attr("cy", function(d) { return -radius(d); })
+	   .attr("r", radius);
+
+legend.append("text")
+	   .attr("y", function(d) { return -2 * radius(d); })
+	   .attr("dy", "1.3em")
+	   .text(d3.format(".1s"));
+
+svg.call(tip);
+			
+d3.json("us.json", function(error, us) {
+  if (error) return console.error(error);
+
+	svg.append("path")
+    .datum(topojson.feature(us, us.objects.nation))
+    .attr("class", "land")
+    .attr("d", path);
+
+	svg.append("path")
+    .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+    .attr("class", "border border--state")
+    .attr("d", path);
+		
+svg.append("g")
+      .attr("class", "bubble")
+    .selectAll("circle")
+      .data(topojson.feature(us, us.objects.counties).features)
+    .enter().append("circle")
+      .attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+      .attr("r", function(d) { return radius(d.properties.population); })
+			.on('mouseover', tip.show)
+      .on('mouseout', tip.hide);
+		
+});
+
+</script>
