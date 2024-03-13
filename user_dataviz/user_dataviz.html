@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Styling Example</title>
+    <style>
+        body {
+            font-family: Whitney,"Trebuchet MS",Arial,sans-serif;
+        }
+        .tooltip {
+            position: absolute;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            pointer-events: none;
+            opacity: 0;
+        }
+    </style>
+</head>
+<body>
+
+<script src="https://d3js.org/d3.v4.js"></script>
+
+<div id="user_dataviz"></div>
+
+<script>
+
+var margin = {top: 10, right: 10, bottom: 10, left: 10},
+  width = 1000 - margin.left - margin.right,
+  height = 800 - margin.top - margin.bottom;
+
+var svg = d3.select("#user_dataviz")
+.append("svg")
+  .attr("width", width + margin.left + margin.right)
+  .attr("height", height + margin.top + margin.bottom)
+.append("g")
+  .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+let randomNumber = Math.floor(Math.random() * 1000);
+let newURL = "user_data.json?" + randomNumber;
+d3.json(newURL, function(data) {
+
+  var root = d3.hierarchy(data).sum(function(d){ return d.value})
+  var sumOfLeaves = root.value;
+  d3.treemap()
+    .size([width, height])
+    .paddingTop(28)
+    .paddingRight(7)
+    .paddingInner(3)
+    (root)
+
+  var color = d3.scaleOrdinal()
+    .domain(["web", "ios", "android", "seek", "other", "ider"])
+    .range(["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b"]);
+
+  var opacity = d3.scaleLinear()
+    .domain([10, 30])
+    .range([.5,1])
+
+  svg
+    .selectAll("rect")
+    .data(root.leaves())
+    .enter()
+    .append("rect")
+      .attr('x', function (d) { return d.x0; })
+      .attr('y', function (d) { return d.y0; })
+      .attr('width', function (d) { return d.x1 - d.x0; })
+      .attr('height', function (d) { return d.y1 - d.y0; })
+      .style("stroke", "black")
+      .style("fill", function(d){ return color(d.data.name);} )
+      .style("opacity", function(d){ return opacity(d.data.value)})
+      .style("cursor", function(d) { return d.data.url ? "pointer" : "default"; }) // Set cursor style
+      .on("mouseover", function(d) {
+        tooltip.style("opacity", 1);
+        tooltip.style("left", (d3.event.pageX + 10) + "px");
+        tooltip.style("top", (d3.event.pageY + 10) + "px");
+        tooltip.html(
+          "Name: " + d.data.name + "<br/>" + 
+          "Value: " + d.data.value.toLocaleString() + "<br/>" +
+          "Percent: " + (d.data.value / sumOfLeaves * 100).toFixed(2) + "%"          
+        );
+      })
+      .on("mouseout", function() {
+        tooltip.style("opacity", 0);
+      })
+      .on("click", function(d) {
+       if (d.data.url) {
+        window.open(d.data.url, "_blank");
+       }
+      });
+      
+  var tooltip = d3.select("body")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+  
+  svg
+    .selectAll("text")
+    .data(root.leaves().filter(function(d) { return d.data.value > 10000; }))
+    .enter()
+    .append("text")
+      .attr("x", function(d){ return d.x0+5})
+      .attr("y", function(d){ return d.y0+20})
+      .text(function(d){ return d.data.name })
+      .attr("font-size", "12px")
+      .attr("fill", "white")
+
+  svg
+    .selectAll("vals")
+    .data(root.leaves().filter(function(d) { return d.data.value > 10000; }))
+    .enter()
+    .append("text")
+      .attr("x", function(d){ return d.x0+5})
+      .attr("y", function(d){ return d.y0+35})
+      .text(function(d){ return d.data.value.toLocaleString() })
+      .attr("font-size", "11px")
+      .attr("fill", "white")
+
+  svg
+    .selectAll("vals")
+    .data(root.leaves().filter(function(d) { return d.data.value > 10000; }))
+    .enter()
+    .append("text")
+      .attr("x", function(d){ return d.x0+5})
+      .attr("y", function(d){ return d.y0+50})
+      .text(function(d){ return (d.data.value / sumOfLeaves * 100).toFixed(2) + "%"; })
+      .attr("font-size", "11px")
+      .attr("fill", "white")
+      
+  svg
+    .selectAll("titles")
+    .data(root.descendants().filter(function(d){return d.depth==1}))
+    .enter()
+    .append("text")
+      .attr("x", function(d){ return d.x0})
+      .attr("y", function(d){ return d.y0+21})
+      .text(function(d){ 
+        var ratio = (d.value / sumOfLeaves * 100).toFixed(2);
+        return d.data.name + ": " + d.value.toLocaleString() + " (" + ratio + "%)" 
+      })
+      .attr("font-size", "15px")
+      .attr("fill",  "black" )
+  
+  svg
+    .selectAll("titles")
+    .data(root.descendants().filter(function(d){return d.depth == 2;}))
+    .enter()
+    .append("text")
+      .attr("x", function(d){ return d.x0})
+      .attr("y", function(d){ return d.y0+21})
+      .text(function(d){ 
+        var ratio = (d.value / sumOfLeaves * 100).toFixed(2);
+        if (d.value > 10000) {
+          return d.data.name + ": " + d.value.toLocaleString() + " (" + ratio + "%)" 
+        } else {
+          return d.data.name + ": " + d.value.toLocaleString()
+        }
+      })
+      .attr("font-size", "14px")
+      .attr("fill",  "black" )
+
+  svg
+    .append("text")
+      .attr("x", 0)
+      .attr("y", 14)
+      .text("All logged in users in the last 30 days")
+      .attr("font-size", "19px")
+      .attr("fill",  "black" )
+
+})
+</script>
+</body>
+</html>
