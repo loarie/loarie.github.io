@@ -32,11 +32,12 @@
       background: white;
       padding: 20px;
       box-sizing: border-box;
-      margin-bottom: 20px; /* space between sections on mobile */
+      margin-bottom: 10px; /* space between sections on mobile */
     }
 
     .heading h1 {
       margin-top: 0;
+      text-align: center;
     }
 
     .paragraphs p {
@@ -128,11 +129,33 @@
     <!-- 1) Heading -->
     <div class="heading">
       <h1>Scott Loarie</h1>
+      
+      <!-- Social Icons Row -->
+      <div style="display: flex; gap: 10px; justify-content: center; margin: 20px 0;">
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/scott-loarie-872b665/" aria-label="LinkedIn">
+          <img src="images/linkedin-icon.png" alt="LinkedIn icon" style="height: 30px; width: auto;" />
+        </a>
+        
+        <!-- iNaturalist -->
+        <a href="https://inaturalist.org/users/loarie" aria-label="X (formerly Twitter)">
+          <img src="images/inat-icon.png" alt="X icon" style="height: 30px; width: auto;" />
+        </a>
+  
+        <!-- X (formerly Twitter) -->
+        <a href="https://twitter.com/loarie" aria-label="X (formerly Twitter)">
+          <img src="images/twitter-icon.png" alt="X icon" style="height: 30px; width: auto;" />
+        </a>  
+        <!-- Email -->
+        <a href="mailto:loarie@inaturalist.org" aria-label="Email">
+          <img src="images/email-icon.png" alt="Email icon" style="height: 30px; width: auto;" />
+        </a>
+      </div>
     </div>
 
     <!-- 2) Image (comes between heading & paragraphs on mobile) -->
     <div class="image">
-      <img src="pic.png" alt="Scott Loarie" />
+      <img src="images/pic.png" alt="Scott Loarie" />
     </div>
 
     <!-- 3) Paragraphs (on mobile, these follow the image) -->
