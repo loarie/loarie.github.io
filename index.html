@@ -1,62 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Scott Loarie</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      margin: 0;
+      margin: 20px;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background-color: #f4f4f9;
+      background-color: white;
+      font-family: Arial, sans-serif;
     }
+
+    /* 
+      Container holds three siblings:
+        1) .heading
+        2) .image
+        3) .paragraphs
+      By default (mobile-first), they flow top-to-bottom:
+        Heading -> Image -> Paragraphs
+      which places the image between the heading and paragraphs as desired.
+    */
     .container {
-      display: flex;
-      background: white;
-      border: 1px solid #ddd;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       max-width: 1000px;
       width: 100%;
-      border-radius: 8px;
-      overflow: hidden;
-      margin-bottom: 20px;
+      margin: 0 auto 20px auto;
+      padding: 0 10px; /* some horizontal padding */
     }
-    .bio {
+
+    .heading, .image, .paragraphs {
+      background: white;
       padding: 20px;
-      flex: 1;
+      box-sizing: border-box;
+      margin-bottom: 20px; /* space between sections on mobile */
     }
-    .bio h1 {
+
+    .heading h1 {
       margin-top: 0;
     }
-    .bio p {
+
+    .paragraphs p {
       line-height: 1.6;
       color: #555;
+      margin-top: 0;
+      margin-bottom: 1em;
     }
+
     .image {
-      flex: 0.5;
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 20px;
-      box-sizing: border-box;
     }
+
     .image img {
       max-width: 100%;
       height: auto;
       border-radius: 8px;
     }
+
+    /* 
+      For LARGE screens (>= 769px), switch the container to a 2-column Grid:
+        - Column 1 (left) for .heading (row 1) + .paragraphs (row 2)
+        - Column 2 (right) for .image
+      Both columns are 1fr (50%-50%), giving the image the same width 
+      as the combined heading + paragraphs column.
+    */
+    @media (min-width: 769px) {
+      .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* two equal-width columns */
+        grid-gap: 20px; /* space between columns */
+        padding: 0;     /* remove extra padding around the grid */
+      }
+
+      /* 
+        Place .heading in Row 1, Column 1
+        Place .paragraphs in Row 2, Column 1
+        Place .image in Row 1-2, Column 2
+      */
+      .heading {
+        grid-column: 1;
+        grid-row: 1;
+        margin-bottom: 0; /* no bottom margin in grid layout */
+      }
+      .paragraphs {
+        grid-column: 1;
+        grid-row: 2;
+        margin-bottom: 0;
+      }
+      .image {
+        grid-column: 2;
+        grid-row: 1 / span 2; /* spans rows 1 and 2 */
+        margin-bottom: 0;
+      }
+    }
+
+    /* Video section styling (unchanged) */
     .video-section {
       max-width: 900px;
       width: 100%;
       background: white;
       border: 1px solid #ddd;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
       border-radius: 8px;
       overflow: hidden;
+      margin: 0 auto 20px auto;
     }
     .video-wrapper {
       position: relative;
@@ -75,21 +123,50 @@
   </style>
 </head>
 <body>
+
   <div class="container">
-    <div class="bio">
+    <!-- 1) Heading -->
+    <div class="heading">
       <h1>Scott Loarie</h1>
-      <p><a href="https://www.linkedin.com/in/scott-loarie-872b665/">Scott Loarie</a> is the Executive Director of <a href="https://www.inaturalist.org/">iNaturalist</a>, a nonprofit that connects people with nature to drive global conservation. Under his leadership, iNaturalist has become one of the world’s largest biodiversity databases, powered by millions of passionate users and thousands of expert naturalists working together to document life on Earth. In 2024, Scott received the prestigious <a href="https://www.heinzawards.org/pages/scott-loarie-ken-ichi-ueda">Heinz Award for the Environment</a>, recognizing iNaturalist's transformative impact on science and conservation.</p>
-      <p>Scott’s love for nature began during his childhood on the Russian River in rural Northern California, where exploring the outdoors sparked a lifelong fascination with biodiversity. That passion led him to earn degrees in biology from Stanford and a PhD in environmental science from Duke. As a researcher at the Carnegie Institution for Science and a lecturer at UC Berkeley, Scott studied how <a href="https://www.nature.com/articles/nature08649">climate change is reshaping ecosystems worldwide</a>, from banding birds in Central America to tracking elephants with GPS collars across Africa.</p>
-      <p>In 2011, Scott’s growing fascination with the power of technology to scale and decentralize solutions inspired him to leave academia and build a platform to connect people and nature at a global scale. The result was iNaturalist—a platform that not only inspires curiosity and discovery but also fuels scientific breakthroughs and conservation action.</p>
     </div>
+
+    <!-- 2) Image (comes between heading & paragraphs on mobile) -->
     <div class="image">
-      <img src="pic.png" alt="Scott Loarie">
+      <img src="pic.png" alt="Scott Loarie" />
+    </div>
+
+    <!-- 3) Paragraphs (on mobile, these follow the image) -->
+    <div class="paragraphs">
+      <p>
+        <a href="https://www.linkedin.com/in/scott-loarie-872b665/">Scott Loarie</a> 
+        is the Executive Director of <a href="https://www.inaturalist.org/">iNaturalist</a>, 
+        a nonprofit that connects people with nature to drive global conservation. 
+        In 2024, Scott received the prestigious 
+        <a href="https://www.heinzawards.org/pages/scott-loarie-ken-ichi-ueda">Heinz Award for the Environment</a>.
+      </p>
+      <p>
+        Scott’s love for nature began during his childhood on the Russian River in rural Northern California, where exploring the outdoors sparked a lifelong fascination with biodiversity. That passion led him to earn degrees in biology from Stanford and a PhD in environmental science from Duke. As a researcher at the Carnegie Institution for Science and a lecturer at UC Berkeley, Scott studied how <a href="https://www.nature.com/articles/nature08649">climate change is reshaping ecosystems worldwide</a>, from banding birds in Central America to tracking elephants with GPS collars across Africa.
+      </p>
+      <p>
+        In 2011, Scott’s growing fascination with the power of technology to scale 
+        and decentralize solutions inspired him to leave academia and build iNaturalist 
+        — a platform that not only inspires curiosity and discovery but also fuels 
+        scientific breakthroughs and conservation action.
+      </p>
     </div>
   </div>
+
   <div class="video-section">
     <div class="video-wrapper">
-      <iframe src="https://www.youtube.com/embed/-bidK7RXB8U?si=0UC3MwuJ28OjAD2A" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+      <iframe
+        src="https://www.youtube.com/embed/-bidK7RXB8U?si=0UC3MwuJ28OjAD2A"
+        title="YouTube video player"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen
+      ></iframe>
     </div>
   </div>
+  
 </body>
 </html>
