@@ -1,15 +1,15 @@
 {
-    "animalia":1,
-    "actinopterygii":1,
-    "aves":2,
-    "reptilia":1,
-    "amphibia":1,
-    "mammalia":1,
-    "arachnida":1,
-    "insecta":6,
-    "plantae":5,
-    "fungi":1,
-    "protozoa":1,
-    "mollusca":1,
-    "chromista":1
+    "Plantae": {"ranges": 37157, "archives": 6},
+    "Insecta": {"ranges": 33805, "archives": 5},
+    "Aves": {"ranges": 6180, "archives": 2},
+    "Fungi": {"ranges": 4045, "archives": 1},
+    "Mollusca": {"ranges": 3474, "archives": 1},
+    "Actinopterygii": {"ranges": 3419, "archives": 1},
+    "Animalia": {"ranges": 3586, "archives": 1},
+    "Reptilia": {"ranges": 2692, "archives": 1},
+    "Arachnida": {"ranges": 2787, "archives": 1},
+    "Mammalia": {"ranges": 1442, "archives": 1},
+    "Amphibia": {"ranges": 1354, "archives": 1},
+    "Chromista": {"ranges": 259, "archives": 1},
+    "Protista": {"ranges": 57, "archives": 1}
 }
