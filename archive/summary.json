@@ -1,1 +1,15 @@
-{"total_users":8423391,"total_leaf_taxa":508574,"total_observations":227901245,"total_observed_taxa":508574,"total_observers":3510370,"updated_at":"2025-02-22T09:12:43.277-08:00"}
+{
+    "Animalia":1,
+    "Actinopterygii":1,
+    "Aves":2,
+    "Reptilia":1,
+    "Amphibia":1,
+    "Mammalia":1,
+    "Arachnida":1,
+    "Insecta":6,
+    "Plantae":5,
+    "Fungi":1,
+    "Protozoa":1,
+    "Mollusca":1,
+    "Chromista":1
+}
