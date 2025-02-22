@@ -1,15 +1,15 @@
 {
-    "Animalia":1,
-    "Actinopterygii":1,
-    "Aves":2,
-    "Reptilia":1,
-    "Amphibia":1,
-    "Mammalia":1,
-    "Arachnida":1,
-    "Insecta":6,
-    "Plantae":5,
-    "Fungi":1,
-    "Protozoa":1,
-    "Mollusca":1,
-    "Chromista":1
+    "animalia":1,
+    "actinopterygii":1,
+    "aves":2,
+    "reptilia":1,
+    "amphibia":1,
+    "mammalia":1,
+    "arachnida":1,
+    "insecta":6,
+    "plantae":5,
+    "fungi":1,
+    "protozoa":1,
+    "mollusca":1,
+    "chromista":1
 }
