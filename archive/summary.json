@@ -1,8 +1,8 @@
 {
-  "ranges": 100300, "version": "2.20", "collections":
+  "ranges": 100293, "version": "2.20", "collections":
   {
-    "Plantae": {"ranges": 37157, "archives": 6},
-    "Insecta": {"ranges": 33805, "archives": 5},
+    "Plantae": {"ranges": 37157, "archives": 8},
+    "Insecta": {"ranges": 33805, "archives": 7},
     "Aves": {"ranges": 6180, "archives": 2},
     "Fungi": {"ranges": 4045, "archives": 1},
     "Mollusca": {"ranges": 3474, "archives": 1},
