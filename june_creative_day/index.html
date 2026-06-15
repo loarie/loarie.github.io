@@ -452,7 +452,7 @@ function taxonClass(iconic) {
   return "taxon-" + (COOL_ICONIC_TAXA.has(iconic) ? iconic : "default");
 }
 
-function renderCards(cards) {
+function renderCards(cards, lat, lng, radius) {
   const container = document.getElementById("results");
   container.innerHTML = "";
 
@@ -502,7 +502,7 @@ function renderCards(cards) {
           <span>Expected ${exp} · Observed ${obs}</span>
           <span>Surprise score: ${card.surprise.toFixed(2)}</span>
           <span>Seen ${card.yearsSeen}/${HISTORIC_YEARS.length} historic years</span>
-          <span>Radius: ${document.getElementById("radius").value} km</span>
+          <span>Radius: ${radius} km</span>
         </div>
       </div>
     `;
@@ -528,7 +528,7 @@ async function run() {
 
   try {
     const cards = await findAnomalies(lat, lng, radius, date);
-    renderCards(cards);
+    renderCards(cards, lat, lng, radius);
     setStatus(cards.length
       ? `Found ${cards.length} seasonal anomal${cards.length === 1 ? "y" : "ies"}.`
       : "No anomalies found.", false);
