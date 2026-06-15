@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>iNaturalist Seasonal Anomaly Finder</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -99,8 +100,8 @@
     @keyframes fadeIn { to { opacity: 1; } }
 
     .card-photo {
-      width: 120px;
-      min-width: 120px;
+      width: 180px;
+      min-width: 180px;
       background: #e8f0e8;
       position: relative;
       overflow: hidden;
@@ -119,28 +120,30 @@
       font-size: 2.5rem;
     }
 
-    .card-body { padding: 1rem 1.1rem; flex: 1; }
+    .card-body { padding: 1rem 1.1rem; flex: 1; min-width: 0; }
 
-    .card-taxon-badge {
-      display: inline-block;
-      font-size: 0.68rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
-      margin-bottom: 0.4rem;
-    }
-
-    .card-title {
+    .card-question {
       font-size: 1rem;
-      font-weight: 700;
+      font-weight: 800;
       line-height: 1.3;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.35rem;
+      color: #1a2e1a;
     }
-    .card-title em { font-style: italic; color: #555; font-size: 0.85em; }
 
-    .card-body-text { font-size: 0.87rem; color: #444; line-height: 1.5; margin-bottom: 0.6rem; }
+    .card-names {
+      margin-bottom: 0.55rem;
+    }
+    .card-names .common { font-size: 0.88rem; font-weight: 600; color: #333; }
+    .card-names .sci    { font-size: 0.78rem; font-style: italic; color: #888; display: block; }
+
+    .card-body-text {
+      font-size: 0.87rem;
+      color: #444;
+      line-height: 1.55;
+      margin-bottom: 0.65rem;
+    }
+    .card-body-text p { margin: 0 0 0.3rem; }
+    .card-body-text p:last-child { margin-bottom: 0; }
 
     .card-cta {
       display: inline-block;
@@ -148,34 +151,21 @@
       font-weight: 700;
       color: #2d6a2d;
       background: #e8f5e8;
-      padding: 0.25rem 0.6rem;
+      padding: 0.25rem 0.65rem;
       border-radius: 5px;
       text-decoration: none;
+      margin-bottom: 0.7rem;
     }
     .card-cta:hover { background: #d0ead0; }
 
-    .card-meta {
-      font-size: 0.72rem;
-      color: #999;
-      margin-top: 0.55rem;
-      display: flex;
-      gap: 0.8rem;
-      flex-wrap: wrap;
+    .card-stats {
+      font-size: 0.78rem;
+      color: #777;
+      line-height: 1.7;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 0.55rem;
     }
-
-    .score-bar {
-      height: 3px;
-      background: #e0e0e0;
-      border-radius: 2px;
-      margin-top: 0.4rem;
-      overflow: hidden;
-    }
-    .score-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #ffa040, #e03030);
-      border-radius: 2px;
-      transition: width 0.6s ease;
-    }
+    .card-stats strong { color: #444; }
 
     .error-box {
       background: #fff0f0;
@@ -186,6 +176,18 @@
       font-size: 0.87rem;
       margin-top: 0.5rem;
     }
+
+    .intro-blurb {
+      background: white;
+      border-radius: 12px;
+      padding: 1.1rem 1.25rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      margin-bottom: 1rem;
+      font-size: 0.92rem;
+      color: #444;
+      line-height: 1.6;
+    }
+    .intro-blurb strong { color: #1a2e1a; }
 
     .empty-state {
       text-align: center;
@@ -204,51 +206,104 @@
     .taxon-Plantae   { background: #dcedc8; color: #33691e; }
     .taxon-Fungi     { background: #e1bee7; color: #4a148c; }
     .taxon-default   { background: #f0f0f0; color: #555; }
+
+    #map {
+      height: 260px;
+      border-radius: 8px;
+      margin-top: 0.75rem;
+      border: 1.5px solid #ddd;
+      cursor: crosshair;
+    }
+    .map-coords {
+      font-size: 0.75rem;
+      color: #888;
+      margin-top: 0.35rem;
+      font-variant-numeric: tabular-nums;
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>iNaturalist Seasonal Anomaly Finder</h1>
-  <p>Find species that are unusually quiet compared to historical activity nearby</p>
+  <h1>🕵️ Nature Mysteries Nearby</h1>
+  <p>Pick a spot on the map to find species that should be here by now — but aren't</p>
 </header>
 
 <div class="container">
   <div class="controls">
-    <div class="row">
+    <div class="row" style="align-items:flex-end;">
       <div class="field" style="min-width:140px;">
         <label>Date</label>
         <input type="date" id="date">
       </div>
-      <div class="field">
-        <label>Latitude</label>
-        <input type="number" id="lat" step="any" placeholder="37.9689">
-      </div>
-      <div class="field">
-        <label>Longitude</label>
-        <input type="number" id="lng" step="any" placeholder="-122.5365">
-      </div>
-      <div class="field" style="max-width:90px;">
+      <div class="field" style="max-width:100px;">
         <label>Radius (km)</label>
-        <input type="number" id="radius" value="5" min="1" max="50">
+        <input type="number" id="radius" value="10" min="1" max="50" oninput="updateCircle()">
+      </div>
+      <div style="margin-left:auto; display:flex; gap:0.5rem; align-items:flex-end;">
+        <button class="btn btn-primary" id="runBtn" onclick="run()">Find Mysteries</button>
       </div>
     </div>
-    <div class="row row-2">
-      <button class="btn btn-secondary" onclick="useMyLocation()">📍 Use my location</button>
-      <button class="btn btn-primary" id="runBtn" onclick="run()">Find Anomalies</button>
-    </div>
+    <div id="map"></div>
+    <div class="map-coords" id="coords-display"></div>
+    <input type="hidden" id="lat">
+    <input type="hidden" id="lng">
     <div class="status" id="status"></div>
   </div>
 
   <div id="results"></div>
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // ── defaults ──────────────────────────────────────────────────────────────────
 const today = new Date().toISOString().slice(0, 10);
 document.getElementById("date").value = today;
-document.getElementById("lat").value  = "37.9689175373541";
-document.getElementById("lng").value  = "-122.53646376340167";
+
+const DEFAULT_LAT = 37.9689175373541;
+const DEFAULT_LNG = -122.53646376340167;
+
+// ── map setup ─────────────────────────────────────────────────────────────────
+const map = L.map("map").setView([DEFAULT_LAT, DEFAULT_LNG], 11);
+
+L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  maxZoom: 19
+}).addTo(map);
+
+const marker = L.marker([DEFAULT_LAT, DEFAULT_LNG], { draggable: true }).addTo(map);
+let circle = L.circle([DEFAULT_LAT, DEFAULT_LNG], {
+  radius: 10000,
+  color: "#2d6a2d",
+  fillColor: "#2d6a2d",
+  fillOpacity: 0.08,
+  weight: 1.5
+}).addTo(map);
+
+function setLocation(lat, lng) {
+  document.getElementById("lat").value = lat;
+  document.getElementById("lng").value = lng;
+  document.getElementById("coords-display").textContent = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
+  marker.setLatLng([lat, lng]);
+  circle.setLatLng([lat, lng]);
+}
+
+function updateCircle() {
+  const km = parseFloat(document.getElementById("radius").value) || 5;
+  circle.setRadius(km * 1000);
+}
+
+marker.on("dragend", e => {
+  const { lat, lng } = e.target.getLatLng();
+  setLocation(lat, lng);
+});
+
+map.on("click", e => {
+  setLocation(e.latlng.lat, e.latlng.lng);
+});
+
+
+setLocation(DEFAULT_LAT, DEFAULT_LNG);
 
 const HISTORIC_YEARS   = [2021, 2022, 2023, 2024, 2025];
 const COOL_ICONIC_TAXA = new Set(["Amphibia","Reptilia","Aves","Mammalia","Fungi","Insecta","Arachnida","Plantae"]);
@@ -349,7 +404,7 @@ async function findAnomalies(lat, lng, radius, dateStr_target) {
     quality_grade: "research,needs_id"
   };
 
-  setStatus("Fetching current observations…");
+  setStatus("Checking what's been spotted this season…");
 
   const currentD1 = dateStr(yr, mo, 1);
   const currentD2 = dateStr(yr, mo, dy);
@@ -361,7 +416,7 @@ async function findAnomalies(lat, lng, radius, dateStr_target) {
 
   const currentSpecies = speciesCounts(currentTaxData);
 
-  setStatus(`Found ${currentTotal} current observations. Fetching ${HISTORIC_YEARS.length} years of history…`);
+  setStatus(`Digging through ${HISTORIC_YEARS.length} years of iNaturalist history…`);
 
   // Fetch all historic years in parallel
   const historicResults = await Promise.all(
@@ -376,7 +431,7 @@ async function findAnomalies(lat, lng, radius, dateStr_target) {
     })
   );
 
-  setStatus("Computing surprise scores…");
+  setStatus("Looking for unusual patterns…");
 
   // Aggregate historic data per taxon
   const historic = {};
@@ -415,7 +470,7 @@ async function findAnomalies(lat, lng, radius, dateStr_target) {
 
   if (!candidates.length) return [];
 
-  setStatus("Fetching species photos…");
+  setStatus("Almost there — fetching photos…");
   const taxaDetails = await fetchTaxaDetails(candidates.map(t => t.id));
 
   return candidates.map(t => ({
@@ -435,42 +490,82 @@ function setStatus(msg, spin = true) {
     : "";
 }
 
-function useMyLocation() {
-  if (!navigator.geolocation) return alert("Geolocation not supported.");
-  setStatus("Getting your location…");
-  navigator.geolocation.getCurrentPosition(
-    pos => {
-      document.getElementById("lat").value = pos.coords.latitude.toFixed(6);
-      document.getElementById("lng").value = pos.coords.longitude.toFixed(6);
-      setStatus("", false);
-    },
-    () => setStatus("Could not get location.", false)
-  );
+
+// ── fun language helpers ──────────────────────────────────────────────────────
+const TAXON_PLURAL = {
+  Aves: "birds", Mammalia: "mammals", Reptilia: "reptiles",
+  Amphibia: "amphibians", Insecta: "insects", Arachnida: "spiders",
+  Plantae: "plants", Fungi: "fungi"
+};
+
+function pluralize(name) {
+  if (!name) return name;
+  const lower = name.toLowerCase();
+  if (lower.endsWith("s") || lower.endsWith("x") || lower.endsWith("z")) return name + "es";
+  if (lower.endsWith("y") && !/[aeiou]y$/.test(lower)) return name.slice(0, -1) + "ies";
+  return name + "s";
 }
 
-function taxonClass(iconic) {
-  return "taxon-" + (COOL_ICONIC_TAXA.has(iconic) ? iconic : "default");
+const MONTH_NAMES = ["January","February","March","April","May","June",
+                     "July","August","September","October","November","December"];
+
+function usuallyText(card, mo) {
+  const display   = card.commonName || card.name;
+  const plural    = pluralize(display);
+  const group     = TAXON_PLURAL[card.iconic_taxon_name] || "species";
+  const monthName = MONTH_NAMES[mo - 1];
+  const midMonth  = `mid-${monthName}`;
+  const ratio     = card.yearsSeen / HISTORIC_YEARS.length;
+
+  if (ratio >= 1)   return `${plural} are one of the most reliably spotted ${group} in the area by ${midMonth}.`;
+  if (ratio >= 0.8) return `${plural} regularly turn up in the area by ${midMonth}.`;
+  return `${plural} usually start appearing in the area by ${midMonth}.`;
 }
+
+function thisYearText(card) {
+  const ratio = card.observed / card.expected;
+  if (ratio <= 0.15) return "This year, they've been almost impossible to find.";
+  if (ratio <= 0.35) return "This year they've been surprisingly hard to find.";
+  if (ratio <= 0.55) return "This season, sightings have been much lower than expected.";
+  return "This season, observers are finding far fewer than expected.";
+}
+
+const CTAS = [
+  "Help solve the mystery →",
+  "Go looking →",
+  "See if you can find one →",
+  "Report a sighting →",
+  "Can you find one? →"
+];
 
 function renderCards(cards, lat, lng, radius) {
   const container = document.getElementById("results");
   container.innerHTML = "";
 
   if (!cards.length) {
-    container.innerHTML = `<div class="empty-state">No notable anomalies found for this date and location.<br>Try a different date, wider radius, or another area.</div>`;
+    container.innerHTML = `<div class="empty-state">Nature seems right on schedule here — no surprises found.<br>Try a wider radius or a different location.</div>`;
     return;
   }
 
-  const maxScore = Math.max(...cards.map(c => c.surprise), 1);
+  const [,, mo] = cards[0].currentWindow ? [] : [];
+  const dateVal = document.getElementById("date").value;
+  const mo_num  = parseInt(dateVal.split("-")[1]);
+  const dy_num  = parseInt(dateVal.split("-")[2]);
+  const monthDisp = MONTH_NAMES[mo_num - 1];
+
+  const intro = document.createElement("div");
+  intro.className = "intro-blurb";
+  intro.innerHTML = `<strong>Something's different this season.</strong> These species are usually turning up all over the area by now, but observations have been surprisingly scarce. Can you help solve the mystery?`;
+  container.appendChild(intro);
 
   const wrapper = document.createElement("div");
   wrapper.className = "cards";
 
   cards.forEach((card, i) => {
-    const icon  = TAXON_EMOJI[card.iconic_taxon_name] || "🌱";
-    const pct   = Math.min((card.surprise / maxScore) * 100, 100).toFixed(1);
-    const exp   = card.expected.toFixed(1);
-    const obs   = card.observed;
+    const icon    = TAXON_EMOJI[card.iconic_taxon_name] || "🌿";
+    const display = card.commonName || card.name;
+    const exp     = Math.round(card.expected);
+    const obs     = card.observed;
     const iNatUrl = `https://www.inaturalist.org/observations?lat=${lat}&lng=${lng}&radius=${radius}&subview=map&taxon_id=${card.id}`;
 
     const el = document.createElement("div");
@@ -481,28 +576,23 @@ function renderCards(cards, lat, lng, radius) {
       ? `<img src="${card.photoUrl}" alt="${card.name}" loading="lazy">`
       : `<div class="no-photo">${icon}</div>`;
 
-    const commonName = card.commonName
-      ? `<em>${card.name}</em>`
-      : "";
-
     el.innerHTML = `
       <div class="card-photo">${photoHtml}</div>
       <div class="card-body">
-        <span class="card-taxon-badge ${taxonClass(card.iconic_taxon_name)}">${card.iconic_taxon_name}</span>
-        <div class="card-title">
-          ${card.commonName || card.name}
-          ${card.commonName ? `<br><em>${card.name}</em>` : ""}
+        <div class="card-question">${icon} Where Are the ${pluralize(display)}?</div>
+        <div class="card-names">
+          <span class="common">${display}</span>
+          ${card.commonName ? `<span class="sci">${card.name}</span>` : ""}
         </div>
         <div class="card-body-text">
-          Based on recent iNaturalist activity nearby, we'd expect about <strong>${exp}</strong> observations by now this ${card.currentWindow}, but there ${obs === 1 ? "is only" : "are only"} <strong>${obs}</strong>.
+          <p>${usuallyText(card, mo_num)}</p>
+          <p>${thisYearText(card)}</p>
         </div>
-        <a class="card-cta" href="${iNatUrl}" target="_blank" rel="noopener">Can you find it? →</a>
-        <div class="score-bar"><div class="score-fill" style="width:${pct}%"></div></div>
-        <div class="card-meta">
-          <span>Expected ${exp} · Observed ${obs}</span>
-          <span>Surprise score: ${card.surprise.toFixed(2)}</span>
-          <span>Seen ${card.yearsSeen}/${HISTORIC_YEARS.length} historic years</span>
-          <span>Radius: ${radius} km</span>
+        <a class="card-cta" href="${iNatUrl}" target="_blank" rel="noopener">${CTAS[i % CTAS.length]}</a>
+        <div class="card-stats">
+          Typically found by now: <strong>~${exp} observation${exp === 1 ? "" : "s"}</strong><br>
+          Reported so far: <strong>${obs} observation${obs === 1 ? "" : "s"}</strong><br>
+          Seen in <strong>${card.yearsSeen} of the last ${HISTORIC_YEARS.length} years</strong> nearby
         </div>
       </div>
     `;
@@ -530,8 +620,8 @@ async function run() {
     const cards = await findAnomalies(lat, lng, radius, date);
     renderCards(cards, lat, lng, radius);
     setStatus(cards.length
-      ? `Found ${cards.length} seasonal anomal${cards.length === 1 ? "y" : "ies"}.`
-      : "No anomalies found.", false);
+      ? `Found ${cards.length} nature myster${cards.length === 1 ? "y" : "ies"} — go explore!`
+      : "No mysteries this time — nature is right on schedule.", false);
   } catch (err) {
     document.getElementById("results").innerHTML =
       `<div class="error-box">Error: ${err.message}</div>`;
