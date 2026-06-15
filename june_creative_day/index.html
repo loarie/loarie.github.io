@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iNaturalist Seasonal Anomaly Finder</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f0f4f0;
+      color: #1a2e1a;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #2d6a2d;
+      color: white;
+      padding: 1.5rem 2rem;
+    }
+
+    header h1 { font-size: 1.4rem; font-weight: 600; }
+    header p { font-size: 0.85rem; opacity: 0.75; margin-top: 0.25rem; }
+
+    .container { max-width: 700px; margin: 0 auto; padding: 1.5rem 1rem; }
+
+    .controls {
+      background: white;
+      border-radius: 12px;
+      padding: 1.25rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      margin-bottom: 1.5rem;
+    }
+
+    .row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-end; }
+
+    .field { display: flex; flex-direction: column; gap: 0.3rem; flex: 1; min-width: 120px; }
+    .field label { font-size: 0.75rem; font-weight: 600; color: #555; text-transform: uppercase; letter-spacing: 0.04em; }
+    .field input {
+      padding: 0.5rem 0.6rem;
+      border: 1.5px solid #ddd;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      background: #fafafa;
+      transition: border-color 0.15s;
+    }
+    .field input:focus { outline: none; border-color: #2d6a2d; background: white; }
+
+    .btn {
+      padding: 0.55rem 1.1rem;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: #2d6a2d; color: white; }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-secondary { background: #e8f0e8; color: #2d6a2d; }
+    .btn-secondary:hover { background: #d4e6d4; }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    .row-2 { margin-top: 0.75rem; }
+
+    .status {
+      font-size: 0.82rem;
+      color: #666;
+      margin-top: 0.75rem;
+      min-height: 1.2em;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 12px; height: 12px;
+      border: 2px solid #ccc;
+      border-top-color: #2d6a2d;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .cards { display: flex; flex-direction: column; gap: 1rem; }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.09);
+      display: flex;
+      gap: 0;
+      animation: fadeIn 0.4s ease forwards;
+      opacity: 0;
+    }
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    .card-photo {
+      width: 120px;
+      min-width: 120px;
+      background: #e8f0e8;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .card-photo .no-photo {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      font-size: 2.5rem;
+    }
+
+    .card-body { padding: 1rem 1.1rem; flex: 1; }
+
+    .card-taxon-badge {
+      display: inline-block;
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-title {
+      font-size: 1rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 0.4rem;
+    }
+    .card-title em { font-style: italic; color: #555; font-size: 0.85em; }
+
+    .card-body-text { font-size: 0.87rem; color: #444; line-height: 1.5; margin-bottom: 0.6rem; }
+
+    .card-cta {
+      display: inline-block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #2d6a2d;
+      background: #e8f5e8;
+      padding: 0.25rem 0.6rem;
+      border-radius: 5px;
+      text-decoration: none;
+    }
+    .card-cta:hover { background: #d0ead0; }
+
+    .card-meta {
+      font-size: 0.72rem;
+      color: #999;
+      margin-top: 0.55rem;
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .score-bar {
+      height: 3px;
+      background: #e0e0e0;
+      border-radius: 2px;
+      margin-top: 0.4rem;
+      overflow: hidden;
+    }
+    .score-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #ffa040, #e03030);
+      border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+
+    .error-box {
+      background: #fff0f0;
+      border: 1.5px solid #f0c0c0;
+      border-radius: 8px;
+      padding: 0.9rem 1rem;
+      color: #c00;
+      font-size: 0.87rem;
+      margin-top: 0.5rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #888;
+      padding: 2rem;
+      font-size: 0.9rem;
+    }
+
+    /* Iconic taxon colors */
+    .taxon-Aves      { background: #cce5ff; color: #0055aa; }
+    .taxon-Mammalia  { background: #ffe0b2; color: #7a3800; }
+    .taxon-Reptilia  { background: #c8e6c9; color: #1b5e20; }
+    .taxon-Amphibia  { background: #b2dfdb; color: #004d40; }
+    .taxon-Insecta   { background: #fff9c4; color: #6d5500; }
+    .taxon-Arachnida { background: #f8bbd0; color: #880e4f; }
+    .taxon-Plantae   { background: #dcedc8; color: #33691e; }
+    .taxon-Fungi     { background: #e1bee7; color: #4a148c; }
+    .taxon-default   { background: #f0f0f0; color: #555; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>iNaturalist Seasonal Anomaly Finder</h1>
+  <p>Find species that are unusually quiet compared to historical activity nearby</p>
+</header>
+
+<div class="container">
+  <div class="controls">
+    <div class="row">
+      <div class="field" style="min-width:140px;">
+        <label>Date</label>
+        <input type="date" id="date">
+      </div>
+      <div class="field">
+        <label>Latitude</label>
+        <input type="number" id="lat" step="any" placeholder="37.9689">
+      </div>
+      <div class="field">
+        <label>Longitude</label>
+        <input type="number" id="lng" step="any" placeholder="-122.5365">
+      </div>
+      <div class="field" style="max-width:90px;">
+        <label>Radius (km)</label>
+        <input type="number" id="radius" value="5" min="1" max="50">
+      </div>
+    </div>
+    <div class="row row-2">
+      <button class="btn btn-secondary" onclick="useMyLocation()">📍 Use my location</button>
+      <button class="btn btn-primary" id="runBtn" onclick="run()">Find Anomalies</button>
+    </div>
+    <div class="status" id="status"></div>
+  </div>
+
+  <div id="results"></div>
+</div>
+
+<script>
+// ── defaults ──────────────────────────────────────────────────────────────────
+const today = new Date().toISOString().slice(0, 10);
+document.getElementById("date").value = today;
+document.getElementById("lat").value  = "37.9689175373541";
+document.getElementById("lng").value  = "-122.53646376340167";
+
+const HISTORIC_YEARS   = [2021, 2022, 2023, 2024, 2025];
+const COOL_ICONIC_TAXA = new Set(["Amphibia","Reptilia","Aves","Mammalia","Fungi","Insecta","Arachnida","Plantae"]);
+const TAXON_EMOJI      = {
+  Aves: "🐦", Mammalia: "🦌", Reptilia: "🦎", Amphibia: "🐸",
+  Insecta: "🦋", Arachnida: "🕷️", Plantae: "🌿", Fungi: "🍄"
+};
+
+// ── iNaturalist API helpers ────────────────────────────────────────────────────
+async function fetchJSON(url, params) {
+  const u = new URL(url);
+  Object.entries(params).forEach(([k, v]) => u.searchParams.set(k, v));
+  const res = await fetch(u.toString());
+  if (!res.ok) throw new Error(`HTTP ${res.status} from ${url}`);
+  return res.json();
+}
+
+async function obsCount(params) {
+  const data = await fetchJSON(
+    "https://api.inaturalist.org/v1/observations",
+    { ...params, per_page: 0 }
+  );
+  return data.total_results;
+}
+
+async function taxonomy(params) {
+  return fetchJSON("https://api.inaturalist.org/v1/observations/taxonomy", params);
+}
+
+function speciesCounts(taxData) {
+  const map = {};
+  for (const r of taxData.results || []) {
+    if (r.rank === "species" && r.is_active) {
+      map[r.id] = {
+        id: r.id,
+        name: r.name,
+        iconic_taxon_name: r.iconic_taxon_name,
+        count: r.descendant_obs_count || 0
+      };
+    }
+  }
+  return map;
+}
+
+// ── statistics ────────────────────────────────────────────────────────────────
+function poissonCDF(observed, lambda) {
+  if (lambda <= 0) return 1.0;
+  let term = Math.exp(-lambda);
+  let sum  = term;
+  for (let k = 1; k <= observed; k++) {
+    term *= lambda / k;
+    sum  += term;
+  }
+  return sum;
+}
+
+function surpriseScore(observed, expected) {
+  let p = poissonCDF(observed, expected);
+  if (p < 1e-300) p = 1e-300;
+  return -Math.log10(p);
+}
+
+// ── taxon photos & names ──────────────────────────────────────────────────────
+async function fetchTaxaDetails(ids) {
+  if (!ids.length) return {};
+  const data = await fetchJSON(
+    "https://api.inaturalist.org/v1/taxa",
+    { id: ids.join(","), per_page: 30 }
+  );
+  const map = {};
+  for (const t of data.results || []) {
+    map[t.id] = {
+      commonName: t.preferred_common_name || null,
+      photoUrl: t.default_photo?.medium_url || t.default_photo?.url || null,
+      attribution: t.default_photo?.attribution || null
+    };
+  }
+  return map;
+}
+
+// ── month helpers ─────────────────────────────────────────────────────────────
+function monthName(m) {
+  return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][m-1];
+}
+
+function dateStr(year, month, day) {
+  return `${year}-${String(month).padStart(2,"0")}-${String(day).padStart(2,"0")}`;
+}
+
+// ── main algorithm ────────────────────────────────────────────────────────────
+async function findAnomalies(lat, lng, radius, dateStr_target) {
+  const [yr, mo, dy] = dateStr_target.split("-").map(Number);
+
+  const base = {
+    lat, lng,
+    radius: radius,
+    verifiable: true,
+    quality_grade: "research,needs_id"
+  };
+
+  setStatus("Fetching current observations…");
+
+  const currentD1 = dateStr(yr, mo, 1);
+  const currentD2 = dateStr(yr, mo, dy);
+
+  const [currentTotal, currentTaxData] = await Promise.all([
+    obsCount({ ...base, d1: currentD1, d2: currentD2 }),
+    taxonomy({ ...base, d1: currentD1, d2: currentD2 })
+  ]);
+
+  const currentSpecies = speciesCounts(currentTaxData);
+
+  setStatus(`Found ${currentTotal} current observations. Fetching ${HISTORIC_YEARS.length} years of history…`);
+
+  // Fetch all historic years in parallel
+  const historicResults = await Promise.all(
+    HISTORIC_YEARS.map(async year => {
+      const d1 = dateStr(year, mo, 1);
+      const d2 = dateStr(year, mo, dy);
+      const [total, taxData] = await Promise.all([
+        obsCount({ ...base, d1, d2 }),
+        taxonomy({ ...base, d1, d2 })
+      ]);
+      return { year, total, species: speciesCounts(taxData) };
+    })
+  );
+
+  setStatus("Computing surprise scores…");
+
+  // Aggregate historic data per taxon
+  const historic = {};
+  for (const { year, total, species } of historicResults) {
+    for (const [tid, taxon] of Object.entries(species)) {
+      if (!historic[tid]) {
+        historic[tid] = {
+          ...taxon,
+          yearlyRates: {},
+          yearsSeen: 0,
+          totalHistoricCount: 0
+        };
+      }
+      const rate = total > 0 ? taxon.count / total : 0;
+      historic[tid].yearlyRates[year] = rate;
+      if (taxon.count > 0) historic[tid].yearsSeen++;
+      historic[tid].totalHistoricCount += taxon.count;
+    }
+  }
+
+  // Score candidates
+  const candidates = Object.values(historic)
+    .map(taxon => {
+      const observed   = (currentSpecies[taxon.id]?.count) || 0;
+      const rates      = Object.values(taxon.yearlyRates);
+      const meanRate   = rates.reduce((a, b) => a + b, 0) / HISTORIC_YEARS.length;
+      const expected   = meanRate * currentTotal;
+      const surprise   = surpriseScore(observed, expected);
+      return { ...taxon, observed, expected, meanRate, surprise };
+    })
+    .filter(t => t.expected >= 2.0)
+    .filter(t => t.observed < t.expected)
+    .filter(t => COOL_ICONIC_TAXA.has(t.iconic_taxon_name))
+    .sort((a, b) => b.surprise - a.surprise)
+    .slice(0, 5);
+
+  if (!candidates.length) return [];
+
+  setStatus("Fetching species photos…");
+  const taxaDetails = await fetchTaxaDetails(candidates.map(t => t.id));
+
+  return candidates.map(t => ({
+    ...t,
+    ...taxaDetails[t.id],
+    currentWindow: `${monthName(mo)} 1–${dy}, ${yr}`,
+    historicWindow: `${HISTORIC_YEARS[0]}–${HISTORIC_YEARS[HISTORIC_YEARS.length - 1]}`,
+    currentTotal
+  }));
+}
+
+// ── UI ────────────────────────────────────────────────────────────────────────
+function setStatus(msg, spin = true) {
+  const el = document.getElementById("status");
+  el.innerHTML = msg
+    ? (spin ? `<span class="spinner"></span>${msg}` : msg)
+    : "";
+}
+
+function useMyLocation() {
+  if (!navigator.geolocation) return alert("Geolocation not supported.");
+  setStatus("Getting your location…");
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      document.getElementById("lat").value = pos.coords.latitude.toFixed(6);
+      document.getElementById("lng").value = pos.coords.longitude.toFixed(6);
+      setStatus("", false);
+    },
+    () => setStatus("Could not get location.", false)
+  );
+}
+
+function taxonClass(iconic) {
+  return "taxon-" + (COOL_ICONIC_TAXA.has(iconic) ? iconic : "default");
+}
+
+function renderCards(cards) {
+  const container = document.getElementById("results");
+  container.innerHTML = "";
+
+  if (!cards.length) {
+    container.innerHTML = `<div class="empty-state">No notable anomalies found for this date and location.<br>Try a different date, wider radius, or another area.</div>`;
+    return;
+  }
+
+  const maxScore = Math.max(...cards.map(c => c.surprise), 1);
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "cards";
+
+  cards.forEach((card, i) => {
+    const icon  = TAXON_EMOJI[card.iconic_taxon_name] || "🌱";
+    const pct   = Math.min((card.surprise / maxScore) * 100, 100).toFixed(1);
+    const exp   = card.expected.toFixed(1);
+    const obs   = card.observed;
+    const iNatUrl = `https://www.inaturalist.org/taxa/${card.id}`;
+
+    const el = document.createElement("div");
+    el.className = "card";
+    el.style.animationDelay = `${i * 0.08}s`;
+
+    const photoHtml = card.photoUrl
+      ? `<img src="${card.photoUrl}" alt="${card.name}" loading="lazy">`
+      : `<div class="no-photo">${icon}</div>`;
+
+    const commonName = card.commonName
+      ? `<em>${card.name}</em>`
+      : "";
+
+    el.innerHTML = `
+      <div class="card-photo">${photoHtml}</div>
+      <div class="card-body">
+        <span class="card-taxon-badge ${taxonClass(card.iconic_taxon_name)}">${card.iconic_taxon_name}</span>
+        <div class="card-title">
+          ${card.commonName || card.name}
+          ${card.commonName ? `<br><em>${card.name}</em>` : ""}
+        </div>
+        <div class="card-body-text">
+          Based on recent iNaturalist activity nearby, we'd expect about <strong>${exp}</strong> observations by now this ${card.currentWindow}, but there ${obs === 1 ? "is only" : "are only"} <strong>${obs}</strong>.
+        </div>
+        <a class="card-cta" href="${iNatUrl}" target="_blank" rel="noopener">Can you find it? →</a>
+        <div class="score-bar"><div class="score-fill" style="width:${pct}%"></div></div>
+        <div class="card-meta">
+          <span>Expected ${exp} · Observed ${obs}</span>
+          <span>Surprise score: ${card.surprise.toFixed(2)}</span>
+          <span>Seen ${card.yearsSeen}/${HISTORIC_YEARS.length} historic years</span>
+          <span>Radius: ${document.getElementById("radius").value} km</span>
+        </div>
+      </div>
+    `;
+    wrapper.appendChild(el);
+  });
+
+  container.appendChild(wrapper);
+}
+
+async function run() {
+  const date   = document.getElementById("date").value;
+  const lat    = parseFloat(document.getElementById("lat").value);
+  const lng    = parseFloat(document.getElementById("lng").value);
+  const radius = parseFloat(document.getElementById("radius").value) || 5;
+
+  if (!date || isNaN(lat) || isNaN(lng)) {
+    setStatus("Please fill in all fields.", false);
+    return;
+  }
+
+  document.getElementById("runBtn").disabled = true;
+  document.getElementById("results").innerHTML = "";
+
+  try {
+    const cards = await findAnomalies(lat, lng, radius, date);
+    renderCards(cards);
+    setStatus(cards.length
+      ? `Found ${cards.length} seasonal anomal${cards.length === 1 ? "y" : "ies"}.`
+      : "No anomalies found.", false);
+  } catch (err) {
+    document.getElementById("results").innerHTML =
+      `<div class="error-box">Error: ${err.message}</div>`;
+    setStatus("", false);
+    console.error(err);
+  } finally {
+    document.getElementById("runBtn").disabled = false;
+  }
+}
+</script>
+</body>
+</html>
