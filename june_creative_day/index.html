@@ -471,7 +471,7 @@ function renderCards(cards) {
     const pct   = Math.min((card.surprise / maxScore) * 100, 100).toFixed(1);
     const exp   = card.expected.toFixed(1);
     const obs   = card.observed;
-    const iNatUrl = `https://www.inaturalist.org/taxa/${card.id}`;
+    const iNatUrl = `https://www.inaturalist.org/observations?lat=${lat}&lng=${lng}&radius=${radius}&subview=map&taxon_id=${card.id}`;
 
     const el = document.createElement("div");
     el.className = "card";
