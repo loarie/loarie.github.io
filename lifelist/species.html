@@ -1,0 +1,1599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>iNaturalist Species Collection</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+
+      background:
+        #f3f2ed;
+
+      color:
+        #171717;
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Helvetica,
+        Arial,
+        sans-serif;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .page {
+      max-width: 1500px;
+
+      margin:
+        0 auto;
+
+      padding:
+        34px 24px 90px;
+    }
+
+    .header {
+      margin-bottom:
+        60px;
+    }
+
+    .eyebrow {
+      margin-bottom:
+        9px;
+
+      color:
+        #7a7974;
+
+      font-size:
+        12px;
+
+      font-weight:
+        750;
+
+      letter-spacing:
+        0.16em;
+
+      text-transform:
+        uppercase;
+    }
+
+    h1 {
+      margin:
+        0;
+
+      font-size:
+        clamp(
+          38px,
+          5.6vw,
+          74px
+        );
+
+      line-height:
+        0.96;
+
+      letter-spacing:
+        -0.055em;
+    }
+
+    .summary {
+      margin-top:
+        18px;
+
+      color:
+        #666;
+
+      font-size:
+        17px;
+    }
+
+    .summary strong {
+      color:
+        #111;
+    }
+
+    .controls {
+      display:
+        flex;
+
+      flex-wrap:
+        wrap;
+
+      gap:
+        10px;
+
+      margin-top:
+        24px;
+    }
+
+    .control {
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      gap:
+        8px;
+
+      background:
+        white;
+
+      border:
+        1px solid #dddcd7;
+
+      border-radius:
+        10px;
+
+      padding:
+        8px 10px;
+    }
+
+    .control label {
+      color:
+        #777;
+
+      font-size:
+        12px;
+
+      font-weight:
+        700;
+    }
+
+    .control input,
+    .control select {
+      border:
+        none;
+
+      background:
+        transparent;
+
+      color:
+        #111;
+
+      font:
+        inherit;
+
+      font-size:
+        14px;
+
+      outline:
+        none;
+    }
+
+    .control button {
+      border:
+        none;
+
+      border-radius:
+        7px;
+
+      padding:
+        7px 11px;
+
+      background:
+        #111;
+
+      color:
+        white;
+
+      font:
+        inherit;
+
+      font-size:
+        13px;
+
+      font-weight:
+        750;
+
+      cursor:
+        pointer;
+    }
+
+    .status {
+      margin:
+        30px 0;
+
+      color:
+        #777;
+
+      font-size:
+        14px;
+    }
+
+    .error {
+      color:
+        #a22;
+    }
+
+    .month {
+      margin-top:
+        68px;
+    }
+
+    .month:first-of-type {
+      margin-top:
+        0;
+    }
+
+    .month-header {
+      display:
+        flex;
+
+      align-items:
+        baseline;
+
+      gap:
+        12px;
+
+      margin-bottom:
+        28px;
+
+      padding-bottom:
+        11px;
+
+      border-bottom:
+        1px solid #cbc9c1;
+    }
+
+    .month-name {
+      font-size:
+        28px;
+
+      font-weight:
+        780;
+
+      letter-spacing:
+        -0.03em;
+    }
+
+    .month-count {
+      color:
+        #888;
+
+      font-size:
+        14px;
+    }
+
+    .day {
+      margin-bottom:
+        42px;
+    }
+
+    .day-header {
+      display:
+        flex;
+
+      align-items:
+        center;
+
+      gap:
+        12px;
+
+      margin:
+        0 0 12px;
+    }
+
+    .day-date {
+      font-size:
+        15px;
+
+      font-weight:
+        760;
+    }
+
+    .day-count {
+      color:
+        #999;
+
+      font-size:
+        12px;
+    }
+
+    .grid {
+      display:
+        grid;
+
+      grid-template-columns:
+        repeat(
+          auto-fill,
+          minmax(180px, 1fr)
+        );
+
+      gap:
+        16px;
+    }
+
+    .card {
+      overflow:
+        hidden;
+
+      background:
+        white;
+
+      border:
+        1px solid #dddcd7;
+
+      border-radius:
+        13px;
+
+      transition:
+        transform 120ms ease,
+        box-shadow 120ms ease;
+    }
+
+    .card:hover {
+      transform:
+        translateY(-2px);
+
+      box-shadow:
+        0 9px 24px
+        rgba(0,0,0,0.10);
+    }
+
+    .photo-wrap {
+      position:
+        relative;
+
+      width:
+        100%;
+
+      aspect-ratio:
+        1 / 1;
+
+      overflow:
+        hidden;
+
+      background:
+        #ddd;
+    }
+
+    .photo {
+      width:
+        100%;
+
+      height:
+        100%;
+
+      object-fit:
+        cover;
+
+      display:
+        block;
+    }
+
+    .no-photo {
+      width:
+        100%;
+
+      height:
+        100%;
+
+      display:
+        grid;
+
+      place-items:
+        center;
+
+      padding:
+        20px;
+
+      color:
+        #aaa;
+
+      font-size:
+        12px;
+
+      text-align:
+        center;
+    }
+
+    .newest-badge {
+      position:
+        absolute;
+
+      right:
+        9px;
+
+      top:
+        9px;
+
+      padding:
+        6px 9px;
+
+      color:
+        white;
+
+      background:
+        #111;
+
+      border-radius:
+        7px;
+
+      font-size:
+        10px;
+
+      font-weight:
+        800;
+
+      letter-spacing:
+        0.1em;
+
+      text-transform:
+        uppercase;
+    }
+
+    .content {
+      min-height:
+        82px;
+
+      padding:
+        13px 13px 15px;
+    }
+
+    .common-name {
+      margin-bottom:
+        5px;
+
+      font-size:
+        16px;
+
+      font-weight:
+        760;
+
+      line-height:
+        1.16;
+    }
+
+    .scientific-name {
+      color:
+        #777;
+
+      font-size:
+        13px;
+
+      font-style:
+        italic;
+
+      line-height:
+        1.25;
+    }
+
+    .photo-credit {
+      margin-top:
+        8px;
+
+      color:
+        #aaa;
+
+      font-size:
+        9px;
+
+      line-height:
+        1.2;
+
+      white-space:
+        nowrap;
+
+      overflow:
+        hidden;
+
+      text-overflow:
+        ellipsis;
+    }
+
+    @media (max-width: 600px) {
+      .page {
+        padding:
+          22px 12px 60px;
+      }
+
+      .header {
+        margin-bottom:
+          40px;
+      }
+
+      .month {
+        margin-top:
+          48px;
+      }
+
+      .grid {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+
+        gap:
+          9px;
+      }
+
+      .content {
+        padding:
+          10px;
+      }
+
+      .common-name {
+        font-size:
+          14px;
+      }
+
+      .scientific-name {
+        font-size:
+          12px;
+      }
+
+      .photo-credit {
+        display:
+          none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="page">
+
+  <header class="header">
+
+    <div class="eyebrow">
+      iNaturalist Collection
+    </div>
+
+    <h1 id="title">
+      Species Collection
+    </h1>
+
+    <div
+      class="summary"
+      id="summary"
+    >
+      Loading...
+    </div>
+
+    <div class="controls">
+
+      <div class="control">
+        <label for="username">
+          USER
+        </label>
+
+        <input
+          id="username"
+          type="text"
+          size="14"
+          placeholder="loarie"
+        >
+      </div>
+
+      <div class="control">
+        <label for="year">
+          YEAR
+        </label>
+
+        <select id="year">
+          <option value="all">
+            All time
+          </option>
+        </select>
+      </div>
+
+      <div class="control">
+        <button id="go">
+          Load collection
+        </button>
+      </div>
+
+    </div>
+
+  </header>
+
+  <div
+    class="status"
+    id="status"
+  ></div>
+
+  <main id="collection"></main>
+
+</div>
+
+
+<script>
+const API_ROOT =
+  "https://api.inaturalist.org/v2";
+
+
+const params =
+  new URLSearchParams(
+    window.location.search
+  );
+
+
+const defaultYear =
+  new Date().getFullYear();
+
+
+const initialUser =
+  params.get("user") ||
+  "loarie";
+
+
+const initialYear =
+  params.get("year") ||
+  String(defaultYear);
+
+
+const usernameInput =
+  document.getElementById(
+    "username"
+  );
+
+
+const yearSelect =
+  document.getElementById(
+    "year"
+  );
+
+
+const goButton =
+  document.getElementById(
+    "go"
+  );
+
+
+const titleEl =
+  document.getElementById(
+    "title"
+  );
+
+
+const summaryEl =
+  document.getElementById(
+    "summary"
+  );
+
+
+const statusEl =
+  document.getElementById(
+    "status"
+  );
+
+
+const collectionEl =
+  document.getElementById(
+    "collection"
+  );
+
+
+usernameInput.value =
+  initialUser;
+
+
+/* ============================================================
+   YEAR SELECT
+   ============================================================ */
+
+for (
+  let year = defaultYear;
+  year >= 2008;
+  year--
+) {
+  const option =
+    document.createElement(
+      "option"
+    );
+
+  option.value =
+    String(year);
+
+  option.textContent =
+    String(year);
+
+  yearSelect.appendChild(
+    option
+  );
+}
+
+
+yearSelect.value =
+  initialYear;
+
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+
+function escapeHtml(value) {
+  return String(
+    value ?? ""
+  )
+    .replaceAll(
+      "&",
+      "&amp;"
+    )
+    .replaceAll(
+      "<",
+      "&lt;"
+    )
+    .replaceAll(
+      ">",
+      "&gt;"
+    )
+    .replaceAll(
+      '"',
+      "&quot;"
+    )
+    .replaceAll(
+      "'",
+      "&#039;"
+    );
+}
+
+
+function formatNumber(number) {
+  return Number(
+    number
+  ).toLocaleString();
+}
+
+
+function parseDate(value) {
+  if (!value) {
+    return null;
+  }
+
+  const parts =
+    value.split(
+      "-"
+    );
+
+  if (
+    parts.length < 3
+  ) {
+    return null;
+  }
+
+  return new Date(
+    Number(parts[0]),
+    Number(parts[1]) - 1,
+    Number(parts[2])
+  );
+}
+
+
+function dateKey(date) {
+  return [
+    date.getFullYear(),
+    String(
+      date.getMonth() + 1
+    ).padStart(
+      2,
+      "0"
+    ),
+    String(
+      date.getDate()
+    ).padStart(
+      2,
+      "0"
+    )
+  ].join("-");
+}
+
+
+function monthKey(date) {
+  return [
+    date.getFullYear(),
+    String(
+      date.getMonth() + 1
+    ).padStart(
+      2,
+      "0"
+    )
+  ].join("-");
+}
+
+
+function monthLabel(date) {
+  return date.toLocaleDateString(
+    "en-US",
+    {
+      month:
+        "long",
+
+      year:
+        "numeric"
+    }
+  );
+}
+
+
+function dayLabel(date) {
+  return date.toLocaleDateString(
+    "en-US",
+    {
+      weekday:
+        "long",
+
+      month:
+        "long",
+
+      day:
+        "numeric"
+    }
+  );
+}
+
+
+/* ============================================================
+   PHOTO
+   ============================================================ */
+
+function normalizePhotoUrl(photo) {
+  if (!photo) {
+    return null;
+  }
+
+  let url =
+    photo.medium_url ||
+    photo.url ||
+    photo.square_url ||
+    null;
+
+  if (!url) {
+    return null;
+  }
+
+  url =
+    url.replace(
+      /\/(square|small|thumb)\./,
+      "/medium."
+    );
+
+  return url;
+}
+
+
+/* ============================================================
+   FETCH PAGE
+   ============================================================ */
+
+async function fetchTaxaPage(
+  username,
+  page
+) {
+  const fields = [
+    "first_observed_on",
+    "taxon.id",
+    "taxon.name",
+    "taxon.preferred_common_name",
+    "taxon.default_photo.id",
+    "taxon.default_photo.url",
+    "taxon.default_photo.square_url",
+    "taxon.default_photo.medium_url",
+    "taxon.default_photo.attribution"
+  ].join(",");
+
+
+  const query =
+    new URLSearchParams({
+      order_by:
+        "first_observed_on",
+
+      order:
+        "desc",
+
+      page:
+        String(page),
+
+      per_page:
+        "200",
+
+      fields:
+        fields
+    });
+
+
+  const url =
+    `${API_ROOT}/users/` +
+    `${encodeURIComponent(username)}` +
+    `/taxa_observed?${query}`;
+
+
+  const response =
+    await fetch(
+      url
+    );
+
+
+  if (!response.ok) {
+    throw new Error(
+      `iNaturalist API returned ${response.status}`
+    );
+  }
+
+
+  return await response.json();
+}
+
+
+/* ============================================================
+   FETCH COLLECTION
+   ============================================================ */
+
+async function fetchCollection(
+  username,
+  year
+) {
+  const results = [];
+
+  let page = 1;
+
+
+  const startDate =
+    year === "all"
+      ? null
+      : new Date(
+          Number(year),
+          0,
+          1
+        );
+
+
+  while (true) {
+
+    statusEl.textContent =
+      `Loading page ${page}…`;
+
+
+    const data =
+      await fetchTaxaPage(
+        username,
+        page
+      );
+
+
+    const pageResults =
+      data.results || [];
+
+
+    if (
+      pageResults.length === 0
+    ) {
+      break;
+    }
+
+
+    let reachedOlderTaxa =
+      false;
+
+
+    for (
+      const record
+      of pageResults
+    ) {
+
+      const observedDate =
+        parseDate(
+          record.first_observed_on
+        );
+
+
+      if (
+        !observedDate
+      ) {
+        continue;
+      }
+
+
+      if (
+        startDate &&
+        observedDate < startDate
+      ) {
+        reachedOlderTaxa =
+          true;
+
+        continue;
+      }
+
+
+      if (
+        year !== "all" &&
+        observedDate.getFullYear() !==
+          Number(year)
+      ) {
+        continue;
+      }
+
+
+      const taxon =
+        record.taxon || {};
+
+
+      results.push({
+        id:
+          taxon.id,
+
+        scientificName:
+          taxon.name ||
+          "",
+
+        commonName:
+          taxon.preferred_common_name ||
+          taxon.name ||
+          "",
+
+        date:
+          observedDate,
+
+        photoUrl:
+          normalizePhotoUrl(
+            taxon.default_photo
+          ),
+
+        photoAttribution:
+          taxon.default_photo
+            ?.attribution ||
+          ""
+      });
+    }
+
+
+    if (
+      reachedOlderTaxa
+    ) {
+      break;
+    }
+
+
+    if (
+      pageResults.length < 200
+    ) {
+      break;
+    }
+
+
+    page += 1;
+  }
+
+
+  results.sort(
+    (a, b) => {
+
+      const dateDifference =
+        b.date -
+        a.date;
+
+
+      if (
+        dateDifference !== 0
+      ) {
+        return dateDifference;
+      }
+
+
+      return a.scientificName.localeCompare(
+        b.scientificName
+      );
+    }
+  );
+
+
+  return results;
+}
+
+
+/* ============================================================
+   GROUP
+   ============================================================ */
+
+function groupByMonthAndDay(
+  taxa
+) {
+  const months =
+    new Map();
+
+
+  for (
+    const taxon
+    of taxa
+  ) {
+
+    const mKey =
+      monthKey(
+        taxon.date
+      );
+
+
+    const dKey =
+      dateKey(
+        taxon.date
+      );
+
+
+    if (
+      !months.has(
+        mKey
+      )
+    ) {
+      months.set(
+        mKey,
+        {
+          date:
+            taxon.date,
+
+          taxa:
+            [],
+
+          days:
+            new Map()
+        }
+      );
+    }
+
+
+    const month =
+      months.get(
+        mKey
+      );
+
+
+    month.taxa.push(
+      taxon
+    );
+
+
+    if (
+      !month.days.has(
+        dKey
+      )
+    ) {
+      month.days.set(
+        dKey,
+        {
+          date:
+            taxon.date,
+
+          taxa:
+            []
+        }
+      );
+    }
+
+
+    month.days
+      .get(
+        dKey
+      )
+      .taxa
+      .push(
+        taxon
+      );
+  }
+
+
+  return months;
+}
+
+
+/* ============================================================
+   CARD
+   ============================================================ */
+
+function renderCard(
+  taxon,
+  isNewest
+) {
+  const taxonUrl =
+    taxon.id
+      ? `https://www.inaturalist.org/taxa/${taxon.id}`
+      : "#";
+
+
+  const photoHtml =
+    taxon.photoUrl
+      ? `
+        <img
+          class="photo"
+          src="${escapeHtml(taxon.photoUrl)}"
+          alt="${escapeHtml(taxon.commonName)}"
+          loading="lazy"
+        >
+      `
+      : `
+        <div class="no-photo">
+          No taxon photo
+        </div>
+      `;
+
+
+  const newestHtml =
+    isNewest
+      ? `
+        <div class="newest-badge">
+          Newest
+        </div>
+      `
+      : "";
+
+
+  const creditHtml =
+    taxon.photoAttribution
+      ? `
+        <div
+          class="photo-credit"
+          title="${escapeHtml(taxon.photoAttribution)}"
+        >
+          ${escapeHtml(taxon.photoAttribution)}
+        </div>
+      `
+      : "";
+
+
+  return `
+    <a
+      class="card"
+      href="${escapeHtml(taxonUrl)}"
+      target="_blank"
+      rel="noopener"
+    >
+
+      <div class="photo-wrap">
+
+        ${photoHtml}
+
+        ${newestHtml}
+
+      </div>
+
+
+      <div class="content">
+
+        <div class="common-name">
+          ${escapeHtml(taxon.commonName)}
+        </div>
+
+
+        <div class="scientific-name">
+          ${escapeHtml(taxon.scientificName)}
+        </div>
+
+
+        ${creditHtml}
+
+      </div>
+
+    </a>
+  `;
+}
+
+
+/* ============================================================
+   RENDER COLLECTION
+   ============================================================ */
+
+function renderCollection(
+  username,
+  year,
+  taxa
+) {
+  const months =
+    groupByMonthAndDay(
+      taxa
+    );
+
+
+  titleEl.textContent =
+    year === "all"
+      ? `${username}'s Species`
+      : `${username}'s ${year} Species`;
+
+
+  document.title =
+    titleEl.textContent;
+
+
+  if (
+    year === "all"
+  ) {
+    summaryEl.innerHTML =
+      `
+        <strong>
+          ${formatNumber(taxa.length)}
+        </strong>
+        taxa collected
+        ·
+        newest first
+      `;
+  }
+  else {
+    summaryEl.innerHTML =
+      `
+        <strong>
+          ${formatNumber(taxa.length)}
+        </strong>
+        new taxa in ${escapeHtml(year)}
+        ·
+        newest first
+      `;
+  }
+
+
+  if (
+    taxa.length === 0
+  ) {
+    collectionEl.innerHTML =
+      `
+        <div class="status">
+          No taxa found for this period.
+        </div>
+      `;
+
+    return;
+  }
+
+
+  let html = "";
+
+  let cardIndex =
+    0;
+
+
+  for (
+    const month
+    of months.values()
+  ) {
+
+    html += `
+      <section class="month">
+
+        <div class="month-header">
+
+          <div class="month-name">
+            ${escapeHtml(monthLabel(month.date))}
+          </div>
+
+          <div class="month-count">
+            ${month.taxa.length} new
+          </div>
+
+        </div>
+    `;
+
+
+    for (
+      const day
+      of month.days.values()
+    ) {
+
+      const countHtml =
+        day.taxa.length > 1
+          ? `
+            <div class="day-count">
+              ${day.taxa.length} species
+            </div>
+          `
+          : "";
+
+
+      html += `
+        <div class="day">
+
+          <div class="day-header">
+
+            <div class="day-date">
+              ${escapeHtml(dayLabel(day.date))}
+            </div>
+
+            ${countHtml}
+
+          </div>
+
+
+          <div class="grid">
+      `;
+
+
+      for (
+        const taxon
+        of day.taxa
+      ) {
+
+        cardIndex += 1;
+
+
+        html +=
+          renderCard(
+            taxon,
+            cardIndex === 1
+          );
+      }
+
+
+      html += `
+          </div>
+
+        </div>
+      `;
+    }
+
+
+    html += `
+      </section>
+    `;
+  }
+
+
+  collectionEl.innerHTML =
+    html;
+}
+
+
+/* ============================================================
+   LOAD
+   ============================================================ */
+
+async function loadCollection() {
+  const username =
+    usernameInput
+      .value
+      .trim();
+
+
+  const year =
+    yearSelect.value;
+
+
+  if (
+    !username
+  ) {
+    return;
+  }
+
+
+  collectionEl.innerHTML =
+    "";
+
+
+  statusEl.className =
+    "status";
+
+
+  statusEl.textContent =
+    "Loading iNaturalist collection…";
+
+
+  titleEl.textContent =
+    `${username}'s Species`;
+
+
+  summaryEl.textContent =
+    "Loading…";
+
+
+  const url =
+    new URL(
+      window.location.href
+    );
+
+
+  url.searchParams.set(
+    "user",
+    username
+  );
+
+
+  url.searchParams.set(
+    "year",
+    year
+  );
+
+
+  window.history.replaceState(
+    {},
+    "",
+    url
+  );
+
+
+  try {
+
+    const taxa =
+      await fetchCollection(
+        username,
+        year
+      );
+
+
+    statusEl.textContent =
+      "";
+
+
+    renderCollection(
+      username,
+      year,
+      taxa
+    );
+
+  }
+  catch (
+    error
+  ) {
+
+    console.error(
+      error
+    );
+
+
+    statusEl.className =
+      "status error";
+
+
+    statusEl.textContent =
+      "Couldn't load this collection. " +
+      error.message;
+
+
+    summaryEl.textContent =
+      "Unable to load";
+  }
+}
+
+
+/* ============================================================
+   EVENTS
+   ============================================================ */
+
+goButton.addEventListener(
+  "click",
+  loadCollection
+);
+
+
+usernameInput.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key ===
+      "Enter"
+    ) {
+      loadCollection();
+    }
+
+  }
+);
+
+
+yearSelect.addEventListener(
+  "change",
+  loadCollection
+);
+
+
+/* ============================================================
+   INITIAL LOAD
+   ============================================================ */
+
+loadCollection();
+
+</script>
+
+</body>
+</html>
