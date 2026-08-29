@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Box Turtle Box</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+    html, body {
+        margin: 0;
+        font-family: system-ui, -apple-system, sans-serif;
+        background: #f4f4f9;
+    }
+    header {
+        padding: 0.75rem 1rem;
+        background: white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        position: relative;
+        z-index: 1000;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+    header h1 {
+        margin: 0 0 0.4rem;
+        font-size: 1.1rem;
+    }
+    header p {
+        margin: 0.25rem 0;
+        font-size: 0.85rem;
+        color: #444;
+    }
+    #tutorial-btn {
+        flex-shrink: 0;
+        padding: 0.4rem 0.9rem;
+        cursor: pointer;
+        background-color: white;
+        color: #2e8b57;
+        border: 1.5px solid #2e8b57;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+    #tutorial-btn:hover {
+        background-color: #eaf5ef;
+    }
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+    .modal-overlay.open {
+        display: flex;
+    }
+    .modal {
+        background: white;
+        border-radius: 8px;
+        max-width: 560px;
+        width: 100%;
+        max-height: 85vh;
+        overflow-y: auto;
+        padding: 1.5rem;
+        position: relative;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .modal h2 {
+        margin: 0 0 1rem;
+        font-size: 1.2rem;
+    }
+    .modal h3 {
+        margin: 1.1rem 0 0.3rem;
+        font-size: 0.95rem;
+    }
+    .modal p, .modal li {
+        font-size: 0.9rem;
+        line-height: 1.5;
+        color: #333;
+    }
+    .modal ol, .modal ul {
+        margin: 0.3rem 0;
+        padding-left: 1.3rem;
+    }
+    .modal-close {
+        position: absolute;
+        top: 0.75rem;
+        right: 0.9rem;
+        border: none;
+        background: none;
+        font-size: 1.4rem;
+        line-height: 1;
+        cursor: pointer;
+        color: #888;
+    }
+    .modal-close:hover {
+        color: #333;
+    }
+    #map {
+        height: 300px;
+        width: 100%;
+    }
+    #results {
+        padding: 1rem;
+    }
+    .results-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 0.75rem;
+    }
+    #results-status {
+        font-size: 0.9rem;
+        color: #555;
+    }
+    #analyze-btn {
+        padding: 0.4rem 0.9rem;
+        cursor: pointer;
+        background-color: #2e8b57;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        white-space: nowrap;
+    }
+    #analyze-btn:disabled {
+        background-color: #aaa;
+        cursor: not-allowed;
+    }
+    #analyze-btn:not(:disabled):hover {
+        background-color: #256e46;
+    }
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 0.75rem;
+    }
+    .card {
+        background: white;
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+        cursor: pointer;
+        border: 3px solid transparent;
+    }
+    .card.selected {
+        border-color: #ff8800;
+    }
+    .card.unavailable {
+        cursor: default;
+        pointer-events: none;
+        opacity: 0.45;
+        filter: grayscale(70%);
+    }
+    .card img {
+        display: block;
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+    }
+    .card .meta {
+        font-size: 0.7rem;
+        text-align: center;
+        padding: 3px 2px;
+        color: #555;
+        background: #fafafa;
+        min-height: 1.2em;
+    }
+</style>
+</head>
+<body>
+
+<header>
+    <div>
+        <h1>Box Turtle Box</h1>
+        <p>A simple simulation of how photo-matching could help identify individual box turtles.</p>
+    </div>
+    <button id="tutorial-btn">Tutorial</button>
+</header>
+
+<div id="map"></div>
+
+<div class="modal-overlay" id="tutorial-overlay">
+    <div class="modal">
+        <button class="modal-close" id="tutorial-close" aria-label="Close">&times;</button>
+        <h2>How this works</h2>
+
+        <p>This is a simple simulation of how you could tell whether two photos show the <strong>same individual box turtle</strong>, using only the pattern on its shell &mdash; like a shell "fingerprint."</p>
+
+        <h3>1. Load a sample of turtles</h3>
+        <p>Click a point on the map to load real box turtle photos from iNaturalist observations near that spot.</p>
+
+        <h3>2. Generate control points on each shell</h3>
+        <p>Click <strong>Analyze Shells</strong> to run every photo through the model. For each photo, it:</p>
+        <ol>
+            <li>Tries to separate the turtle from its background (dirt, leaves, grass, hands) so it isn't distracted by clutter.</li>
+            <li>Picks out dozens of small, distinctive spots on the shell pattern, called <strong>control points</strong>. This is the same family of technique used by fingerprint scanners and real animal-ID tools like Hotspotter and WildID.</li>
+        </ol>
+
+        <h3>3. Simulate "uploading" a photo</h3>
+        <p>Once analysis finishes, click any photo to make it the photo you just "uploaded." The app compares its control points against every other photo's control points and counts how many genuinely line up &mdash; not just similar-looking, but consistent with the same shell shape seen from two angles. The rest of the photos are then sorted with the closest matches first, and each one shows its <strong>matching points</strong> count.</p>
+
+        <h3>4. What's still missing: a threshold</h3>
+        <p>A high match count doesn't automatically mean "same turtle" &mdash; that call requires a <strong>threshold</strong>, a cutoff number of matching points above which you'd confidently say it's a match. Building that threshold for real would mean:</p>
+        <ul>
+            <li>Gathering many photo pairs you already know are the <em>same</em> turtle, and many pairs you know are <em>different</em> turtles.</li>
+            <li>Looking at the matching-points count for both groups.</li>
+            <li>Finding a cutoff where same-turtle pairs mostly score above it and different-turtle pairs mostly score below it &mdash; for example, "20 or more matching points usually means the same turtle."</li>
+        </ul>
+        <p>That threshold would depend on photo quality, angle, and lighting, and would need testing against real known matches before you could trust it. This simulation stops short of that last step &mdash; it shows you the matching in action, but leaves picking the threshold as the open question.</p>
+    </div>
+</div>
+
+<div id="results">
+    <div class="results-header">
+        <p id="results-status">Let's simulate how individual turtle recognition could work. Select a point on the map to load a sample of turtles from iNaturalist.</p>
+        <button id="analyze-btn" disabled>Analyze Shells</button>
+    </div>
+    <div class="cards" id="cards"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+    const TAXON_ID = '39814';
+    const RANGE_BOUNDS = [
+        [20.939041115, -103.323152495],
+        [47.473159808, -61.183031035]
+    ];
+
+    const map = L.map('map', {
+        maxBounds: RANGE_BOUNDS,
+        maxBoundsViscosity: 1.0,
+        zoomSnap: 0
+    });
+
+    // Fit zoom to the container's width so the range fills it horizontally,
+    // rather than Leaflet's default fitBounds which would zoom out to fit
+    // the (much taller) full latitude span into a short container.
+    const lngSpan = RANGE_BOUNDS[1][1] - RANGE_BOUNDS[0][1];
+    const containerWidth = document.getElementById('map').clientWidth;
+    const fitZoom = Math.log2(containerWidth * 360 / (lngSpan * 256));
+    map.setView(L.latLngBounds(RANGE_BOUNDS).getCenter(), fitZoom);
+    map.setMinZoom(fitZoom);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19,
+        minZoom: Math.floor(fitZoom),
+        noWrap: true
+    }).addTo(map);
+
+    fetch(`https://inaturalist-open-data.s3.us-east-1.amazonaws.com/geomodel/geojsons/latest/${TAXON_ID}.geojson`)
+        .then(res => res.json())
+        .then(geojson => {
+            L.geoJSON(geojson, {
+                style: { color: '#2e8b57', weight: 1, fillOpacity: 0.15 }
+            }).addTo(map);
+        })
+        .catch(() => {});
+
+    const tutorialBtn = document.getElementById('tutorial-btn');
+    const tutorialOverlay = document.getElementById('tutorial-overlay');
+    const tutorialClose = document.getElementById('tutorial-close');
+
+    function openTutorial() {
+        tutorialOverlay.classList.add('open');
+    }
+    function closeTutorial() {
+        tutorialOverlay.classList.remove('open');
+    }
+    tutorialBtn.addEventListener('click', openTutorial);
+    tutorialClose.addEventListener('click', closeTutorial);
+    tutorialOverlay.addEventListener('click', (e) => {
+        if (e.target === tutorialOverlay) closeTutorial();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeTutorial();
+    });
+
+    let marker = null;
+    let rectangle = null;
+
+    const statusEl = document.getElementById('results-status');
+    const cardsEl = document.getElementById('cards');
+    const analyzeBtn = document.getElementById('analyze-btn');
+
+    let cardEls = [];
+    let photoUrls = [];
+    let photoDescriptors = [];
+    let photoKeypoints = [];
+    let cvLoadPromise = null;
+
+    function nearestTenth(value) {
+        return Math.round(value * 10) / 10;
+    }
+
+    // Loads OpenCV.js (used for ORB, a fast SIFT-like local feature
+    // detector/descriptor) on demand, once.
+    function loadOpenCv() {
+        if (cvLoadPromise) return cvLoadPromise;
+        cvLoadPromise = new Promise((resolve, reject) => {
+            if (window.cv && window.cv.Mat) return resolve();
+            const script = document.createElement('script');
+            script.src = 'https://docs.opencv.org/4.x/opencv.js';
+            script.onload = () => {
+                (function waitForRuntime() {
+                    if (window.cv && window.cv.Mat) resolve();
+                    else setTimeout(waitForRuntime, 50);
+                })();
+            };
+            script.onerror = () => reject(new Error('Failed to load OpenCV'));
+            document.head.appendChild(script);
+        });
+        return cvLoadPromise;
+    }
+
+    function ensureImageLoaded(img) {
+        if (img.complete) {
+            return img.naturalWidth > 0
+                ? Promise.resolve(img)
+                : Promise.reject(new Error('image failed to load'));
+        }
+        return new Promise((resolve, reject) => {
+            img.addEventListener('load', () => resolve(img), { once: true });
+            img.addEventListener('error', () => reject(new Error('image failed to load')), { once: true });
+        });
+    }
+
+    function imageToMat(img) {
+        const maxDim = 650;
+        const scale = Math.min(1, maxDim / Math.max(img.naturalWidth, img.naturalHeight));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.max(1, Math.round(img.naturalWidth * scale));
+        canvas.height = Math.max(1, Math.round(img.naturalHeight * scale));
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        return cv.imread(canvas);
+    }
+
+    // Seeds GrabCut with a rectangle covering the central 80% of the photo
+    // and uses the resulting foreground (the turtle) as an ORB mask, so
+    // control points aren't planted on background clutter (gravel, leaf
+    // litter, grass). Returns null if GrabCut's result looks degenerate
+    // (near-empty or near-total foreground), so the caller can fall back
+    // to the unmasked image instead of starving ORB of keypoints.
+    function computeForegroundMask(rgbaMat) {
+        const w = rgbaMat.cols, h = rgbaMat.rows;
+        const rgb = new cv.Mat();
+        cv.cvtColor(rgbaMat, rgb, cv.COLOR_RGBA2RGB);
+
+        const marginX = Math.round(w * 0.1);
+        const marginY = Math.round(h * 0.1);
+        const rect = new cv.Rect(marginX, marginY, w - 2 * marginX, h - 2 * marginY);
+
+        const gcMask = new cv.Mat.zeros(h, w, cv.CV_8UC1);
+        const bgdModel = new cv.Mat();
+        const fgdModel = new cv.Mat();
+        let fgMask = null;
+        try {
+            cv.grabCut(rgb, gcMask, rect, bgdModel, fgdModel, 5, cv.GC_INIT_WITH_RECT);
+
+            const candidate = new cv.Mat.zeros(h, w, cv.CV_8UC1);
+            let fgCount = 0;
+            for (let i = 0; i < gcMask.rows * gcMask.cols; i++) {
+                const v = gcMask.data[i];
+                if (v === 1 || v === 3) { // GC_FGD or GC_PR_FGD
+                    candidate.data[i] = 255;
+                    fgCount++;
+                }
+            }
+
+            const fraction = fgCount / (w * h);
+            if (fraction > 0.02 && fraction < 0.95) {
+                fgMask = candidate;
+            } else {
+                candidate.delete();
+            }
+        } finally {
+            rgb.delete();
+            gcMask.delete();
+            bgdModel.delete();
+            fgdModel.delete();
+        }
+        return fgMask;
+    }
+
+    analyzeBtn.addEventListener('click', async () => {
+        if (!cardEls.length) return;
+        analyzeBtn.disabled = true;
+
+        statusEl.textContent = 'Loading the shell-matching model...';
+        try {
+            await loadOpenCv();
+        } catch (err) {
+            statusEl.textContent = 'Something went wrong loading the model — please try again.';
+            analyzeBtn.disabled = false;
+            return;
+        }
+
+        const orb = new cv.ORB(800);
+        photoDescriptors = new Array(cardEls.length).fill(null);
+        photoKeypoints = new Array(cardEls.length).fill(null);
+
+        for (let i = 0; i < cardEls.length; i++) {
+            statusEl.textContent = `Generating control points for photo ${i + 1} of ${cardEls.length}...`;
+            let mat, gray, kp, mask;
+            try {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                // Cache-bust: the visible <img> already fetched this URL in
+                // no-cors mode, and browsers won't reuse that cache entry
+                // for a crossOrigin=anonymous request, so it fails silently
+                // unless we force a fresh fetch.
+                img.src = photoUrls[i] + (photoUrls[i].includes('?') ? '&' : '?') + '_cors=1';
+                await ensureImageLoaded(img);
+                mat = imageToMat(img);
+                gray = new cv.Mat();
+                cv.cvtColor(mat, gray, cv.COLOR_RGBA2GRAY);
+                kp = new cv.KeyPointVector();
+                mask = computeForegroundMask(mat) || new cv.Mat();
+                const desc = new cv.Mat();
+                orb.detectAndCompute(gray, mask, kp, desc);
+                if (desc.rows > 0) {
+                    photoDescriptors[i] = desc;
+                    const pts = [];
+                    for (let k = 0; k < kp.size(); k++) {
+                        const pt = kp.get(k).pt;
+                        pts.push({ x: pt.x, y: pt.y });
+                    }
+                    photoKeypoints[i] = pts;
+                } else {
+                    desc.delete();
+                }
+            } catch (err) {
+                photoDescriptors[i] = null;
+            } finally {
+                if (mat) mat.delete();
+                if (gray) gray.delete();
+                if (kp) kp.delete();
+                if (mask) mask.delete();
+            }
+        }
+        orb.delete();
+
+        cardEls.forEach((card, i) => {
+            if (!photoDescriptors[i]) {
+                card.classList.add('unavailable');
+                card.querySelector('.meta').textContent = 'No control points found';
+            }
+        });
+
+        const found = photoDescriptors.filter(Boolean).length;
+        statusEl.textContent = `Found control points for ${found} of ${cardEls.length} photos. Now let's simulate uploading a turtle photo: select the photo you want to be the "uploaded" photo, and the rest will be sorted by decreasing similarity.`;
+        // Stays disabled: re-running on the same photo set would produce
+        // identical results. It re-enables when the marker moves and a new
+        // set of photos loads.
+    });
+
+    // Compares two photos' ORB control points and returns the number of
+    // matches that are both (a) distinctive (Lowe's ratio test, which
+    // throws out ambiguous matches instead of counting every close-enough
+    // descriptor) and (b) geometrically consistent with a single shell
+    // viewed from two angles (RANSAC homography inliers). Raw brute-force
+    // match counts are dominated by background clutter (dirt, leaves,
+    // gravel) and repetitive shell-pattern texture that matches almost
+    // anything, so they rank unrelated shells as "similar". This is much
+    // closer to what Hotspotter/WildID-style pipelines actually score.
+    function verifiedMatchCount(descA, ptsA, descB, ptsB) {
+        const bf = new cv.BFMatcher(cv.NORM_HAMMING, false);
+        const knn = new cv.DMatchVectorVector();
+        bf.knnMatch(descA, descB, knn, 2);
+
+        const good = [];
+        for (let k = 0; k < knn.size(); k++) {
+            const pair = knn.get(k);
+            if (pair.size() < 2) continue;
+            const m0 = pair.get(0), m1 = pair.get(1);
+            if (m0.distance < 0.75 * m1.distance) good.push(m0);
+        }
+        knn.delete();
+        bf.delete();
+
+        if (good.length < 4) return 0; // not enough to fit/verify a homography
+
+        const src = [], dst = [];
+        good.forEach(m => {
+            src.push(ptsA[m.queryIdx].x, ptsA[m.queryIdx].y);
+            dst.push(ptsB[m.trainIdx].x, ptsB[m.trainIdx].y);
+        });
+
+        const srcMat = cv.matFromArray(good.length, 1, cv.CV_32FC2, src);
+        const dstMat = cv.matFromArray(good.length, 1, cv.CV_32FC2, dst);
+        const mask = new cv.Mat();
+        const H = cv.findHomography(srcMat, dstMat, cv.RANSAC, 5, mask);
+        let inliers = 0;
+        for (let k = 0; k < mask.rows; k++) if (mask.data[k]) inliers++;
+        srcMat.delete();
+        dstMat.delete();
+        mask.delete();
+        H.delete();
+        return inliers;
+    }
+
+    function selectKeyImage(i) {
+        if (!photoDescriptors[i]) {
+            statusEl.textContent = 'Click "Analyze Shells" first so we can generate control points to compare.';
+            return;
+        }
+
+        const ranked = cardEls
+            .map((card, j) => {
+                if (j === i) return null;
+                const descJ = photoDescriptors[j];
+                if (!descJ) return { index: j, matches: 0 };
+                const matches = verifiedMatchCount(photoDescriptors[i], photoKeypoints[i], descJ, photoKeypoints[j]);
+                return { index: j, matches };
+            })
+            .filter(Boolean)
+            .sort((a, b) => b.matches - a.matches);
+
+        cardEls.forEach(c => c.classList.remove('selected'));
+        cardEls[i].classList.add('selected');
+        cardEls[i].querySelector('.meta').textContent = 'Uploaded photo';
+        cardsEl.appendChild(cardEls[i]);
+
+        ranked.forEach(({ index, matches }) => {
+            // Cards without control points keep their "No control points
+            // found" label from the analyze step rather than being
+            // overwritten here.
+            if (photoDescriptors[index]) {
+                cardEls[index].querySelector('.meta').textContent = `${matches} matching points`;
+            }
+            cardsEl.appendChild(cardEls[index]);
+        });
+
+        statusEl.textContent = 'Sorted by decreasing similarity to the uploaded photo. All that\'s missing is a threshold to know if nearby photos are close enough to be considered the same turtle.';
+    }
+
+    map.on('click', async (e) => {
+        const { lat, lng } = e.latlng;
+        const swlat = nearestTenth(lat);
+        const swlng = nearestTenth(lng);
+        const nelat = Math.round((swlat + 0.2) * 10) / 10;
+        const nelng = Math.round((swlng + 0.2) * 10) / 10;
+
+        if (marker) marker.setLatLng(e.latlng);
+        else marker = L.marker(e.latlng).addTo(map);
+
+        const bounds = [[swlat, swlng], [nelat, nelng]];
+        if (rectangle) rectangle.setBounds(bounds);
+        else rectangle = L.rectangle(bounds, { color: '#007bff', weight: 2, fillOpacity: 0.15 }).addTo(map);
+
+        const params = new URLSearchParams({ nelat, nelng, swlat, swlng, taxon_id: TAXON_ID });
+
+        cardsEl.innerHTML = '';
+        cardEls = [];
+        photoUrls = [];
+        photoDescriptors = [];
+        photoKeypoints = [];
+        analyzeBtn.disabled = true;
+        statusEl.textContent = 'Loading a sample of turtle photos from this area...';
+
+        try {
+            const res = await fetch(`https://api.inaturalist.org/v1/observations?${params.toString()}`);
+            const data = await res.json();
+            const photos = (data.results || [])
+                .flatMap(obs => obs.photos || [])
+                .map(photo => photo.url && photo.url.replace('square', 'medium'))
+                .filter(Boolean);
+
+            statusEl.textContent = photos.length === 0
+                ? 'No box turtle photos found here — try selecting a different point on the map.'
+                : `Loaded ${photos.length} photo(s) from ${data.total_results || 0} observation(s). Click "Analyze Shells" below to run each photo through the model — this generates control points on each shell so we can compare them. This may take a little while.`;
+
+            photos.forEach((url, i) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                const img = document.createElement('img');
+                img.src = url;
+                img.loading = 'lazy';
+                const meta = document.createElement('div');
+                meta.className = 'meta';
+                card.appendChild(img);
+                card.appendChild(meta);
+                card.addEventListener('click', () => selectKeyImage(i));
+                cardsEl.appendChild(card);
+                cardEls.push(card);
+                photoUrls.push(url);
+            });
+
+            analyzeBtn.disabled = photos.length === 0;
+        } catch (err) {
+            statusEl.textContent = 'Something went wrong loading turtle photos — please try again.';
+        }
+    });
+</script>
+
+</body>
+</html>
