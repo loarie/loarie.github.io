@@ -1202,7 +1202,7 @@ function renderCard(
 ) {
   const taxonUrl =
     taxon.id
-      ? `https://www.inaturalist.org/taxa/${taxon.id}`
+      ? `https://www.inaturalist.org/observations?order=asc&order_by=observed_on&taxon_id=${encodeURIComponent(taxon.id)}&user_id=${encodeURIComponent(usernameInput.value.trim())}&verifiable=any`
       : "#";
 
 
