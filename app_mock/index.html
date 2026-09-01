@@ -1,0 +1,1329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>loarie</title>
+<style>
+  :root {
+    --green: #6bab2b;
+    --green-dark: #4c8a17;
+    --ink: #2b2b28;
+    --sub: #6f6f6a;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    background: #d9d9d9;
+    color: var(--ink);
+  }
+  body {
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 24px 0;
+  }
+  .phone {
+    width: 390px;
+    max-width: 100vw;
+    background: #fff;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.25);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* status bar */
+  .statusbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 22px 6px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  .statusbar .icons { display: flex; align-items: center; gap: 5px; }
+  .battery { display: flex; align-items: center; gap: 3px; }
+  .battery-pct {
+    background: #1a1a1a; color: #fff; font-size: 11px; font-weight: 700;
+    border-radius: 4px; padding: 1px 4px;
+  }
+
+  /* header */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 18px 14px;
+  }
+  .user { display: flex; align-items: center; gap: 12px; }
+  .avatar {
+    width: 46px; height: 46px; border-radius: 50%;
+    background: linear-gradient(135deg,#8fae6b,#4d6b3a);
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 18px; font-weight: 700;
+    border: 2px solid #eee;
+  }
+  .username { font-size: 22px; font-weight: 600; }
+  .header-icons { display: flex; align-items: center; gap: 20px; }
+  .icon-btn { background: none; border: none; padding: 0; color: #444; display: flex; cursor: pointer; }
+  .icon-btn svg { width: 24px; height: 24px; }
+  .menu-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s;
+  }
+  .menu-btn svg { width: 20px; height: 20px; }
+  .menu-btn.active { background: var(--green); color: #fff; }
+
+  /* stats */
+  .stats {
+    display: flex;
+    padding: 6px 0 0;
+  }
+  .stat {
+    flex: 1;
+    text-align: center;
+    padding-bottom: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+  }
+  .stat .num { font-size: 26px; font-weight: 400; }
+  .stat .label {
+    font-size: 11px; letter-spacing: 0.06em; color: var(--sub);
+    margin-top: 2px; font-weight: 600;
+  }
+  .stat.active { border-bottom: 3px solid var(--green); padding-bottom: 10px; }
+  .stat.active .num, .stat.active .label { color: var(--ink); }
+
+  /* tab panels */
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* lifelist */
+  .lifelist-scroll {
+    height: 480px;
+    overflow-y: auto;
+    padding: 12px 16px 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .lifelist-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: var(--sub);
+    font-size: 14px;
+  }
+  .ll-month { margin-bottom: 6px; }
+  .ll-month-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--green);
+  }
+  .ll-month-title { font-size: 17px; font-weight: 800; color: var(--ink); }
+  .ll-month-count { font-size: 12px; font-weight: 600; color: var(--sub); }
+  .ll-day { margin-bottom: 12px; }
+  .ll-day-header {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--sub);
+    margin-bottom: 6px;
+  }
+  .ll-entry {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 0;
+  }
+  .ll-thumb {
+    width: 52px; height: 52px;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    background-color: #ddd;
+    flex-shrink: 0;
+  }
+  .ll-entry-name {
+    font-size: 14.5px;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .ll-entry-sci { font-size: 12.5px; font-style: italic; color: #666; margin-top: 1px; }
+  .ll-newest-badge {
+    display: inline-block;
+    background: var(--green);
+    color: #fff;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    padding: 2px 7px;
+    border-radius: 999px;
+  }
+
+  /* grid */
+  .grid-wrapper {
+    position: relative;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 3px;
+    padding: 6px 6px 6px;
+    height: 480px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .card {
+    position: relative;
+    height: 0;
+    padding-bottom: 105%;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    background-color: #ddd;
+  }
+  .card::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0; height: 55%;
+    background: linear-gradient(to top, rgba(0,0,0,0.55), rgba(0,0,0,0));
+  }
+  .card .label {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    z-index: 1;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 10px;
+    line-height: 1.15;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+  .grid.loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--sub);
+    font-size: 14px;
+  }
+
+  /* overlay controls, floating over grid */
+  .view-toggle {
+    position: absolute;
+    bottom: 14px;
+    left: 12px;
+    z-index: 2;
+    display: flex;
+    background: rgba(255,255,255,0.92);
+    border-radius: 22px;
+    padding: 3px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+  .view-toggle button {
+    border: none;
+    background: none;
+    width: 42px;
+    height: 36px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    cursor: pointer;
+  }
+  .view-toggle button.active { background: var(--green); color: #fff; }
+  .view-toggle svg { width: 18px; height: 18px; }
+
+  .sort-btn {
+    position: absolute;
+    bottom: 14px;
+    right: 12px;
+    z-index: 2;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.92);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    display: flex; align-items: center; justify-content: center;
+    color: #555;
+    cursor: pointer;
+  }
+  .sort-btn svg { width: 18px; height: 18px; }
+
+  /* bottom nav */
+  .bottom-nav {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+    padding: 8px 4px 14px;
+    border-top: 1px solid #eee;
+    margin-top: 6px;
+    position: relative;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #444;
+    font-size: 11px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    position: relative;
+  }
+  .nav-item svg { width: 24px; height: 24px; }
+  .nav-item.active { color: var(--green); }
+  .nav-item .nav-avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: linear-gradient(135deg,#8fae6b,#4d6b3a);
+    border: 2px solid var(--green);
+  }
+  .nav-item .badge {
+    position: absolute;
+    top: -2px; right: -4px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--green);
+  }
+  .nav-camera {
+    width: 62px; height: 62px;
+    border-radius: 50%;
+    background: linear-gradient(160deg,#8fbf3f,#3f7a1a);
+    display: flex; align-items: center; justify-content: center;
+    margin-top: -26px;
+    box-shadow: 0 4px 14px rgba(63,122,26,0.5);
+    border: 4px solid #fff;
+    cursor: pointer;
+  }
+  .nav-camera svg { width: 26px; height: 26px; color: #fff; }
+
+  /* screens */
+  .screen { display: none; flex-direction: column; }
+  .screen.active { display: flex; }
+
+  /* camera screen */
+  .camera-screen { height: 728px; background: #000; }
+  .cam-topbar {
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
+  }
+  .cam-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); }
+  .cam-viewfinder, .match-photo-main {
+    background-image: url('original.jpg');
+    background-size: cover;
+    background-position: center;
+    background-color: #333;
+  }
+  .cam-viewfinder {
+    height: 706px;
+    position: relative;
+    overflow: hidden;
+  }
+  .cam-suggestion {
+    position: absolute;
+    top: 16px; left: 16px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .cam-thumb {
+    width: 56px; height: 56px;
+    border-radius: 10px;
+    background-color: #444;
+    background-size: cover;
+    background-position: center;
+    border: 2px solid rgba(255,255,255,0.5);
+  }
+  .cam-suggestion-text { color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+  .cam-name { font-size: 20px; font-weight: 600; }
+  .cam-sci { font-size: 14px; font-style: italic; opacity: 0.9; }
+  .cam-side-controls {
+    position: absolute;
+    right: 12px; top: 45%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    z-index: 2;
+  }
+  .cam-pill, .cam-circle {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: rgba(20,20,20,0.55);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .cam-circle svg { width: 18px; height: 18px; }
+  .cam-bottom-controls {
+    position: absolute;
+    left: 0; right: 0; bottom: 22px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 28px;
+  }
+  .cam-close, .cam-gallery {
+    width: 46px; height: 46px;
+    border-radius: 10px;
+    background: rgba(20,20,20,0.55);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .cam-close { border-radius: 50%; }
+  .cam-close svg, .cam-gallery svg { width: 20px; height: 20px; }
+  .cam-shutter {
+    width: 74px; height: 74px;
+    border-radius: 50%;
+    background: var(--green);
+    border: 4px solid #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+  }
+  .cam-shutter svg { width: 30px; height: 30px; }
+
+  /* match screen */
+  .match-screen { height: 728px; }
+  .match-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .match-section-title {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--sub);
+    padding: 16px 16px 6px;
+  }
+  .life-stages {
+    display: flex;
+    gap: 10px;
+    padding: 0 16px 4px;
+  }
+  .life-stage { flex: 1; text-align: center; }
+  .life-stage-photo {
+    width: 100%;
+    height: 0;
+    padding-bottom: 100%;
+    border-radius: 10px;
+    background-size: cover;
+    background-position: center;
+    background-color: #ddd;
+  }
+  .life-stage-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-top: 6px;
+  }
+  .match-facts {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 6px 16px 6px;
+  }
+  .match-fact {
+    display: flex;
+    align-items: flex-start;
+  }
+  .fact-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg,#8fae6b,#4d6b3a);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 13px;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+    position: relative;
+    z-index: 2;
+    margin-right: -16px;
+    margin-top: 8px;
+    flex-shrink: 0;
+  }
+  .fact-bubble {
+    background: #f2f5ec;
+    border-radius: 14px;
+    padding: 12px 14px 12px 30px;
+    font-size: 13.5px;
+    line-height: 1.45;
+    color: var(--ink);
+    flex: 1;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+  .match-topnav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 18px 10px;
+  }
+  .match-icon-btn { background: none; border: none; padding: 0; color: var(--ink); display: flex; cursor: pointer; }
+  .match-icon-btn svg { width: 24px; height: 24px; }
+  .match-info {
+    padding: 10px 18px 14px;
+    border-bottom: 1px solid #eee;
+  }
+  .lifelist-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    box-sizing: border-box;
+    background: #eef6e2;
+    color: var(--green-dark);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+  .lifelist-badge svg { width: 16px; height: 16px; flex-shrink: 0; color: var(--green); }
+  .match-info-row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  .status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .status-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .status-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 5px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .status-chip svg { width: 13px; height: 13px; flex-shrink: 0; }
+  .chip-native { background: #eaf5df; color: var(--green-dark); }
+  .chip-threatened { background: #fdf1dc; color: #a15c00; }
+  .rarity-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #f2f2ee;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .rarity-mini-track {
+    position: relative;
+    width: 34px;
+    height: 5px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #e2574c 0%, #f0b94a 50%, var(--green) 100%);
+  }
+  .rarity-mini-dot {
+    position: absolute;
+    top: 50%;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--green-dark);
+    transform: translate(-50%, -50%);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  }
+  .match-name { font-size: 24px; font-weight: 700; }
+  .match-sci { font-size: 16px; font-style: italic; color: #444; margin-top: 2px; }
+  .match-confidence-wrap { text-align: right; }
+  .match-confidence { font-size: 22px; font-weight: 700; color: var(--green); }
+  .match-confidence-label { font-size: 12px; color: var(--sub); margin-top: 2px; }
+  .match-photos {
+    display: flex;
+    gap: 3px;
+    height: 373px;
+    padding: 3px;
+  }
+  .match-photo-main {
+    width: 234px;
+    flex: none;
+    background-size: cover;
+    background-position: center;
+  }
+  .match-photo-side {
+    width: 147px;
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .match-thumb { height: 120px; flex: none; background-size: cover; background-position: center; background-color: #ddd; }
+  .match-map {
+    position: relative;
+    height: 150px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background-image: url('range_map.png');
+    background-size: cover;
+    background-position: center;
+    background-color: #bcd7e6;
+  }
+  .match-map-pin {
+    position: absolute;
+    left: 11.1%; top: 26.3%;
+    transform: translate(-50%, -100%);
+    z-index: 2;
+    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.4));
+  }
+  .match-map-pin svg { width: 26px; height: 26px; }
+  .match-actions {
+    display: flex;
+    gap: 10px;
+    padding: 12px 16px 18px;
+  }
+  .match-discard, .match-save {
+    flex: 1;
+    padding: 16px 0;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .match-discard { background: #fff; border: 2px solid var(--ink); color: var(--ink); }
+  .match-save { background: var(--green); border: 2px solid var(--green); color: #fff; }
+
+  /* menu screen */
+  .menu-screen { height: 728px; }
+  .menu-subhead { padding: 0 18px 14px; font-size: 13px; color: var(--sub); }
+  .menu-list { border-top: 1px solid #eee; flex: 1; min-height: 0; overflow-y: auto; }
+  .menu-item {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 18px 20px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+  }
+  .menu-item svg { width: 22px; height: 22px; color: var(--ink); flex-shrink: 0; }
+  .menu-item span {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .menu-item.donate svg { color: var(--green); }
+  .menu-item.disabled svg, .menu-item.disabled span { color: #c7c7c2; }
+
+  /* home feed */
+  .home-screen { height: 728px; background: #f6f6f2; }
+  .home-header {
+    background: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    padding: 16px 18px;
+    border-bottom: 1px solid #eee;
+  }
+  .home-scroll {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 14px 14px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .feed-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    flex-shrink: 0;
+  }
+  .feed-card-body { padding: 14px; }
+
+  .blog-photo {
+    height: 130px;
+    background:
+      radial-gradient(circle at 70% 30%, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 40%),
+      linear-gradient(160deg, #8fb3c4 0%, #4c7284 55%, #2a4a58 100%);
+  }
+  .blog-title { font-size: 15px; font-weight: 700; color: var(--ink); line-height: 1.35; margin-bottom: 8px; }
+  .read-more { font-size: 13px; font-weight: 700; color: var(--green-dark); text-decoration: none; }
+
+  .donate-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #eaf5df;
+    color: var(--green);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 10px;
+  }
+  .donate-icon svg { width: 19px; height: 19px; }
+  .donate-heading { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
+  .donate-text { font-size: 12.5px; color: var(--sub); line-height: 1.45; margin-bottom: 12px; }
+  .donate-btn, .project-btn {
+    display: inline-block;
+    background: var(--green);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 9px 18px;
+    border-radius: 999px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .following-who { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .following-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #6fa8c4, #2c5a74);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .following-name { font-size: 13.5px; font-weight: 700; color: var(--ink); }
+  .following-time { font-size: 11.5px; color: var(--sub); margin-top: 1px; }
+  .following-obs { display: flex; align-items: center; gap: 12px; }
+  .following-photo {
+    width: 56px; height: 56px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    background: linear-gradient(160deg, #cfd6c0 0%, #94a13f 55%, #536b2e 100%);
+  }
+  .following-species { font-size: 14px; font-weight: 700; color: var(--ink); }
+  .following-sci { font-size: 12.5px; font-style: italic; color: #666; margin-top: 1px; }
+
+  .project-icon {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: #eaf5df;
+    color: var(--green-dark);
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 10px;
+  }
+  .project-icon svg { width: 19px; height: 19px; }
+  .project-heading { font-size: 13px; font-weight: 700; color: var(--sub); text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 4px; }
+  .project-name { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+  .project-text { font-size: 12.5px; color: var(--sub); margin-bottom: 12px; }
+
+  .milestone-heading { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 12px; }
+  .milestone-track { height: 8px; border-radius: 4px; background: #eee; overflow: hidden; }
+  .milestone-fill { height: 100%; background: linear-gradient(90deg, #9ec95a, var(--green)); border-radius: 4px; }
+  .milestone-text { font-size: 12.5px; color: var(--sub); font-weight: 600; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+<div class="screen active" id="screen-main">
+  <div class="statusbar">
+    <span class="time">6:46</span>
+    <div class="icons">
+      <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="0.5" fill="#1a1a1a"/><rect x="4.5" y="5" width="3" height="7" rx="0.5" fill="#1a1a1a"/><rect x="9" y="3" width="3" height="9" rx="0.5" fill="#1a1a1a"/><rect x="13.5" y="0" width="3" height="12" rx="0.5" fill="#bbb"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M1 4.5C4.5 1 11.5 1 15 4.5" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/><path d="M3.3 7C5.7 4.7 10.3 4.7 12.7 7" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/><path d="M5.8 9.3C7.2 8 8.8 8 10.2 9.3" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <div class="battery">
+        <span class="battery-pct">83</span>
+        <svg width="22" height="11" viewBox="0 0 22 11"><rect x="0.5" y="0.5" width="19" height="10" rx="2.5" stroke="#1a1a1a"/><rect x="2" y="2" width="14.5" height="7" rx="1.2" fill="#1a1a1a"/><rect x="20.3" y="3.5" width="1.5" height="4" rx="0.7" fill="#1a1a1a"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="header">
+    <div class="user">
+      <div class="avatar">S</div>
+      <span class="username">loarie</span>
+    </div>
+    <div class="header-icons">
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+      <button class="icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></button>
+      <button class="icon-btn menu-btn" id="menu-toggle-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat active" data-tab="obs">
+      <div class="num">87</div>
+      <div class="label">OBSERVATIONS</div>
+    </div>
+    <div class="stat" data-tab="lifelist">
+      <div class="num" id="lifelist-stat-num">30</div>
+      <div class="label">LIFELIST</div>
+    </div>
+  </div>
+
+  <div class="tab-panel active" id="panel-observations">
+    <div class="grid-wrapper">
+      <div class="grid loading" id="grid">Loading observations…</div>
+      <div class="view-toggle">
+        <button class="active" data-view="grid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+        <button data-view="list"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></button>
+        <button data-view="map"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg></button>
+      </div>
+      <div class="sort-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 10 12 15 17 10"/><polyline points="7 4 12 9"/><line x1="12" y1="4" x2="12" y2="15"/><line x1="12" y1="15" x2="12" y2="20"/></svg></div>
+    </div>
+  </div>
+
+  <div class="tab-panel" id="panel-lifelist">
+    <div class="lifelist-scroll" id="lifelistScroll">
+      <div class="lifelist-loading">Loading lifelist…</div>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-item" data-nav="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/></svg>
+      Home
+    </button>
+    <button class="nav-item" data-nav="explore">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Explore
+    </button>
+    <button class="nav-camera" data-nav="camera">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    </button>
+    <button class="nav-item active" data-nav="me">
+      <div class="nav-avatar"></div>
+      Me
+    </button>
+    <button class="nav-item" data-nav="activity">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="badge"></span>
+      Activity
+    </button>
+  </nav>
+</div>
+
+<div class="screen camera-screen" id="screen-camera">
+  <div class="cam-topbar"><span class="cam-dot"></span></div>
+  <div class="cam-viewfinder">
+    <div class="cam-suggestion">
+      <div class="cam-thumb"></div>
+      <div class="cam-suggestion-text">
+        <div class="cam-name">Monarch</div>
+        <div class="cam-sci">Danaus plexippus</div>
+      </div>
+    </div>
+    <div class="cam-side-controls">
+      <button class="cam-pill">1×</button>
+      <button class="cam-circle"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h6l-1 8 9-12h-6l1-8z"/><line x1="3" y1="3" x2="21" y2="21"/></svg></button>
+      <button class="cam-circle"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg></button>
+    </div>
+    <div class="cam-bottom-controls">
+      <button class="cam-close" id="cam-close"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      <button class="cam-shutter" id="cam-shutter"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg></button>
+      <button class="cam-gallery"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<div class="screen match-screen" id="screen-match">
+  <div class="statusbar">
+    <span class="time">7:05</span>
+    <div class="icons">
+      <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="0.5" fill="#1a1a1a"/><rect x="4.5" y="5" width="3" height="7" rx="0.5" fill="#1a1a1a"/><rect x="9" y="3" width="3" height="9" rx="0.5" fill="#1a1a1a"/><rect x="13.5" y="0" width="3" height="12" rx="0.5" fill="#bbb"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M1 4.5C4.5 1 11.5 1 15 4.5" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/><path d="M3.3 7C5.7 4.7 10.3 4.7 12.7 7" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/><path d="M5.8 9.3C7.2 8 8.8 8 10.2 9.3" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <div class="battery">
+        <span class="battery-pct">80</span>
+        <svg width="22" height="11" viewBox="0 0 22 11"><rect x="0.5" y="0.5" width="19" height="10" rx="2.5" stroke="#1a1a1a"/><rect x="2" y="2" width="13.7" height="7" rx="1.2" fill="#1a1a1a"/><rect x="20.3" y="3.5" width="1.5" height="4" rx="0.7" fill="#1a1a1a"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="match-topnav">
+    <button class="match-icon-btn" id="match-back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <button class="match-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></button>
+  </div>
+  <div class="match-info">
+    <div class="lifelist-badge">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.9 6.6 7.1.6-5.4 4.7 1.7 7-6.3-3.8L5.7 21l1.7-7-5.4-4.7 7.1-.6L12 2z"/></svg>
+      New to your lifelist!
+    </div>
+    <div class="match-info-row">
+      <div>
+        <div class="match-name">Monarch</div>
+        <div class="match-sci">Danaus plexippus</div>
+      </div>
+      <div class="match-confidence-wrap">
+        <div class="match-confidence">99.5%</div>
+        <div class="match-confidence-label">Confidence</div>
+      </div>
+    </div>
+    <div class="status-row">
+      <div class="status-chips">
+        <div class="status-chip chip-native">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+          Native
+        </div>
+        <div class="status-chip chip-threatened">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3L2 20h20L12 3z"/><line x1="12" y1="9" x2="12" y2="13.5"/><circle cx="12" cy="16.5" r="0.75" fill="currentColor" stroke="none"/></svg>
+          Near Threatened
+        </div>
+      </div>
+      <div class="rarity-chip">
+        Common
+        <span class="rarity-mini-track"><span class="rarity-mini-dot" style="left:85%"></span></span>
+      </div>
+    </div>
+  </div>
+  <div class="match-scroll">
+    <div class="match-photos">
+      <div class="match-photo-main" id="match-photo-main"></div>
+      <div class="match-photo-side">
+        <div class="match-thumb sim1"></div>
+        <div class="match-thumb sim2"></div>
+        <div class="match-thumb sim3"></div>
+      </div>
+    </div>
+    <div class="match-section-title">Life Stages</div>
+    <div class="life-stages">
+      <div class="life-stage">
+        <div class="life-stage-photo" style="background-image:url('adult.png')"></div>
+        <div class="life-stage-label">Adult</div>
+      </div>
+      <div class="life-stage">
+        <div class="life-stage-photo" style="background-image:url('caterpillar.png')"></div>
+        <div class="life-stage-label">Caterpillar</div>
+      </div>
+      <div class="life-stage">
+        <div class="life-stage-photo" style="background-image:url('pupae.png')"></div>
+        <div class="life-stage-label">Pupa</div>
+      </div>
+    </div>
+    <div class="match-section-title">Community Notes</div>
+    <div class="match-facts">
+      <div class="match-fact">
+        <div class="fact-avatar">S</div>
+        <div class="fact-bubble">Monarch caterpillars eat milkweed, which makes both the caterpillars and adult butterflies distasteful to many predators.</div>
+      </div>
+      <div class="match-fact">
+        <div class="fact-avatar">S</div>
+        <div class="fact-bubble">You can recognize a male Monarch by the small black scent spot on each hindwing; females lack these spots and usually have thicker black wing veins.</div>
+      </div>
+      <div class="match-fact">
+        <div class="fact-avatar">S</div>
+        <div class="fact-bubble">Monarchs are famous for migration, but not every generation makes the whole trip—several generations move north in spring and summer, while one long-lived generation returns south in fall.</div>
+      </div>
+    </div>
+    <div class="match-section-title">Range Map</div>
+    <div class="match-map">
+      <div class="match-map-pin">
+        <svg viewBox="0 0 24 24" fill="var(--green)" stroke="#fff" stroke-width="1.5"><path d="M12 2C7.6 2 4 5.6 4 10c0 6 8 12 8 12s8-6 8-12c0-4.4-3.6-8-8-8z"/></svg>
+      </div>
+    </div>
+  </div>
+  <div class="match-actions">
+    <button class="match-discard" id="match-discard">DISCARD</button>
+    <button class="match-save" id="match-save">SAVE</button>
+  </div>
+</div>
+
+<div class="screen menu-screen" id="screen-menu">
+  <div class="statusbar">
+    <span class="time">6:46</span>
+    <div class="icons">
+      <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="0.5" fill="#1a1a1a"/><rect x="4.5" y="5" width="3" height="7" rx="0.5" fill="#1a1a1a"/><rect x="9" y="3" width="3" height="9" rx="0.5" fill="#1a1a1a"/><rect x="13.5" y="0" width="3" height="12" rx="0.5" fill="#bbb"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M1 4.5C4.5 1 11.5 1 15 4.5" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/><path d="M3.3 7C5.7 4.7 10.3 4.7 12.7 7" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/><path d="M5.8 9.3C7.2 8 8.8 8 10.2 9.3" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <div class="battery">
+        <span class="battery-pct">83</span>
+        <svg width="22" height="11" viewBox="0 0 22 11"><rect x="0.5" y="0.5" width="19" height="10" rx="2.5" stroke="#1a1a1a"/><rect x="2" y="2" width="14.5" height="7" rx="1.2" fill="#1a1a1a"/><rect x="20.3" y="3.5" width="1.5" height="4" rx="0.7" fill="#1a1a1a"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="header">
+    <div class="user">
+      <div class="avatar">S</div>
+      <span class="username">loarie</span>
+    </div>
+    <div class="header-icons">
+      <button class="icon-btn menu-btn active" id="menu-close-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+    </div>
+  </div>
+  <div class="menu-subhead">87 Observations</div>
+
+  <div class="menu-list">
+    <div class="menu-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+      <span>Projects</span>
+    </div>
+    <div class="menu-item">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2 15c3-1 5-3 6-5 1 1 2 1 3 0 2-3 5-6 9-7-1 2-3 4-3 4s3 0 5 1c-2 1-4 1-5 1-1 3-4 6-8 7-2 .5-4 .5-7 0 1-.5 2-1 3-2-1 0-2 0-3 1z"/></svg>
+      <span>About</span>
+    </div>
+    <div class="menu-item donate">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.4C11 6.1 12.4 5 14.4 5c3.4 0 5.2 3.4 3.7 6.7C19.5 16.4 12 21 12 21z"/></svg>
+      <span>Donate</span>
+    </div>
+    <div class="menu-item">
+      <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/><path d="M9.5 9a2.5 2.5 0 015 .3c0 1.7-2.3 1.9-2.3 3.5" stroke="#fff" stroke-width="1.8" fill="none" stroke-linecap="round"/><circle cx="12.2" cy="16.8" r="1" fill="#fff"/></svg>
+      <span>Help</span>
+    </div>
+    <div class="menu-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.3 1.9l.1.1a2 2 0 11-2.8 2.8l-.1-.1a1.7 1.7 0 00-1.9-.3 1.7 1.7 0 00-1 1.5V21a2 2 0 01-4 0v-.1a1.7 1.7 0 00-1-1.6 1.7 1.7 0 00-1.9.3l-.1.1a2 2 0 11-2.8-2.8l.1-.1a1.7 1.7 0 00.3-1.9 1.7 1.7 0 00-1.5-1H3a2 2 0 010-4h.1a1.7 1.7 0 001.6-1 1.7 1.7 0 00-.3-1.9l-.1-.1a2 2 0 112.8-2.8l.1.1a1.7 1.7 0 001.9.3H9a1.7 1.7 0 001-1.5V3a2 2 0 014 0v.1a1.7 1.7 0 001 1.5 1.7 1.7 0 001.9-.3l.1-.1a2 2 0 112.8 2.8l-.1.1a1.7 1.7 0 00-.3 1.9V9a1.7 1.7 0 001.5 1H21a2 2 0 010 4h-.1a1.7 1.7 0 00-1.5 1z"/></svg>
+      <span>Settings</span>
+    </div>
+    <div class="menu-item">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h16a2 2 0 012 2v9a2 2 0 01-2 2H9l-5 4v-4H4a2 2 0 01-2-2V6a2 2 0 012-2z"/><rect x="11" y="7" width="2" height="6" fill="#fff"/><rect x="11" y="15" width="2" height="2" fill="#fff"/></svg>
+      <span>Feedback</span>
+    </div>
+    <div class="menu-item disabled">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      <span>Log Out</span>
+    </div>
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-item" data-nav="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/></svg>
+      Home
+    </button>
+    <button class="nav-item" data-nav="explore">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Explore
+    </button>
+    <button class="nav-camera" data-nav="camera">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    </button>
+    <button class="nav-item active" data-nav="me">
+      <div class="nav-avatar"></div>
+      Me
+    </button>
+    <button class="nav-item" data-nav="activity">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="badge"></span>
+      Activity
+    </button>
+  </nav>
+</div>
+
+<div class="screen home-screen" id="screen-home">
+  <div class="statusbar">
+    <span class="time">6:46</span>
+    <div class="icons">
+      <svg width="18" height="12" viewBox="0 0 18 12"><rect x="0" y="7" width="3" height="5" rx="0.5" fill="#1a1a1a"/><rect x="4.5" y="5" width="3" height="7" rx="0.5" fill="#1a1a1a"/><rect x="9" y="3" width="3" height="9" rx="0.5" fill="#1a1a1a"/><rect x="13.5" y="0" width="3" height="12" rx="0.5" fill="#bbb"/></svg>
+      <svg width="16" height="12" viewBox="0 0 16 12" fill="none"><path d="M1 4.5C4.5 1 11.5 1 15 4.5" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/><path d="M3.3 7C5.7 4.7 10.3 4.7 12.7 7" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/><path d="M5.8 9.3C7.2 8 8.8 8 10.2 9.3" stroke="#1a1a1a" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <div class="battery">
+        <span class="battery-pct">83</span>
+        <svg width="22" height="11" viewBox="0 0 22 11"><rect x="0.5" y="0.5" width="19" height="10" rx="2.5" stroke="#1a1a1a"/><rect x="2" y="2" width="14.5" height="7" rx="1.2" fill="#1a1a1a"/><rect x="20.3" y="3.5" width="1.5" height="4" rx="0.7" fill="#1a1a1a"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="home-header">Home</div>
+
+  <div class="home-scroll">
+
+    <div class="feed-card blog-card">
+      <div class="blog-photo"></div>
+      <div class="feed-card-body">
+        <div class="blog-title">Threatened mussel species found in a new watershed</div>
+        <a class="read-more" href="#">Read more →</a>
+      </div>
+    </div>
+
+    <div class="feed-card donate-card">
+      <div class="feed-card-body">
+        <div class="donate-icon">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21s-7.5-4.6-10-9.3C.5 8.4 2.3 5 5.7 5c2 0 3.4 1.1 4.3 2.4C11 6.1 12.4 5 14.4 5c3.4 0 5.2 3.4 3.7 6.7C19.5 16.4 12 21 12 21z"/></svg>
+        </div>
+        <div class="donate-heading">Help protect the species you love</div>
+        <div class="donate-text">Your support funds the identifiers, tools, and conservation partners behind every ID.</div>
+        <button class="donate-btn">Donate</button>
+      </div>
+    </div>
+
+    <div class="feed-card following-card">
+      <div class="feed-card-body">
+        <div class="following-who">
+          <div class="following-avatar">M</div>
+          <div>
+            <div class="following-name">Maya Chen</div>
+            <div class="following-time">2 hours ago · new observation</div>
+          </div>
+        </div>
+        <div class="following-obs">
+          <div class="following-photo"></div>
+          <div>
+            <div class="following-species">Western Tiger Swallowtail</div>
+            <div class="following-sci">Papilio rutulus</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feed-card project-card">
+      <div class="feed-card-body">
+        <div class="project-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+        </div>
+        <div class="project-heading">Join a project near you</div>
+        <div class="project-name">Marin Biodiversity Watch</div>
+        <div class="project-text">127 members · 3,400 observations</div>
+        <button class="project-btn">Join Project</button>
+      </div>
+    </div>
+
+    <div class="feed-card milestone-card">
+      <div class="feed-card-body">
+        <div class="milestone-heading">You're closing in on 100 species!</div>
+        <div class="milestone-track"><div class="milestone-fill" style="width:30%"></div></div>
+        <div class="milestone-text">30 of 100 species</div>
+      </div>
+    </div>
+
+  </div>
+
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-nav="home">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10a1 1 0 001 1h4v-6h4v6h4a1 1 0 001-1V10"/></svg>
+      Home
+    </button>
+    <button class="nav-item" data-nav="explore">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      Explore
+    </button>
+    <button class="nav-camera" data-nav="camera">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z"/><circle cx="12" cy="13" r="4"/></svg>
+    </button>
+    <button class="nav-item" data-nav="me">
+      <div class="nav-avatar"></div>
+      Me
+    </button>
+    <button class="nav-item" data-nav="activity">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 00-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+      <span class="badge"></span>
+      Activity
+    </button>
+  </nav>
+</div>
+
+</div>
+
+<script>
+  document.querySelectorAll('.stat').forEach(el => {
+    el.addEventListener('click', () => {
+      document.querySelectorAll('.stat').forEach(s => s.classList.remove('active'));
+      el.classList.add('active');
+      const tab = el.dataset.tab;
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      const panelId = tab === 'lifelist' ? 'panel-lifelist' : 'panel-observations';
+      document.getElementById(panelId).classList.add('active');
+      if (tab === 'lifelist') loadLifelist();
+    });
+  });
+  document.querySelectorAll('.view-toggle button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+  document.querySelectorAll('.bottom-nav .nav-item').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.bottom-nav .nav-item').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll(`.bottom-nav .nav-item[data-nav="${btn.dataset.nav}"]`).forEach(b => b.classList.add('active'));
+      if (btn.dataset.nav === 'home') showScreen('screen-home');
+      if (btn.dataset.nav === 'me') showScreen('screen-main');
+    });
+  });
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    document.getElementById('menu-toggle-btn').classList.toggle('active', id === 'screen-menu');
+  }
+
+  document.querySelectorAll('.nav-camera').forEach(btn => btn.addEventListener('click', () => showScreen('screen-camera')));
+  document.getElementById('cam-close').addEventListener('click', () => showScreen('screen-main'));
+  document.getElementById('cam-shutter').addEventListener('click', () => showScreen('screen-match'));
+  document.getElementById('match-back').addEventListener('click', () => showScreen('screen-camera'));
+  document.getElementById('match-discard').addEventListener('click', () => showScreen('screen-main'));
+  document.getElementById('match-save').addEventListener('click', () => showScreen('screen-main'));
+  document.getElementById('menu-toggle-btn').addEventListener('click', () => {
+    const goingToMenu = !document.getElementById('menu-toggle-btn').classList.contains('active');
+    showScreen(goingToMenu ? 'screen-menu' : 'screen-main');
+  });
+  document.getElementById('menu-close-btn').addEventListener('click', () => showScreen('screen-main'));
+
+  const TAXON_URL = 'https://api.inaturalist.org/v1/taxa/48662';
+  fetch(TAXON_URL)
+    .then(res => res.json())
+    .then(data => {
+      const taxon = data.results && data.results[0];
+      if (!taxon) return;
+      const defaultPhoto = taxon.default_photo;
+      if (defaultPhoto) {
+        document.querySelector('.cam-thumb').style.backgroundImage =
+          `url("${defaultPhoto.medium_url || defaultPhoto.url}")`;
+      }
+      const photos = (taxon.taxon_photos || []).map(tp => tp.photo).filter(Boolean);
+      const simEls = document.querySelectorAll('.match-thumb');
+      photos.slice(1, 4).forEach((p, i) => {
+        if (simEls[i]) simEls[i].style.backgroundImage = `url("${p.medium_url || p.url}")`;
+      });
+    })
+    .catch(err => console.error('taxon fetch failed', err));
+
+  const grid = document.getElementById('grid');
+  const API_URL = 'https://api.inaturalist.org/v1/observations?user_id=loarie&per_page=30&order=desc&order_by=created_at&photos=true';
+
+  fetch(API_URL)
+    .then(res => res.json())
+    .then(data => {
+      const results = data.results || [];
+      grid.classList.remove('loading');
+      grid.innerHTML = '';
+      results.forEach(obs => {
+        const taxon = obs.taxon || {};
+        const name = taxon.preferred_common_name || obs.species_guess || taxon.name || 'Unknown';
+        const photoUrl = (obs.photos && obs.photos[0] && obs.photos[0].url) || '';
+        const mediumUrl = photoUrl.replace('square.', 'medium.');
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.style.backgroundImage = `url("${mediumUrl}")`;
+        card.innerHTML = `<span class="label">${name}</span>`;
+        grid.appendChild(card);
+      });
+    })
+    .catch(err => {
+      grid.textContent = 'Could not load observations.';
+      console.error(err);
+    });
+
+  const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  let lifelistLoaded = false;
+
+  function loadLifelist() {
+    if (lifelistLoaded) return;
+    lifelistLoaded = true;
+    const container = document.getElementById('lifelistScroll');
+    const LIFELIST_URL = 'https://api.inaturalist.org/v2/users/loarie/taxa_observed?order_by=first_observed_on&order=desc&per_page=30&fields=taxon.name,taxon.preferred_common_name,taxon.default_photo.square_url,taxon.default_photo.medium_url';
+
+    fetch(LIFELIST_URL)
+      .then(res => res.json())
+      .then(data => {
+        const results = data.results || [];
+        document.getElementById('lifelist-stat-num').textContent = results.length.toLocaleString();
+
+        const months = [];
+        let curMonth = null, curDay = null;
+        results.forEach(item => {
+          const dateStr = item.first_observed_on;
+          if (!dateStr) return;
+          const [y, m, d] = dateStr.split('-').map(Number);
+          const monthKey = y + '-' + m;
+          if (!curMonth || curMonth.key !== monthKey) {
+            curMonth = { key: monthKey, y, m, count: 0, days: [] };
+            months.push(curMonth);
+            curDay = null;
+          }
+          if (!curDay || curDay.key !== dateStr) {
+            curDay = { key: dateStr, y, m, d, items: [] };
+            curMonth.days.push(curDay);
+          }
+          curDay.items.push(item);
+          curMonth.count++;
+        });
+
+        container.innerHTML = '';
+
+        let isFirst = true;
+        months.forEach(month => {
+          const monthEl = document.createElement('div');
+          monthEl.className = 'll-month';
+          monthEl.innerHTML = `
+            <div class="ll-month-header">
+              <span class="ll-month-title">${MONTH_NAMES[month.m - 1]} ${month.y}</span>
+              <span class="ll-month-count">${month.count} new</span>
+            </div>
+          `;
+          month.days.forEach(day => {
+            const dayEl = document.createElement('div');
+            dayEl.className = 'll-day';
+            const dateObj = new Date(day.y, day.m - 1, day.d);
+            const dayHeader = document.createElement('div');
+            dayHeader.className = 'll-day-header';
+            dayHeader.textContent = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
+            dayEl.appendChild(dayHeader);
+            day.items.forEach(item => {
+              const taxon = item.taxon || {};
+              const name = taxon.preferred_common_name || taxon.name || 'Unknown';
+              const sci = taxon.name || '';
+              const photo = taxon.default_photo;
+              const photoUrl = photo ? (photo.medium_url || photo.square_url) : '';
+              const entry = document.createElement('div');
+              entry.className = 'll-entry';
+              entry.innerHTML = `
+                <div class="ll-thumb" style="background-image:url('${photoUrl}')"></div>
+                <div>
+                  <div class="ll-entry-name">${name}${isFirst ? '<span class="ll-newest-badge">NEWEST</span>' : ''}</div>
+                  <div class="ll-entry-sci">${sci}</div>
+                </div>
+              `;
+              dayEl.appendChild(entry);
+              isFirst = false;
+            });
+            monthEl.appendChild(dayEl);
+          });
+          container.appendChild(monthEl);
+        });
+      })
+      .catch(err => {
+        container.innerHTML = '<div class="lifelist-loading">Could not load lifelist.</div>';
+        console.error(err);
+      });
+  }
+</script>
+
+</body>
+</html>
