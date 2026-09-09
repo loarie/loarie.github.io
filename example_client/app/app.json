@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "iNat Example Client",
+    "slug": "inat-example-client",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.scottloarie.inatclient",
+      "infoPlist": {
+        "NSCameraUsageDescription": "Used to take a photo to attach to an iNaturalist observation.",
+        "NSPhotoLibraryUsageDescription": "Used to attach a photo from your library to an iNaturalist observation.",
+        "NSLocationWhenInUseUsageDescription": "Used to attach your current location to an iNaturalist observation.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.RECORD_AUDIO"
+      ]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Used to attach a photo from your library to an iNaturalist observation.",
+          "cameraPermission": "Used to take a photo to attach to an iNaturalist observation."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Used to attach your current location to an iNaturalist observation."
+        }
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "07af5a38-ddcf-4cc5-aaa8-6b5f88e53d5e"
+      }
+    }
+  }
+}
